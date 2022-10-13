@@ -1,0 +1,9 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: goal-service
+  profiles:
+    active: local
+  output.ansi.disabled: always
