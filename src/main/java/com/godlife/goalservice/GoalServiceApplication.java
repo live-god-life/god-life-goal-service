@@ -1,13 +1,13 @@
-package com.godlife.godlifegoalservice;
+package com.godlife.goalservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GodLifeGoalServiceApplication {
+public class GoalServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GodLifeGoalServiceApplication.class, args);
+		SpringApplication.run(GoalServiceApplication.class, args);
 	}
 
 }
