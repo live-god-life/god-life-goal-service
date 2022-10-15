@@ -2,6 +2,7 @@ package com.godlife.goalservice.repository;
 
 import com.godlife.goalservice.domain.Goal;
 import com.godlife.goalservice.domain.Mindset;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -15,18 +16,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GoalRepositoryTest {
     @Autowired GoalRepository goalRepository;
 
-    @Test
-    void save() {
+    private Goal goal;
+    private String expectedTitle;
+
+    @BeforeEach
+    void beforeEach() {
         //given
         Mindset mindset1 = createMindsetByContent("마인드셋1");
         Mindset mindset2 = createMindsetByContent("마인드셋2");
 
-        String expectedTitle = "목표제목이다";
-        Goal goal = Goal.builder()
+        expectedTitle = "목표제목이다";
+        goal = Goal.builder()
                 .title(expectedTitle)
                 .mindsets(List.of(mindset1, mindset2))
                 .build();
+    }
 
+    @Test
+    void save() {
         //when
         Goal savedGoal = goalRepository.save(goal);
 
@@ -36,28 +43,18 @@ class GoalRepositoryTest {
 
     @Test
     void findById() {
-        //given
-        Mindset mindset1 = createMindsetByContent("마인드셋1");
-        Mindset mindset2 = createMindsetByContent("마인드셋2");
-
-        String expectedTitle = "목표제목이다";
-        Goal goal = Goal.builder()
-                .title(expectedTitle)
-                .mindsets(List.of(mindset1, mindset2))
-                .build();
-
         //when
         Goal savedGoal = goalRepository.save(goal);
-
         Goal foundGoal = goalRepository.findById(savedGoal.getGoalId()).orElseThrow(() -> new NoSuchElementException());
+
         //then
         assertThat(foundGoal.getTitle()).isEqualTo(expectedTitle);
-        assertThat(foundGoal.getMindsets().get(0).getContent()).isEqualTo("마인드셋1");
+        assertThat(foundGoal.getMindsets().size()).isEqualTo(2);
     }
 
-    private static Mindset createMindsetByContent(String 마인드셋1) {
+    private static Mindset createMindsetByContent(String content) {
         return Mindset.builder()
-                .content(마인드셋1)
+                .content(content)
                 .build();
     }
 }
