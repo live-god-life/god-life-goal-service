@@ -12,7 +12,9 @@ public class ApiResponse {
     private Object data;
 
     private ApiResponse(String status, String message, Object data) {
-
+        this.status = status;
+        this.message = message;
+        this.data = data;
     }
 
     public static ApiResponse createGetSuccessResponse(List<GoalServiceDto> goalServiceDtos) {
