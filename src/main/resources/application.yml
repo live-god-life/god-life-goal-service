@@ -6,4 +6,4 @@ spring:
     name: goal-service
   profiles:
     active: local
-  output.ansi.disabled: always
+  output.ansi.enabled: always

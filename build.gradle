@@ -2,7 +2,40 @@ plugins {
 	id 'org.springframework.boot' version '2.7.4'
 	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 	id 'java'
+	/* asciidoc파일을 변환해주고, Build폴더에 복사해주는 플러그인 */
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
+/* =============== BEGIN Spring Rest Docs SETTING ===============*/
+ext {
+	snippetsDir = file('build/generated-snippets')
+	docsDir = file('src/docs/asciidoc')
+}
+asciidoctor {
+	configurations 'asciidoctorExtensions'
+	inputs.dir snippetsDir
+	dependsOn test
+	attributes 'docsDir': docsDir
+}
+bootJar {
+	dependsOn asciidoctor
+	copy {
+		from "${asciidoctor.outputDir}"
+		into 'src/main/resources/static/docs'
+	}
+}
+test {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+configurations {
+	asciidoctorExtensions
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+/* =============== END Spring Rest Docs SETTING ===============*/
+
 
 group = 'com.godlife'
 version = '0.0.1-SNAPSHOT'
@@ -22,13 +55,13 @@ ext {
 	set('springCloudVersion', "2021.0.4")
 }
 
-//현재 환경(운영,개발) 세팅
+/* 현재 환경(운영,개발) 세팅 */
 ext.profile = (!project.hasProperty('profile') || !profile) ? 'local' : profile
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	// local 환경에서 실행될 경우 eureka-client,mysql 라이브러리를 사용하지 않겠다
+	/* local 환경에서 실행될 경우 eureka-client,mysql 라이브러리를 사용하지 않겠다 */
 	if (profile != 'local') {
 		implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 		runtimeOnly 'mysql:mysql-connector-java'
@@ -37,6 +70,10 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	/* spring rest docs dependency 추가 */
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 dependencyManagement {
