@@ -2,7 +2,6 @@ package com.godlife.goalservice.api;
 
 import com.godlife.goalservice.api.response.ApiResponse;
 import com.godlife.goalservice.service.GoalService;
-import com.godlife.goalservice.service.dto.GoalServiceDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
