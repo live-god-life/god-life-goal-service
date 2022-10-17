@@ -1,16 +1,23 @@
 package com.godlife.goalservice.domain;
 
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
+@Getter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public abstract class Todo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long todoId;
+//    private String type;
     private String title;
     private Integer depth;
     private Integer orderNumber;

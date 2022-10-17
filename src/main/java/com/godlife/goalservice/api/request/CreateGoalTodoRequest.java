@@ -1,9 +1,13 @@
 package com.godlife.goalservice.api.request;
 
+import com.godlife.goalservice.service.dto.TodoServiceDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -23,5 +27,16 @@ public class CreateGoalTodoRequest {
         this.title = title;
         this.type = type;
         this.todos = todos;
+    }
+
+    public TodoServiceDto toTodoServiceDto() {
+        return TodoServiceDto.builder()
+                .title(title)
+                .type(type)
+                .depth(depth)
+                .order(order)
+//                .todos(todos.stream().map(CreateGoalTodoRequest::toTodoServiceDto).collect(Collectors.toList()))
+                .todos(Optional.ofNullable(todos).orElseGet(Collections::emptyList).stream().map(CreateGoalTodoRequest::toTodoServiceDto).collect(Collectors.toList()))
+                .build();
     }
 }

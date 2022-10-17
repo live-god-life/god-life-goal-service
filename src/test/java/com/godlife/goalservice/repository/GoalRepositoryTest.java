@@ -1,7 +1,6 @@
 package com.godlife.goalservice.repository;
 
-import com.godlife.goalservice.domain.Goal;
-import com.godlife.goalservice.domain.Mindset;
+import com.godlife.goalservice.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

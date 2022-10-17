@@ -1,14 +1,17 @@
 package com.godlife.goalservice.domain;
 
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
 @DiscriminatorValue("task")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class TodoTask extends Todo {
     private LocalDateTime startDate;
     private LocalDateTime endDate;

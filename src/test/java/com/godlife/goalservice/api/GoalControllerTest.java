@@ -1,6 +1,5 @@
 package com.godlife.goalservice.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.godlife.goalservice.api.request.CreateGoalMindsetRequest;
 import com.godlife.goalservice.api.request.CreateGoalRequest;
@@ -37,11 +36,11 @@ class GoalControllerTest {
         //sample mindset
         CreateGoalMindsetRequest createGoalMindsetRequest = new CreateGoalMindsetRequest("사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다.");
 
-        //sample todo
+        //sample todo-task
         CreateGoalTodoRequest createGoalTodoRequest2 = new CreateGoalTodoRequest("작업1완료하기", "folder");
         CreateGoalTodoRequest createGoalTodoRequest3 = new CreateGoalTodoRequest("컨셉잡기", "task");
         CreateGoalTodoRequest createGoalTodoRequest4 = new CreateGoalTodoRequest("스케치", "task");
-
+        //sample todo-folder
         CreateGoalTodoRequest createGoalTodoRequest1 = new CreateGoalTodoRequest("포폴완성", "folder", List.of(createGoalTodoRequest2, createGoalTodoRequest3, createGoalTodoRequest4));
 
         //sample goal

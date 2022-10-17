@@ -25,4 +25,9 @@ public class GoalService {
 
         return goals.stream().map(goal -> GoalServiceDto.of(goal)).collect(Collectors.toList());
     }
+
+    @Transactional
+    public void createGoal(GoalServiceDto goalServiceDto) {
+        goalRepository.save(goalServiceDto.toEntity());
+    }
 }

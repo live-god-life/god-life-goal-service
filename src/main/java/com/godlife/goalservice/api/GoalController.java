@@ -30,8 +30,9 @@ public class GoalController {
     }
 
     @PostMapping("/goals")
-    public ResponseEntity<ApiResponse> createGoals(@RequestBody CreateGoalRequest request) {
+    public ResponseEntity<ApiResponse> createGoal(@RequestBody CreateGoalRequest request) {
         log.info("request: {}", request);
+        goalService.createGoal(request.toGoalServiceDto());
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.createPostSuccessResponse());
     }
 }
