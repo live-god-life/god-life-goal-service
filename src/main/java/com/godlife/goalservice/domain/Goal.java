@@ -22,4 +22,7 @@ public class Goal extends BaseEntity{
     @JoinColumn(name = "goal_id")
     private List<Mindset> mindsets;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "goal_id")
+    private List<Todo> todos;
 }
