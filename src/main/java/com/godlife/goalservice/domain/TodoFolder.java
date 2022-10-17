@@ -1,10 +1,17 @@
 package com.godlife.goalservice.domain;
 
+import lombok.Builder;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import java.util.List;
+
 
 @Entity
 @DiscriminatorValue("folder")
 public class TodoFolder extends Todo {
-    private String name;
+    @Builder
+    public TodoFolder(Long todoId, String title, Integer depth, Integer orderNumber, List<Todo> childTodos) {
+        super(todoId, title, depth, orderNumber, childTodos);
+    }
 }
