@@ -17,6 +17,5 @@ public class TodoFolder extends Todo {
     public TodoFolder(Long todoId, String title, Integer depth, Integer orderNumber, List<Todo> childTodos) {
         super(todoId, title, depth, orderNumber, childTodos);
     }
-
 }
 

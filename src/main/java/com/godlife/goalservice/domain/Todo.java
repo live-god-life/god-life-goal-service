@@ -19,17 +19,11 @@ public abstract class Todo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long todoId;
-//    private String type;
     private String title;
     private Integer depth;
     private Integer orderNumber;
 
-    /* TODO 양방향 단방향에 대해서는 고민좀 하고 결정, 우선 일대다 단방향으로 설정 */
-
-//    @ManyToOne(targetEntity = Todo.class, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "parent_todo_id")
-//    private Todo parent;
-
+    //TODO 양방향 단방향에 대해서는 고민좀 하고 결정, 우선 일대다 단방향으로 설정
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_todo_id")
     private List<Todo> childTodos;

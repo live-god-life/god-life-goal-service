@@ -19,7 +19,6 @@ public class TodoServiceDto {
     public static TodoServiceDto of(Todo todo) {
         return TodoServiceDto.builder()
                 .title(todo.getTitle())
-//                .type(todo.getType())
                 .depth(todo.getDepth())
                 .order(todo.getOrderNumber())
                 .build();

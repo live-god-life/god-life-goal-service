@@ -35,7 +35,6 @@ public class CreateGoalTodoRequest {
                 .type(type)
                 .depth(depth)
                 .order(order)
-//                .todos(todos.stream().map(CreateGoalTodoRequest::toTodoServiceDto).collect(Collectors.toList()))
                 .todos(Optional.ofNullable(todos).orElseGet(Collections::emptyList).stream().map(CreateGoalTodoRequest::toTodoServiceDto).collect(Collectors.toList()))
                 .build();
     }

@@ -26,7 +26,6 @@ public class CreateGoalRequest {
         return GoalServiceDto.builder()
                 .title(title)
                 .mindsets(mindsets.stream().map(CreateGoalMindsetRequest::toMindServiceDto).collect(Collectors.toList()))
-//                .todos(todos.stream().map(CreateGoalTodoRequest::toTodoServiceDto).collect(Collectors.toList()))
                 .todos(Optional.ofNullable(todos).orElseGet(Collections::emptyList).stream().map(CreateGoalTodoRequest::toTodoServiceDto).collect(Collectors.toList()))
                 .build();
     }

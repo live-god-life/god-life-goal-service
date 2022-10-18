@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper=false)
 @Data
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
