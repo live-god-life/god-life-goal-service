@@ -6,6 +6,7 @@ import com.godlife.goalservice.domain.TodoTask;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 public class TodoServiceDto {
@@ -28,6 +29,7 @@ public class TodoServiceDto {
         if (type.equals("folder")) {
             return TodoFolder.builder()
                     .title(title)
+                    .childTodos(todos.stream().map(TodoServiceDto::toEntity).collect(Collectors.toList()))
                     .build();
         } else {
             return TodoTask.builder()

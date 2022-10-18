@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static com.godlife.goalservice.util.SampleDataCreator.getCreateGoalTodoFolderRequest;
+import static com.godlife.goalservice.util.SampleDataCreator.getCreateGoalTodoTaskRequest;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,15 +35,30 @@ class GoalControllerTest {
     @Test
     void postGoals() throws Exception {
         //given
-        //sample mindset
+        //=========================sample mindset=========================
         CreateGoalMindsetRequest createGoalMindsetRequest = new CreateGoalMindsetRequest("사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다.");
 
-        //sample todo-task
-        CreateGoalTodoRequest createGoalTodoRequest2 = new CreateGoalTodoRequest("작업1완료하기", "folder");
-        CreateGoalTodoRequest createGoalTodoRequest3 = new CreateGoalTodoRequest("컨셉잡기", "task");
-        CreateGoalTodoRequest createGoalTodoRequest4 = new CreateGoalTodoRequest("스케치", "task");
-        //sample todo-folder
-        CreateGoalTodoRequest createGoalTodoRequest1 = new CreateGoalTodoRequest("포폴완성", "folder", List.of(createGoalTodoRequest2, createGoalTodoRequest3, createGoalTodoRequest4));
+        //=========================sample todo1 작업1완료하기=========================
+        CreateGoalTodoRequest createGoalTodoRequest1 = getCreateGoalTodoFolderRequest(
+                "포폴완성",
+                List.of(getCreateGoalTodoFolderRequest(
+                        "작업1 완료하기",
+                        List.of(
+                                getCreateGoalTodoTaskRequest("컨셉잡기"),
+                                getCreateGoalTodoTaskRequest("스케치")
+                        )
+                ))
+        );
+
+        //=========================sample todo2 개발프로젝트 해보기=========================
+        CreateGoalTodoRequest createGoalTodoRequest7 = getCreateGoalTodoFolderRequest(
+                "개발프로젝트 해보기",
+                List.of(
+                        getCreateGoalTodoTaskRequest("IT 동아리 서류 내기"),
+                        getCreateGoalTodoTaskRequest("파이썬 공부")
+                )
+        );
+
 
         //sample goal
         CreateGoalRequest createGoalRequest = CreateGoalRequest.builder()
@@ -49,7 +66,7 @@ class GoalControllerTest {
                 .categoryName("돈관리")
                 .categoryCode("001")
                 .mindsets(List.of(createGoalMindsetRequest))
-                .todos(List.of(createGoalTodoRequest1))
+                .todos(List.of(createGoalTodoRequest1, createGoalTodoRequest7))
                 .build();
 
         //when
@@ -77,13 +94,19 @@ class GoalControllerTest {
                         fieldWithPath("todos[].type").description("목표 제목"),
                         fieldWithPath("todos[].depth").description("목표 제목"),
                         fieldWithPath("todos[].order").description("목표 제목"),
-                        fieldWithPath("todos[].todos").description("목표 제목"),
+                        fieldWithPath("todos[].todos").optional().description("목표 제목"),
 
                         fieldWithPath("todos[].todos[].title").description("목표 제목"),
                         fieldWithPath("todos[].todos[].type").description("목표 제목"),
                         fieldWithPath("todos[].todos[].depth").description("목표 제목"),
                         fieldWithPath("todos[].todos[].order").description("목표 제목"),
-                        fieldWithPath("todos[].todos[].todos").description("목표 제목")
+                        fieldWithPath("todos[].todos[].todos").optional().description("목표 제목"),
+
+                        fieldWithPath("todos[].todos[].todos[].title").description("목표 제목"),
+                        fieldWithPath("todos[].todos[].todos[].type").description("목표 제목"),
+                        fieldWithPath("todos[].todos[].todos[].depth").description("목표 제목"),
+                        fieldWithPath("todos[].todos[].todos[].order").description("목표 제목"),
+                        fieldWithPath("todos[].todos[].todos[].todos").optional().description("목표 제목")
                 ),
                 responseFields(
                         fieldWithPath("status").description(""),
@@ -92,7 +115,7 @@ class GoalControllerTest {
                 )));
 
     }
-    
+
     @Test
     @DisplayName("random 방식으로 5개의 마인드셋을 가져온다")
     void getFiveGoalsWithMindsetsByRandom() throws Exception {

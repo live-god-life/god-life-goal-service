@@ -1,15 +1,11 @@
 package com.godlife.goalservice.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.SessionFactory;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
-
+@Data
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
