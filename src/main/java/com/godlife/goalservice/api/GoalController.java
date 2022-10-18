@@ -29,10 +29,16 @@ public class GoalController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoalsWithMindsetsByMethodAndCount(method, count)));
     }
 
+    /**
+     * 목표 추가
+     * @param request
+     * @return
+     */
     @PostMapping("/goals")
     public ResponseEntity<ApiResponse> createGoal(@RequestBody CreateGoalRequest request) {
         log.info("request: {}", request);
         goalService.createGoal(request.toGoalServiceDto());
+        //TODO 목표 추가 후 client 원하는 response 데이터 물어보기
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.createPostSuccessResponse());
     }
 }
