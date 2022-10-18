@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.ResponseFieldsSnippet;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -59,11 +60,10 @@ class GoalControllerTest {
                 )
         );
 
-
-        //sample goal
+        //=========================sample goal=========================
         CreateGoalRequest createGoalRequest = CreateGoalRequest.builder()
-                .title("1년안에 5000만원 모으기")
-                .categoryName("돈관리")
+                .title("이직하기")
+                .categoryName("커리어")
                 .categoryCode("001")
                 .mindsets(List.of(createGoalMindsetRequest))
                 .todos(List.of(createGoalTodoRequest1, createGoalTodoRequest7))
@@ -83,37 +83,34 @@ class GoalControllerTest {
 
         //rest-doc
         result.andDo(document("post-goals",
-                requestFields(
-                        fieldWithPath("title").description("목표 제목"),
-                        fieldWithPath("categoryName").description("목표 카테고리명"),
-                        fieldWithPath("categoryCode").description("목표 카테고리코드"),
+                        requestFields(
+                                fieldWithPath("title").description("목표 제목"),
+                                fieldWithPath("categoryName").description("목표 카테고리명"),
+                                fieldWithPath("categoryCode").description("목표 카테고리코드"),
 
-                        fieldWithPath("mindsets[].content").description("마인드셋 내용"),
+                                fieldWithPath("mindsets[].content").description("마인드셋 내용"),
 
-                        fieldWithPath("todos[].title").description("목표 제목"),
-                        fieldWithPath("todos[].type").description("목표 제목"),
-                        fieldWithPath("todos[].depth").description("목표 제목"),
-                        fieldWithPath("todos[].order").description("목표 제목"),
-                        fieldWithPath("todos[].todos").optional().description("목표 제목"),
+                                fieldWithPath("todos[].title").description("목표 제목"),
+                                fieldWithPath("todos[].type").description("목표 제목"),
+                                fieldWithPath("todos[].depth").description("목표 제목"),
+                                fieldWithPath("todos[].order").description("목표 제목"),
+                                fieldWithPath("todos[].todos").optional().description("목표 제목"),
 
-                        fieldWithPath("todos[].todos[].title").description("목표 제목"),
-                        fieldWithPath("todos[].todos[].type").description("목표 제목"),
-                        fieldWithPath("todos[].todos[].depth").description("목표 제목"),
-                        fieldWithPath("todos[].todos[].order").description("목표 제목"),
-                        fieldWithPath("todos[].todos[].todos").optional().description("목표 제목"),
+                                fieldWithPath("todos[].todos[].title").description("목표 제목"),
+                                fieldWithPath("todos[].todos[].type").description("목표 제목"),
+                                fieldWithPath("todos[].todos[].depth").description("목표 제목"),
+                                fieldWithPath("todos[].todos[].order").description("목표 제목"),
+                                fieldWithPath("todos[].todos[].todos").optional().description("목표 제목"),
 
-                        fieldWithPath("todos[].todos[].todos[].title").description("목표 제목"),
-                        fieldWithPath("todos[].todos[].todos[].type").description("목표 제목"),
-                        fieldWithPath("todos[].todos[].todos[].depth").description("목표 제목"),
-                        fieldWithPath("todos[].todos[].todos[].order").description("목표 제목"),
-                        fieldWithPath("todos[].todos[].todos[].todos").optional().description("목표 제목")
-                ),
-                responseFields(
-                        fieldWithPath("status").description(""),
-                        fieldWithPath("message").description(""),
-                        fieldWithPath("data").description("")
-                )));
-
+                                fieldWithPath("todos[].todos[].todos[].title").description("목표 제목"),
+                                fieldWithPath("todos[].todos[].todos[].type").description("목표 제목"),
+                                fieldWithPath("todos[].todos[].todos[].depth").description("목표 제목"),
+                                fieldWithPath("todos[].todos[].todos[].order").description("목표 제목"),
+                                fieldWithPath("todos[].todos[].todos[].todos").optional().description("목표 제목")
+                        ),
+                        getSuccessResponseFieldsSnippet()
+                )
+        );
     }
 
     @Test
@@ -121,15 +118,10 @@ class GoalControllerTest {
     void getFiveGoalsWithMindsetsByRandom() throws Exception {
         mockMvc.perform(get("/goals/mindsets")
                         .queryParam("method", "random")
-                        .queryParam("count","5")
+                        .queryParam("count", "5")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("get-goals-with-mindsets",
-                        responseFields(
-                                fieldWithPath("status").description("api 응답 상태"),
-                                fieldWithPath("message").description("api 응답 메시지"),
-                                fieldWithPath("data").description("api 응답 데이터")
-                        )))
+                .andDo(document("get-goals-with-mindsets", getSuccessResponseFieldsSnippet()))
                 .andDo(print());
     }
 
@@ -139,12 +131,15 @@ class GoalControllerTest {
         mockMvc.perform(get("/goals/mindsets")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("get-goals-with-mindsets",
-                        responseFields(
-                                fieldWithPath("status").description("api 응답 상태"),
-                                fieldWithPath("message").description("api 응답 메시지"),
-                                fieldWithPath("data").description("api 응답 데이터")
-                        )))
+                .andDo(document("get-goals-with-mindsets", getSuccessResponseFieldsSnippet()))
                 .andDo(print());
+    }
+
+    private static ResponseFieldsSnippet getSuccessResponseFieldsSnippet() {
+        return responseFields(
+                fieldWithPath("status").description("api 응답 상태"),
+                fieldWithPath("message").description("api 응답 메시지"),
+                fieldWithPath("data").description("api 응답 데이터")
+        );
     }
 }
