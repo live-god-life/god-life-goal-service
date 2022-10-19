@@ -20,4 +20,8 @@ public class ApiResponse {
     public static ApiResponse createGetSuccessResponse(List<GoalServiceDto> goalServiceDtos) {
         return new ApiResponse("success", "ok", goalServiceDtos);
     }
+
+    public static ApiResponse createPostSuccessResponse() {
+        return new ApiResponse("success", "created", null);
+    }
 }

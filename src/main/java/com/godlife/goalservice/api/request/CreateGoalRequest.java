@@ -1,0 +1,32 @@
+package com.godlife.goalservice.api.request;
+
+import com.godlife.goalservice.service.dto.GoalServiceDto;
+import lombok.Builder;
+import lombok.Data;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Data
+@Builder
+public class CreateGoalRequest {
+    private String title;
+
+    //TODO category 처리 어떻게할까
+    private String categoryName;
+    private String categoryCode;
+
+    private List<CreateGoalMindsetRequest> mindsets;
+    private List<CreateGoalTodoRequest> todos;
+
+    public GoalServiceDto toGoalServiceDto() {
+
+        return GoalServiceDto.builder()
+                .title(title)
+                .mindsets(mindsets.stream().map(CreateGoalMindsetRequest::toMindServiceDto).collect(Collectors.toList()))
+                .todos(Optional.ofNullable(todos).orElseGet(Collections::emptyList).stream().map(CreateGoalTodoRequest::toTodoServiceDto).collect(Collectors.toList()))
+                .build();
+    }
+}
