@@ -1,14 +1,13 @@
 package com.godlife.goalservice.api;
 
+import com.godlife.goalservice.api.request.CreateGoalRequest;
 import com.godlife.goalservice.api.response.ApiResponse;
 import com.godlife.goalservice.service.GoalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -18,8 +17,9 @@ public class GoalController {
 
     /**
      * 목표와 마인드셋 조회
+     *
      * @param method mindset을 가져오는 방법 ( normal, random )
-     * @param count mindset의 갯수
+     * @param count  mindset의 갯수
      * @return
      */
     @GetMapping("/goals/mindsets")
@@ -27,5 +27,18 @@ public class GoalController {
                                                             @RequestParam(value = "count", required = false) Integer count) {
         log.info("method: {}, count: {}", method, count);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoalsWithMindsetsByMethodAndCount(method, count)));
+    }
+
+    /**
+     * 목표 추가
+     * @param request
+     * @return
+     */
+    @PostMapping("/goals")
+    public ResponseEntity<ApiResponse> createGoal(@RequestBody CreateGoalRequest request) {
+        log.info("request: {}", request);
+        goalService.createGoal(request.toGoalServiceDto());
+        //TODO 목표 추가 후 client 원하는 response 데이터 물어보기
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.createPostSuccessResponse());
     }
 }

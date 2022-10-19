@@ -12,13 +12,25 @@ public class GoalServiceDto {
     private String title;
     private Long userId;
     private List<MindsetServiceDto> mindsets;
+    private List<TodoServiceDto> todos;
 
     public static GoalServiceDto of(Goal goal) {
         return GoalServiceDto.builder()
                 .goalId(goal.getGoalId())
                 .title(goal.getTitle())
                 .userId(goal.getUserId())
-                .mindsets(goal.getMindsets().stream().map(mindset -> MindsetServiceDto.of(mindset)).collect(Collectors.toList()))
+                .mindsets(goal.getMindsets().stream().map(MindsetServiceDto::of).collect(Collectors.toList()))
+                .todos(goal.getTodos().stream().map(TodoServiceDto::of).collect(Collectors.toList()))
+                .build();
+    }
+
+    public Goal toEntity() {
+        return Goal.builder()
+                .goalId(goalId)
+                .title(title)
+                .userId(userId)
+                .mindsets(mindsets.stream().map(MindsetServiceDto::toEntity).collect(Collectors.toList()))
+                .todos(todos.stream().map(TodoServiceDto::toEntity).collect(Collectors.toList()))
                 .build();
     }
 }
