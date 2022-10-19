@@ -17,20 +17,22 @@ public class GoalController {
 
     /**
      * 목표와 마인드셋 조회
-     *
+     * @param authorization JWT 서비스 토큰
      * @param method mindset을 가져오는 방법 ( normal, random )
      * @param count  mindset의 갯수
      * @return
      */
     @GetMapping("/goals/mindsets")
-    public ResponseEntity<ApiResponse> getGoalsWithMindsets(@RequestParam(value = "method", defaultValue = "normal") String method,
+    public ResponseEntity<ApiResponse> getGoalsWithMindsets(@RequestHeader("Authorization") String authorization,
+                                                            @RequestParam(value = "method", defaultValue = "normal") String method,
                                                             @RequestParam(value = "count", required = false) Integer count) {
         log.info("method: {}, count: {}", method, count);
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoalsWithMindsetsByMethodAndCount(method, count)));
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoalsWithMindsetsByMethodAndCount(method, count, authorization)));
     }
 
     /**
      * 목표 추가
+     *
      * @param request
      * @return
      */
@@ -40,5 +42,16 @@ public class GoalController {
         goalService.createGoal(request.toGoalServiceDto());
         //TODO 목표 추가 후 client 원하는 response 데이터 물어보기
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.createPostSuccessResponse());
+    }
+
+    /**
+     * 목표 조회
+     * @param authorization JWT 서비스 토큰
+     * @return
+     */
+    @GetMapping("/goals")
+    public ResponseEntity<ApiResponse> getGoals(@RequestHeader(value = "Authorization") String authorization) {
+        log.info("Header/Authorization: {}", authorization);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoals(authorization)));
     }
 }
