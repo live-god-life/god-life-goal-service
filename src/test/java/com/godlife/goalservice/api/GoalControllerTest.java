@@ -21,6 +21,8 @@ import static com.godlife.goalservice.utils.restdoc.DocumentProvider.getSuccessR
 import static com.godlife.goalservice.utils.SampleTestDataCreator.getCreateGoalTodoFolderRequest;
 import static com.godlife.goalservice.utils.SampleTestDataCreator.getCreateGoalTodoTaskRequest;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -63,7 +65,16 @@ class GoalControllerTest {
         //then
         result
                 .andExpect(status().isOk())
-                .andDo(document("get-goals", getSuccessResponseFieldsSnippet()))
+                .andDo(document("get-goals",
+                        responseFields(
+                                fieldWithPath("status").description("api 응답 상태"),
+                                fieldWithPath("message").description("api 응답 메시지"),
+                                fieldWithPath("data").description("api 응답 데이터"),
+
+                                fieldWithPath("data[].goalId").description("목표 아이디"),
+                                fieldWithPath("data[].title").description("목표 제목"),
+                                fieldWithPath("data[].userId").description("사용자 아이디")
+                        )))
                 .andDo(print());
     }
 
@@ -79,7 +90,16 @@ class GoalControllerTest {
         //then
         result
                 .andExpect(status().isOk())
-                .andDo(document("get-goals-with-mindsets", getSuccessResponseFieldsSnippet()))
+                .andDo(document("get-goals-with-mindsets",
+                responseFields(
+                        fieldWithPath("status").description("api 응답 상태"),
+                        fieldWithPath("message").description("api 응답 메시지"),
+                        fieldWithPath("data").description("api 응답 데이터"),
+
+                        fieldWithPath("data[].goalId").description("목표 아이디"),
+                        fieldWithPath("data[].title").description("목표 제목"),
+                        fieldWithPath("data[].userId").description("사용자 아이디")
+                )))
                 .andDo(print());
     }
 
@@ -97,10 +117,8 @@ class GoalControllerTest {
     }
 
     private ResultActions performSampleGoalsWithMindsetsAndTodos() throws Exception {
-        //=========================sample mindset=========================
         CreateGoalMindsetRequest createGoalMindsetRequest = new CreateGoalMindsetRequest("사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다.");
 
-        //=========================sample todo1 작업1완료하기=========================
         CreateGoalTodoRequest createGoalTodoRequest1 = getCreateGoalTodoFolderRequest(
                 "포폴완성",
                 List.of(getCreateGoalTodoFolderRequest(
@@ -112,7 +130,6 @@ class GoalControllerTest {
                 ))
         );
 
-        //=========================sample todo2 개발프로젝트 해보기=========================
         CreateGoalTodoRequest createGoalTodoRequest7 = getCreateGoalTodoFolderRequest(
                 "개발프로젝트 해보기",
                 List.of(
@@ -121,7 +138,6 @@ class GoalControllerTest {
                 )
         );
 
-        //=========================sample goal=========================
         CreateGoalRequest createGoalRequest = CreateGoalRequest.builder()
                 .title("이직하기")
                 .categoryName("커리어")
@@ -137,7 +153,7 @@ class GoalControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
 
-        ).andDo(print());
+        );
     }
 
     private ResultActions performGetWithAuthorizationByUrlTemplate(String urlTemplate) throws Exception {
