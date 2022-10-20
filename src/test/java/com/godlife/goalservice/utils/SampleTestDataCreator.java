@@ -1,4 +1,4 @@
-package com.godlife.goalservice.util;
+package com.godlife.goalservice.utils;
 
 import com.godlife.goalservice.api.request.CreateGoalTodoRequest;
 

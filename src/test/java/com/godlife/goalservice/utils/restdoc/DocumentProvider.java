@@ -1,4 +1,4 @@
-package com.godlife.goalservice.util.restdoc;
+package com.godlife.goalservice.utils.restdoc;
 
 import org.springframework.restdocs.payload.RequestFieldsSnippet;
 import org.springframework.restdocs.payload.ResponseFieldsSnippet;

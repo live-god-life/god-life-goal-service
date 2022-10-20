@@ -16,10 +16,10 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static com.godlife.goalservice.util.restdoc.DocumentProvider.getPostGoalsRequestFieldsSnippet;
-import static com.godlife.goalservice.util.restdoc.DocumentProvider.getSuccessResponseFieldsSnippet;
-import static com.godlife.goalservice.util.SampleTestDataCreator.getCreateGoalTodoFolderRequest;
-import static com.godlife.goalservice.util.SampleTestDataCreator.getCreateGoalTodoTaskRequest;
+import static com.godlife.goalservice.utils.restdoc.DocumentProvider.getPostGoalsRequestFieldsSnippet;
+import static com.godlife.goalservice.utils.restdoc.DocumentProvider.getSuccessResponseFieldsSnippet;
+import static com.godlife.goalservice.utils.SampleTestDataCreator.getCreateGoalTodoFolderRequest;
+import static com.godlife.goalservice.utils.SampleTestDataCreator.getCreateGoalTodoTaskRequest;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
