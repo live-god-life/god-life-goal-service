@@ -29,8 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /*
-todo
-인증관련 테스트는 어떻게 진행하는게 좋을까
+    todo
+    - 인증관련 테스트는 어떻게 진행하는게 좋을까
  */
 
 @AutoConfigureMockMvc
@@ -40,11 +40,13 @@ class GoalControllerTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
+    private static final String JWT_TOKEN = "Bearer token";
+
     @Test
     @DisplayName("목표를 저장한다")
     void postGoals() throws Exception {
         //given & when
-        ResultActions result = performSampleGoalsWithMindsetsAndTodos();
+        ResultActions result = performPostSampleGoalsWithMindsetsAndTodos();
 
         //then
         result
@@ -57,7 +59,7 @@ class GoalControllerTest {
     @DisplayName("모든 목표를 가져온다")
     void getAllGoals() throws Exception{
         //given
-        performSampleGoalsWithMindsetsAndTodos();
+        performPostSampleGoalsWithMindsetsAndTodos();
 
         //when
         ResultActions result = performGetWithAuthorizationByUrlTemplate("/goals");
@@ -82,7 +84,7 @@ class GoalControllerTest {
     @DisplayName("normal 방식으로 모든 마인드셋을 가져온다")
     void getAllGoalsWithMindsets() throws Exception {
         //given
-        performSampleGoalsWithMindsetsAndTodos();
+        performPostSampleGoalsWithMindsetsAndTodos();
 
         //when
         ResultActions result = performGetWithAuthorizationByUrlTemplate("/goals/mindsets");
@@ -107,7 +109,7 @@ class GoalControllerTest {
     @DisplayName("random 방식으로 5개의 마인드셋을 가져온다")
     void getFiveGoalsWithMindsetsByRandom() throws Exception {
         mockMvc.perform(get("/goals/mindsets")
-                        .header("Authorization", "Bearer adjilafjisdlf")
+                        .header("Authorization", JWT_TOKEN)
                         .queryParam("method", "random")
                         .queryParam("count", "5")
                         .accept(MediaType.APPLICATION_JSON))
@@ -116,7 +118,7 @@ class GoalControllerTest {
                 .andDo(print());
     }
 
-    private ResultActions performSampleGoalsWithMindsetsAndTodos() throws Exception {
+    private ResultActions performPostSampleGoalsWithMindsetsAndTodos() throws Exception {
         CreateGoalMindsetRequest createGoalMindsetRequest = new CreateGoalMindsetRequest("사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다.");
 
         CreateGoalTodoRequest createGoalTodoRequest1 = getCreateGoalTodoFolderRequest(
@@ -148,7 +150,7 @@ class GoalControllerTest {
 
         return mockMvc.perform(
                 post("/goals")
-                        .header("Authorization", "Bearer adjilafjisdlf")
+                        .header("Authorization", JWT_TOKEN)
                         .content(objectMapper.writeValueAsString(createGoalRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -158,7 +160,7 @@ class GoalControllerTest {
 
     private ResultActions performGetWithAuthorizationByUrlTemplate(String urlTemplate) throws Exception {
         return mockMvc.perform(get(urlTemplate)
-                .header("Authorization", "Bearer adjilafjisdlf")
+                .header("Authorization", JWT_TOKEN)
                 .accept(MediaType.APPLICATION_JSON));
     }
 }
