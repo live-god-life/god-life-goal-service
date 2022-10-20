@@ -126,8 +126,30 @@ class GoalControllerTest {
                 List.of(getCreateGoalTodoFolderRequest(
                         "작업1 완료하기",
                         List.of(
-                                getCreateGoalTodoTaskRequest("컨셉잡기"),
-                                getCreateGoalTodoTaskRequest("스케치")
+                                getCreateGoalTodoTaskRequest(
+                                        "컨셉잡기",
+                                        "20221001",
+                                        "20221031",
+                                        "everyday",
+                                        List.of("월","화","수","목","금","토","일"),
+                                        "0900"
+                                ),
+                                getCreateGoalTodoTaskRequest(
+                                        "스케치",
+                                        "20221101",
+                                        "20221131",
+                                        "everyday",
+                                        List.of("월","수","금","토"),
+                                        "0900"
+                                ),
+                                getCreateGoalTodoTaskRequest(
+                                        "UI 작업",
+                                        "20221001",
+                                        "20221231",
+                                        null,
+                                        null,
+                                        "0900"
+                                )
                         )
                 ))
         );
@@ -135,8 +157,22 @@ class GoalControllerTest {
         CreateGoalTodoRequest createGoalTodoRequest7 = getCreateGoalTodoFolderRequest(
                 "개발프로젝트 해보기",
                 List.of(
-                        getCreateGoalTodoTaskRequest("IT 동아리 서류 내기"),
-                        getCreateGoalTodoTaskRequest("파이썬 공부")
+                        getCreateGoalTodoTaskRequest(
+                                "IT 동아리 서류 내기",
+                                "20221001",
+                                "20221031",
+                                null,
+                                null,
+                                "0900"
+                        ),
+                        getCreateGoalTodoTaskRequest(
+                                "파이썬 공부",
+                                "20221001",
+                                "20221031",
+                                "everyday",
+                                List.of("월","수","금"),
+                                "0900"
+                        )
                 )
         );
 
