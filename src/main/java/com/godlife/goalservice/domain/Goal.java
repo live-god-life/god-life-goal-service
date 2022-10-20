@@ -1,9 +1,20 @@
 package com.godlife.goalservice.domain;
 
 import lombok.*;
+import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 import java.util.List;
+
+/*
+    todo
+    - 완료유무
+    - 시작일 구하기(todos 시작일중 제일 빠른 날짜)
+    - 종료일 구하기(todos 종료일중 제일 느린 날짜)
+    - D-Day 구하기(오늘부터 종료일까지)
+    - 진행중 투두 카운팅
+    - 완료된 투두 카운팅
+ */
 
 @EqualsAndHashCode(callSuper=false)
 @Data
@@ -13,10 +24,13 @@ import java.util.List;
 public class Goal extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long goalId;
 
+    @Comment("제목")
     private String title;
 
+    @Comment("사용자아이디")
     private Long userId;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -34,5 +48,9 @@ public class Goal extends BaseEntity{
         this.userId = userId;
         this.mindsets = mindsets;
         this.todos = todos;
+    }
+
+    public int getMindsetTotalCount() {
+        return mindsets.size();
     }
 }
