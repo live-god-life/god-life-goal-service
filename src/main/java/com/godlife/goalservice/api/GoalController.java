@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 /*
 todo
-목표 추가 후 client 원하는 response 데이터 물어보기
+- 목표 추가 후 client 원하는 response 데이터 물어보기
+- 생각해보니 모든 API에 사용자 정보가 필요하다. 이런식으로 밖에 안될까?
  */
 
 @Slf4j
