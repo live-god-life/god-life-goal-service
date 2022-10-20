@@ -4,7 +4,7 @@ import com.godlife.goalservice.api.request.CreateGoalTodoRequest;
 
 import java.util.List;
 
-public class SampleDataCreator {
+public class SampleTestDataCreator {
     public static CreateGoalTodoRequest getCreateGoalTodoTaskRequest(String title) {
         return new CreateGoalTodoRequest(title, "task");
     }
