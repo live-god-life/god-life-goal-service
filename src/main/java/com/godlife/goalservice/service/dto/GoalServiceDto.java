@@ -49,6 +49,7 @@ public class GoalServiceDto {
                 .goalId(goal.getGoalId())
                 .title(goal.getTitle())
                 .userId(goal.getUserId())
+                .category(goal.getCategory())
                 .mindsetCount(goal.getMindsetTotalCount())
                 .onProgressCount(goal.getProgressCount())
                 .completedCount(goal.getCompletedCount())

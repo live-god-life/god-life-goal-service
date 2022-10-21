@@ -29,16 +29,16 @@ import java.util.stream.Collectors;
 public class GoalService {
     private final GoalRepository goalRepository;
 
-    public List<GoalServiceDto> getGoalsWithMindsetsByMethodAndCount(String method, Integer count, String authorization) {
-        List<Goal> goals = goalRepository.findByUserId(getUserInfo(authorization).getUserId());
-        return goals.stream().map(GoalServiceDto::of).collect(Collectors.toList());
-    }
-
     @Transactional
     public void createGoal(String authorization, GoalServiceDto goalServiceDto) {
         Long userId = getUserInfo(authorization).getUserId();
         Goal goal = goalServiceDto.toEntity(userId);
         goalRepository.save(goal);
+    }
+
+    public List<GoalServiceDto> getGoalsWithMindsetsByMethodAndCount(String method, Integer count, String authorization) {
+        List<Goal> goals = goalRepository.findByUserId(getUserInfo(authorization).getUserId());
+        return goals.stream().map(GoalServiceDto::of).collect(Collectors.toList());
     }
 
     public List<GoalServiceDto> getGoals(String authorization) {
