@@ -33,6 +33,10 @@ public class CreateGoalTodoRequest {
                 .type(type)
                 .depth(depth)
                 .order(order)
+                .startDate(startDate)
+                .endDate(endDate)
+                .repetitionType(repetitionType)
+                .repetitionParams(repetitionParams)
                 .todos(Optional.ofNullable(todos).orElseGet(Collections::emptyList).stream().map(CreateGoalTodoRequest::toTodoServiceDto).collect(Collectors.toList()))
                 .build();
     }
