@@ -16,13 +16,13 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static com.godlife.goalservice.utils.restdoc.DocumentProvider.getPostGoalsRequestFieldsSnippet;
-import static com.godlife.goalservice.utils.restdoc.DocumentProvider.getSuccessResponseFieldsSnippet;
 import static com.godlife.goalservice.utils.SampleTestDataCreator.getCreateGoalTodoFolderRequest;
 import static com.godlife.goalservice.utils.SampleTestDataCreator.getCreateGoalTodoTaskRequest;
+import static com.godlife.goalservice.utils.restdoc.DocumentProvider.getPostGoalsRequestFieldsSnippet;
+import static com.godlife.goalservice.utils.restdoc.DocumentProvider.getSuccessResponseFieldsSnippet;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /*
     todo
     - 인증관련 테스트는 어떻게 진행하는게 좋을까
+    - 리스폰스, 리퀘스트 확정전까진 relaxed
  */
 
 @AutoConfigureMockMvc
@@ -68,7 +69,7 @@ class GoalControllerTest {
         result
                 .andExpect(status().isOk())
                 .andDo(document("get-goals",
-                        responseFields(
+                        relaxedResponseFields(
                                 fieldWithPath("status").description("api 응답 상태"),
                                 fieldWithPath("message").description("api 응답 메시지"),
                                 fieldWithPath("data").description("api 응답 데이터"),
@@ -93,15 +94,15 @@ class GoalControllerTest {
         result
                 .andExpect(status().isOk())
                 .andDo(document("get-goals-with-mindsets",
-                responseFields(
-                        fieldWithPath("status").description("api 응답 상태"),
-                        fieldWithPath("message").description("api 응답 메시지"),
-                        fieldWithPath("data").description("api 응답 데이터"),
+                        relaxedResponseFields(
+                                fieldWithPath("status").description("api 응답 상태"),
+                                fieldWithPath("message").description("api 응답 메시지"),
+                                fieldWithPath("data").description("api 응답 데이터"),
 
-                        fieldWithPath("data[].goalId").description("목표 아이디"),
-                        fieldWithPath("data[].title").description("목표 제목"),
-                        fieldWithPath("data[].userId").description("사용자 아이디")
-                )))
+                                fieldWithPath("data[].goalId").description("목표 아이디"),
+                                fieldWithPath("data[].title").description("목표 제목"),
+                                fieldWithPath("data[].userId").description("사용자 아이디")
+                        )))
                 .andDo(print());
     }
 
@@ -179,7 +180,7 @@ class GoalControllerTest {
         CreateGoalRequest createGoalRequest = CreateGoalRequest.builder()
                 .title("이직하기")
                 .categoryName("커리어")
-                .categoryCode("001")
+                .categoryCode("CAREER")
                 .mindsets(List.of(createGoalMindsetRequest))
                 .todos(List.of(createGoalTodoRequest1, createGoalTodoRequest7))
                 .build();
