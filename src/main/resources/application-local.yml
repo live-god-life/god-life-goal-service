@@ -19,8 +19,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-#        dialect: org.hibernate.dialect.H2Dialect
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         show_sql: true
         format_sql: true
     generate-ddl: true
