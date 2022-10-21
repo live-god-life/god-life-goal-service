@@ -139,7 +139,7 @@ class GoalControllerTest {
                                         "스케치",
                                         "20221101",
                                         "20221131",
-                                        "everyday",
+                                        "everyweek",
                                         List.of("월","수","금","토"),
                                         "0900"
                                 ),
@@ -170,7 +170,7 @@ class GoalControllerTest {
                                 "파이썬 공부",
                                 "20221001",
                                 "20221031",
-                                "everyday",
+                                "everyweek",
                                 List.of("월","수","금"),
                                 "0900"
                         )
