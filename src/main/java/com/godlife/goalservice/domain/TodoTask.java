@@ -9,7 +9,11 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.time.LocalDateTime;
 import java.util.List;
-
+/*
+    todo
+    기간 어떤식으로 풀지?
+    알림은 0900 String 형태가 좋을까?
+ */
 @DiscriminatorValue("task")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -19,9 +23,13 @@ public class TodoTask extends Todo {
     @Comment("Task 종료일")
     private LocalDateTime endDate;
 
-    //todo 일단 스트링 -> enum
-    @Comment("완료 유무")
-    private String completionStatus;
+    @Comment("기간 type")
+    private String repetitionType;
+    @Comment("기간 파라미터")
+    private String repetitionParams;
+
+    @Comment("알림")
+    private String notification;
 
     @Builder
     public TodoTask(Long todoId, String title, Integer depth, Integer orderNumber, List<Todo> childTodos, LocalDateTime startDate, LocalDateTime endDate) {
