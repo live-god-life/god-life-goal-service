@@ -10,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /*
-todo
-- 목표 추가 후 client 원하는 response 데이터 물어보기
-- 생각해보니 모든 API에 사용자 정보가 필요하다. 이런식으로 밖에 안될까?
+    todo
+    - 목표 추가 후 client 원하는 response 데이터 물어보기
+    - 생각해보니 모든 API에 사용자 정보가 필요하다. 이런식으로 밖에 안될까?
+
+    - 굳이 getGoalsWithMindsets / @RequestParam(value = "method", defaultValue = "normal") String method 랜덤기능이 있어야할 이유가없는듯? 그냥 원하는 갯수만큼 전달하면될거같은데
  */
 
 @Slf4j
