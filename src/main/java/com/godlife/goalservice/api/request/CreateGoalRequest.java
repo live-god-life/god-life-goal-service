@@ -1,5 +1,6 @@
 package com.godlife.goalservice.api.request;
 
+import com.godlife.goalservice.domain.enums.Category;
 import com.godlife.goalservice.service.dto.GoalServiceDto;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,6 @@ import java.util.stream.Collectors;
 public class CreateGoalRequest {
     private String title;
 
-    //TODO category 처리 어떻게할까
     private String categoryName;
     private String categoryCode;
 
@@ -25,6 +25,7 @@ public class CreateGoalRequest {
 
         return GoalServiceDto.builder()
                 .title(title)
+                .category(Category.valueOf(categoryCode))
                 .mindsets(mindsets.stream().map(CreateGoalMindsetRequest::toMindServiceDto).collect(Collectors.toList()))
                 .todos(Optional.ofNullable(todos).orElseGet(Collections::emptyList).stream().map(CreateGoalTodoRequest::toTodoServiceDto).collect(Collectors.toList()))
                 .build();
