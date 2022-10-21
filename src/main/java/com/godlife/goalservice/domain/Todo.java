@@ -10,6 +10,11 @@ import java.util.List;
     todo
     엔티티 - 테이블 상속관계 전략을 SINGLE_TABLE로 설정, 추후 변경가능하지만 코드의 복잡성을 생각하면 SINGLE_TABLE이 좋아보임, 보류
     childTodos: 양방향 단방향에 대해서는 고민좀 하고 결정, 우선 일대다 단방향으로 설정
+
+    완료체크할때 날짜별, todo의 상태는 어떻게 저장할까?
+    투두 완료유무 테이블 생성
+    1. 목표의 투두를 추가할때 기간, 반복에 해당되는 모든 데이터들을 만들어서 디비에 넣어놓는다.
+    2. 완료체크를 할때 이력테이블에 넣는다.
  */
 
 @EqualsAndHashCode(callSuper=false)
