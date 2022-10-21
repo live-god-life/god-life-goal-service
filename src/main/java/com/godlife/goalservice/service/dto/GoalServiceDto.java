@@ -7,7 +7,7 @@ import com.godlife.goalservice.utils.mapper.MindsetMapper;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 /*
@@ -32,8 +32,12 @@ public class GoalServiceDto {
     private int onProgressCount;
     private int completedCount;
 
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
+
+    private String repetitionType;
+    private String repetitionPrams;
+
 
     @JsonIgnore
     private List<MindsetServiceDto> mindsets;
