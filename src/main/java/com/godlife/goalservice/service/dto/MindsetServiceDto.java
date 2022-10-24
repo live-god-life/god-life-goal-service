@@ -2,7 +2,9 @@ package com.godlife.goalservice.service.dto;
 
 import com.godlife.goalservice.domain.Mindset;
 import lombok.Builder;
+import lombok.Data;
 
+@Data
 @Builder
 public class MindsetServiceDto {
     private Long mindsetId;

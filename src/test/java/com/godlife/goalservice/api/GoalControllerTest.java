@@ -11,20 +11,28 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.ResponseFieldsSnippet;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static com.godlife.goalservice.util.SampleDataCreator.getCreateGoalTodoFolderRequest;
-import static com.godlife.goalservice.util.SampleDataCreator.getCreateGoalTodoTaskRequest;
+import static com.godlife.goalservice.utils.SampleTestDataCreator.getCreateGoalTodoFolderRequest;
+import static com.godlife.goalservice.utils.SampleTestDataCreator.getCreateGoalTodoTaskRequest;
+import static com.godlife.goalservice.utils.restdoc.DocumentProvider.getPostGoalsRequestFieldsSnippet;
+import static com.godlife.goalservice.utils.restdoc.DocumentProvider.getSuccessResponseFieldsSnippet;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+/*
+    todo
+    - 인증관련 테스트는 어떻게 진행하는게 좋을까
+    - 리스폰스, 리퀘스트 확정전까진 relaxed
+ */
 
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
@@ -33,90 +41,76 @@ class GoalControllerTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
+    private static final String JWT_TOKEN = "Bearer token";
+
     @Test
+    @DisplayName("목표를 저장한다")
     void postGoals() throws Exception {
-        //given
-        //=========================sample mindset=========================
-        CreateGoalMindsetRequest createGoalMindsetRequest = new CreateGoalMindsetRequest("사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다.");
-
-        //=========================sample todo1 작업1완료하기=========================
-        CreateGoalTodoRequest createGoalTodoRequest1 = getCreateGoalTodoFolderRequest(
-                "포폴완성",
-                List.of(getCreateGoalTodoFolderRequest(
-                        "작업1 완료하기",
-                        List.of(
-                                getCreateGoalTodoTaskRequest("컨셉잡기"),
-                                getCreateGoalTodoTaskRequest("스케치")
-                        )
-                ))
-        );
-
-        //=========================sample todo2 개발프로젝트 해보기=========================
-        CreateGoalTodoRequest createGoalTodoRequest7 = getCreateGoalTodoFolderRequest(
-                "개발프로젝트 해보기",
-                List.of(
-                        getCreateGoalTodoTaskRequest("IT 동아리 서류 내기"),
-                        getCreateGoalTodoTaskRequest("파이썬 공부")
-                )
-        );
-
-        //=========================sample goal=========================
-        CreateGoalRequest createGoalRequest = CreateGoalRequest.builder()
-                .title("이직하기")
-                .categoryName("커리어")
-                .categoryCode("001")
-                .mindsets(List.of(createGoalMindsetRequest))
-                .todos(List.of(createGoalTodoRequest1, createGoalTodoRequest7))
-                .build();
-
-        //when
-        ResultActions result = mockMvc.perform(
-                post("/goals")
-                        .content(objectMapper.writeValueAsString(createGoalRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-
-        );
+        //given & when
+        ResultActions result = performPostSampleGoalsWithMindsetsAndTodos();
 
         //then
-        result.andExpect(status().isCreated());
+        result
+                .andExpect(status().isCreated())
+                .andDo(document("post-goals", getPostGoalsRequestFieldsSnippet(), getSuccessResponseFieldsSnippet()))
+                .andDo(print());
+    }
 
-        //rest-doc
-        result.andDo(document("post-goals",
-                        requestFields(
-                                fieldWithPath("title").description("목표 제목"),
-                                fieldWithPath("categoryName").description("목표 카테고리명"),
-                                fieldWithPath("categoryCode").description("목표 카테고리코드"),
+    @Test
+    @DisplayName("모든 목표를 가져온다")
+    void getAllGoals() throws Exception{
+        //given
+        performPostSampleGoalsWithMindsetsAndTodos();
 
-                                fieldWithPath("mindsets[].content").description("마인드셋 내용"),
+        //when
+        ResultActions result = performGetWithAuthorizationByUrlTemplate("/goals");
 
-                                fieldWithPath("todos[].title").description("목표 제목"),
-                                fieldWithPath("todos[].type").description("목표 제목"),
-                                fieldWithPath("todos[].depth").description("목표 제목"),
-                                fieldWithPath("todos[].order").description("목표 제목"),
-                                fieldWithPath("todos[].todos").optional().description("목표 제목"),
+        //then
+        result
+                .andExpect(status().isOk())
+                .andDo(document("get-goals",
+                        relaxedResponseFields(
+                                fieldWithPath("status").description("api 응답 상태"),
+                                fieldWithPath("message").description("api 응답 메시지"),
+                                fieldWithPath("data").description("api 응답 데이터"),
 
-                                fieldWithPath("todos[].todos[].title").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].type").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].depth").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].order").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].todos").optional().description("목표 제목"),
+                                fieldWithPath("data[].goalId").description("목표 아이디"),
+                                fieldWithPath("data[].title").description("목표 제목"),
+                                fieldWithPath("data[].userId").description("사용자 아이디")
+                        )))
+                .andDo(print());
+    }
 
-                                fieldWithPath("todos[].todos[].todos[].title").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].todos[].type").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].todos[].depth").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].todos[].order").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].todos[].todos").optional().description("목표 제목")
-                        ),
-                        getSuccessResponseFieldsSnippet()
-                )
-        );
+    @Test
+    @DisplayName("normal 방식으로 모든 마인드셋을 가져온다")
+    void getAllGoalsWithMindsets() throws Exception {
+        //given
+        performPostSampleGoalsWithMindsetsAndTodos();
+
+        //when
+        ResultActions result = performGetWithAuthorizationByUrlTemplate("/goals/mindsets");
+
+        //then
+        result
+                .andExpect(status().isOk())
+                .andDo(document("get-goals-with-mindsets",
+                        relaxedResponseFields(
+                                fieldWithPath("status").description("api 응답 상태"),
+                                fieldWithPath("message").description("api 응답 메시지"),
+                                fieldWithPath("data").description("api 응답 데이터"),
+
+                                fieldWithPath("data[].goalId").description("목표 아이디"),
+                                fieldWithPath("data[].title").description("목표 제목"),
+                                fieldWithPath("data[].userId").description("사용자 아이디")
+                        )))
+                .andDo(print());
     }
 
     @Test
     @DisplayName("random 방식으로 5개의 마인드셋을 가져온다")
     void getFiveGoalsWithMindsetsByRandom() throws Exception {
         mockMvc.perform(get("/goals/mindsets")
+                        .header("Authorization", JWT_TOKEN)
                         .queryParam("method", "random")
                         .queryParam("count", "5")
                         .accept(MediaType.APPLICATION_JSON))
@@ -125,21 +119,85 @@ class GoalControllerTest {
                 .andDo(print());
     }
 
-    @Test
-    @DisplayName("normal 방식으로 모든 마인드셋을 가져온다")
-    void getAllGoalsWithMindsets() throws Exception {
-        mockMvc.perform(get("/goals/mindsets")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("get-goals-with-mindsets", getSuccessResponseFieldsSnippet()))
-                .andDo(print());
+    private ResultActions performPostSampleGoalsWithMindsetsAndTodos() throws Exception {
+        CreateGoalMindsetRequest createGoalMindsetRequest = new CreateGoalMindsetRequest("사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다.");
+
+        CreateGoalTodoRequest createGoalTodoRequest1 = getCreateGoalTodoFolderRequest(
+                "포폴완성",
+                List.of(getCreateGoalTodoFolderRequest(
+                        "작업1 완료하기",
+                        List.of(
+                                getCreateGoalTodoTaskRequest(
+                                        "컨셉잡기",
+                                        "20221001",
+                                        "20221031",
+                                        "everyday",
+                                        List.of("월","화","수","목","금","토","일"),
+                                        "0900"
+                                ),
+                                getCreateGoalTodoTaskRequest(
+                                        "스케치",
+                                        "20221101",
+                                        "20221131",
+                                        "everyweek",
+                                        List.of("월","수","금","토"),
+                                        "0900"
+                                ),
+                                getCreateGoalTodoTaskRequest(
+                                        "UI 작업",
+                                        "20221001",
+                                        "20221231",
+                                        null,
+                                        null,
+                                        "0900"
+                                )
+                        )
+                ))
+        );
+
+        CreateGoalTodoRequest createGoalTodoRequest7 = getCreateGoalTodoFolderRequest(
+                "개발프로젝트 해보기",
+                List.of(
+                        getCreateGoalTodoTaskRequest(
+                                "IT 동아리 서류 내기",
+                                "20221001",
+                                "20221031",
+                                null,
+                                null,
+                                "0900"
+                        ),
+                        getCreateGoalTodoTaskRequest(
+                                "파이썬 공부",
+                                "20221001",
+                                "20221031",
+                                "everyweek",
+                                List.of("월","수","금"),
+                                "0900"
+                        )
+                )
+        );
+
+        CreateGoalRequest createGoalRequest = CreateGoalRequest.builder()
+                .title("이직하기")
+                .categoryName("커리어")
+                .categoryCode("CAREER")
+                .mindsets(List.of(createGoalMindsetRequest))
+                .todos(List.of(createGoalTodoRequest1, createGoalTodoRequest7))
+                .build();
+
+        return mockMvc.perform(
+                post("/goals")
+                        .header("Authorization", JWT_TOKEN)
+                        .content(objectMapper.writeValueAsString(createGoalRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+
+        );
     }
 
-    private static ResponseFieldsSnippet getSuccessResponseFieldsSnippet() {
-        return responseFields(
-                fieldWithPath("status").description("api 응답 상태"),
-                fieldWithPath("message").description("api 응답 메시지"),
-                fieldWithPath("data").description("api 응답 데이터")
-        );
+    private ResultActions performGetWithAuthorizationByUrlTemplate(String urlTemplate) throws Exception {
+        return mockMvc.perform(get(urlTemplate)
+                .header("Authorization", JWT_TOKEN)
+                .accept(MediaType.APPLICATION_JSON));
     }
 }
