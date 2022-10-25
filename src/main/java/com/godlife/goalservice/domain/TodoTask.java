@@ -28,7 +28,7 @@ public class TodoTask extends Todo {
     private LocalDate endDate;
 
     @Comment("기간 type")
-    private String repetitionType;
+    private RepetitionType repetitionType;
 
     @Convert(converter = StringListConverter.class)
     @Comment("기간 파라미터")
