@@ -45,6 +45,9 @@ public class Goal extends BaseEntity{
     @Comment("HEX 색상코드")
     private String hexColorCode;
 
+    @Comment("정렬순서")
+    private Integer orderNumber;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "goal_id")
     private List<Mindset> mindsets;
