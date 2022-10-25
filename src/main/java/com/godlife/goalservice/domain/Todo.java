@@ -32,15 +32,10 @@ public abstract class Todo extends BaseEntity {
     private Integer depth;
     private Integer orderNumber;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "parent_todo_id")
-    private List<Todo> childTodos;
-
-    protected Todo(Long todoId, String title, Integer depth, Integer orderNumber, List<Todo> childTodos) {
+    protected Todo(Long todoId, String title, Integer depth, Integer orderNumber) {
         this.todoId = todoId;
         this.title = title;
         this.depth = depth;
         this.orderNumber = orderNumber;
-        this.childTodos = childTodos;
     }
 }
