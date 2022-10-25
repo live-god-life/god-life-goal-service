@@ -131,23 +131,23 @@ class GoalControllerTest {
                                         "컨셉잡기",
                                         "20221001",
                                         "20221031",
-                                        "everyday",
-                                        List.of("월","화","수","목","금","토","일"),
+                                        "DAY",
+                                        null,
                                         "0900"
                                 ),
                                 getCreateGoalTodoTaskRequest(
                                         "스케치",
                                         "20221101",
                                         "20221131",
-                                        "everyweek",
-                                        List.of("월","수","금","토"),
+                                        "WEEK",
+                                        List.of("월", "수", "금", "토"),
                                         "0900"
                                 ),
                                 getCreateGoalTodoTaskRequest(
                                         "UI 작업",
                                         "20221001",
                                         "20221231",
-                                        null,
+                                        "NONE",
                                         null,
                                         "0900"
                                 )
@@ -162,7 +162,7 @@ class GoalControllerTest {
                                 "IT 동아리 서류 내기",
                                 "20221001",
                                 "20221031",
-                                null,
+                                "NONE",
                                 null,
                                 "0900"
                         ),
@@ -170,7 +170,7 @@ class GoalControllerTest {
                                 "파이썬 공부",
                                 "20221001",
                                 "20221031",
-                                "everyweek",
+                                "WEEK",
                                 List.of("월","수","금"),
                                 "0900"
                         )
