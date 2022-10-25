@@ -14,8 +14,7 @@ import java.util.List;
 
 /*
     todo
-    기간 어떤식으로 풀지?
-    알림은 0900 String 형태가 좋을까?
+
  */
 
 
