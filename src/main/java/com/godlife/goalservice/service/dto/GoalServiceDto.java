@@ -38,6 +38,7 @@ public class GoalServiceDto {
     private String repetitionType;
     private String repetitionPrams;
 
+    private Integer OrderNumber;
 
     @JsonIgnore
     private List<MindsetServiceDto> mindsets;
