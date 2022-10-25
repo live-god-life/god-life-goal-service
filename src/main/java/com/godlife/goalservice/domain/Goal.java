@@ -29,14 +29,18 @@ public class Goal extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long goalId;
+
     @Comment("사용자아이디")
+    @Column(nullable = false)
     private Long userId;
 
     @Comment("카테고리")
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Category category;
 
     @Comment("제목")
+    @Column(nullable = false)
     private String title;
 
     @Comment("완료유무")
