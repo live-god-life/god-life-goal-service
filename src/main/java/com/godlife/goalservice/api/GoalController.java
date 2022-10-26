@@ -23,6 +23,33 @@ import org.springframework.web.bind.annotation.*;
 public class GoalController {
     private final GoalService goalService;
 
+    @PostMapping("/goals")
+    public ResponseEntity<ApiResponse> createGoal(@RequestHeader("Authorization") String authorization,
+                                                  @RequestBody CreateGoalRequest request) {
+        log.info("request: {}", request);
+        goalService.createGoal(authorization, request.toGoalServiceDto());
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.createPostSuccessResponse());
+    }
+
+
+
+    @GetMapping("/goals/todos/count")
+    public ResponseEntity<ApiResponse> getDailyTodosCount(@RequestHeader("Authorization") String authorization,
+                                                          @RequestParam(value = "date") YearMonth date) {
+
+        log.info("date!!: {}", date);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getDailyTodosCount(authorization, date)));
+    }
+
+    //===================================================================================================================
+
+    @GetMapping("/goals/todos")
+    public ResponseEntity<ApiResponse> getDailyGoalsAndLowestDepthTodos(@RequestHeader("Authorization") String authorization,
+                                                                        @RequestParam(value = "date") String date) {
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getDailyGoalsAndLowestDepthTodos(authorization, date)));
+    }
+
     @GetMapping("/goals/mindsets")
     public ResponseEntity<ApiResponse> getGoalsWithMindsets(@RequestHeader("Authorization") String authorization,
                                                             @RequestParam(value = "method", defaultValue = "normal") String method,

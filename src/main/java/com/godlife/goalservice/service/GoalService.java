@@ -3,12 +3,14 @@ package com.godlife.goalservice.service;
 import com.godlife.goalservice.domain.Goal;
 import com.godlife.goalservice.repository.GoalRepository;
 import com.godlife.goalservice.service.dto.GoalServiceDto;
+import com.godlife.goalservice.service.dto.GoalTodoScheduleDto;
 import com.godlife.goalservice.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 /*  todo
@@ -34,6 +36,11 @@ public class GoalService {
         Long userId = getUserInfo(authorization).getUserId();
         Goal goal = goalServiceDto.toEntity(userId);
         goalRepository.save(goal);
+    }
+
+    public List<GoalTodoScheduleDto> getDailyTodosCount(String authorization, YearMonth yearMonth) {
+        Long userId = getUserInfo(authorization).getUserId();
+        return goalRepository.findDailyTodosCount(userId, yearMonth);
     }
 
     public List<GoalServiceDto> getGoalsWithMindsetsByMethodAndCount(String method, Integer count, String authorization) {
