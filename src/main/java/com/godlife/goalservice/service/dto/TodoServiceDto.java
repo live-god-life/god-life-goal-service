@@ -3,6 +3,7 @@ package com.godlife.goalservice.service.dto;
 import com.godlife.goalservice.domain.Todo;
 import com.godlife.goalservice.domain.TodoFolder;
 import com.godlife.goalservice.domain.TodoTask;
+import com.godlife.goalservice.domain.enums.RepetitionType;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -42,7 +43,7 @@ public class TodoServiceDto {
                     .title(title)
                     .startDate(LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyyMMdd")))
                     .endDate(LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyyMMdd")))
-                    .repetitionType(repetitionType)
+                    .repetitionType(RepetitionType.valueOf(repetitionType))
                     .repetitionParams(repetitionParams)
                     .build();
         }
