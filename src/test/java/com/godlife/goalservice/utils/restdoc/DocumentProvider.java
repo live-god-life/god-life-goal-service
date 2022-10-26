@@ -59,7 +59,7 @@ public class DocumentProvider {
     }
 
     public static ResponseFieldsSnippet getSuccessResponseFieldsSnippet() {
-        return responseFields(
+        return relaxedResponseFields(
                 fieldWithPath("status").description("api 응답 상태"),
                 fieldWithPath("message").description("api 응답 메시지"),
                 fieldWithPath("data").description("api 응답 데이터")
