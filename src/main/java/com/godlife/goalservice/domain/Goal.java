@@ -44,7 +44,7 @@ public class Goal extends BaseEntity{
     private String title;
 
     @Comment("완료유무")
-    private String completedStatus;
+    private Boolean completedStatus;
 
     @Comment("HEX 색상코드")
     private String hexColorCode;
