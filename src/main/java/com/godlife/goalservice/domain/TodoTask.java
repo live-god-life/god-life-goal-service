@@ -1,23 +1,27 @@
 package com.godlife.goalservice.domain;
 
 import com.godlife.goalservice.domain.converter.StringListConverter;
+import com.godlife.goalservice.domain.enums.RepetitionType;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-import javax.persistence.Convert;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /*
     todo
 
  */
 
-
+@Getter
 @DiscriminatorValue("task")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -67,19 +71,19 @@ public class TodoTask extends Todo {
 
     //TODO 뭔가 리팩토링이 필요해보인다??
     private void createDaySchedule() {
-        for (int i = 0; i <= Period.between(startDate,endDate).getDays(); i++) {
+        for (int i = 0; i <= ChronoUnit.DAYS.between(startDate,endDate); i++) {
             todoTaskSchedules.add(new TodoTaskSchedule(startDate.plusDays(i)));
         }
     }
     private void createWeekSchedule() {
-        for (int i = 0; i <= Period.between(startDate,endDate).getDays(); i++) {
+        for (int i = 0; i <= ChronoUnit.DAYS.between(startDate,endDate); i++) {
             if (repetitionParams.contains(startDate.plusDays(i).getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREA))) {
                 todoTaskSchedules.add(new TodoTaskSchedule(startDate.plusDays(i)));
             }
         }
     }
     private void createMonthSchedule() {
-        for (int i = 0; i <= Period.between(startDate,endDate).getDays(); i++) {
+        for (int i = 0; i <= ChronoUnit.DAYS.between(startDate,endDate); i++) {
             if (repetitionParams.contains(String.valueOf(startDate.plusDays(i).getDayOfMonth()))) {
                 todoTaskSchedules.add(new TodoTaskSchedule(startDate.plusDays(i)));
             }
