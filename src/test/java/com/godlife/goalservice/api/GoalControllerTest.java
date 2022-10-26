@@ -55,6 +55,52 @@ class GoalControllerTest {
                 .andDo(document("post-goals", getPostGoalsRequestFieldsSnippet(), getSuccessResponseFieldsSnippet()))
                 .andDo(print());
     }
+    
+    @Test
+    @DisplayName("MyList/캘린더 특정 년월의 일자별 투두카운트를 조회한다")
+    void getDailyTodosCount() throws Exception {
+        //given
+        performPostSampleGoalsWithMindsetsAndTodos();
+
+        //when
+        mockMvc.perform(get("/goals/todos/count")
+                        .header("Authorization", JWT_TOKEN)
+                        .queryParam("date", "202210")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("get-goals-with-todos-count", getSuccessResponseFieldsSnippet()))
+                .andDo(print());
+
+        //then
+    }
+    
+    @Test
+    @DisplayName("MyList/캘린더 특정 년월일의 투두리스트를 조회한다")
+    void getDailyGoalsAndLowestDepthTodos() throws Exception{
+        //given
+        performPostSampleGoalsWithMindsetsAndTodos();
+
+        //when
+        mockMvc.perform(get("/goals/todos")
+                        .header("Authorization", JWT_TOKEN)
+                        .queryParam("date", "20221001")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("get-goals-with-todos", getSuccessResponseFieldsSnippet()))
+                .andDo(print());
+        
+        //then
+    }
+
+    @Test
+    @DisplayName("MyList/캘린더 특정 년월일의 투두리스트에 완료체크를 한다")
+    void put() {
+        //given
+
+        //when
+
+        //then
+    }
 
     @Test
     @DisplayName("모든 목표를 가져온다")
@@ -177,12 +223,21 @@ class GoalControllerTest {
                 )
         );
 
+        CreateGoalTodoRequest createGoalTodoTaskRequest = getCreateGoalTodoTaskRequest(
+                "최상위 태스크",
+                "20221001",
+                "20221031",
+                "DAY",
+                null,
+                "0900"
+        );
+
         CreateGoalRequest createGoalRequest = CreateGoalRequest.builder()
                 .title("이직하기")
                 .categoryName("커리어")
                 .categoryCode("CAREER")
                 .mindsets(List.of(createGoalMindsetRequest))
-                .todos(List.of(createGoalTodoRequest1, createGoalTodoRequest7))
+                .todos(List.of(createGoalTodoRequest1, createGoalTodoRequest7, createGoalTodoTaskRequest))
                 .build();
 
         return mockMvc.perform(
