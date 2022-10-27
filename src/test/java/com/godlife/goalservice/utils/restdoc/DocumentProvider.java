@@ -24,7 +24,7 @@ public class DocumentProvider {
                 fieldWithPath("todos[].title").description("투두 제목"),
                 fieldWithPath("todos[].type").description("투두 타입"),
                 fieldWithPath("todos[].depth").description("투두 뎁스"),
-                fieldWithPath("todos[].order").description("투두 정렬순서"),
+                fieldWithPath("todos[].orderNumber").description("투두 정렬순서"),
                 fieldWithPath("todos[].startDate").optional().description("투두 정렬순서"),
                 fieldWithPath("todos[].endDate").optional().description("투두 정렬순서"),
                 fieldWithPath("todos[].notification").optional().description("투두 정렬순서"),
