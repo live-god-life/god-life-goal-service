@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.godlife.goalservice.utils.SampleTestDataCreator.getCreateGoalTodoFolderRequest;
@@ -40,8 +41,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class GoalControllerTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
-
-    private static final String JWT_TOKEN = "Bearer token";
+    
+    private static final String USER_ID_HEADER = "x-user";
+    private static final Long TEST_USER_ID = 1L;
 
     @Test
     @DisplayName("목표를 저장한다")
@@ -64,7 +66,7 @@ class GoalControllerTest {
 
         //when
         mockMvc.perform(get("/goals/todos/count")
-                        .header("Authorization", JWT_TOKEN)
+                        .header(USER_ID_HEADER, TEST_USER_ID)
                         .queryParam("date", "202210")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -82,7 +84,7 @@ class GoalControllerTest {
 
         //when
         mockMvc.perform(get("/goals/todos")
-                        .header("Authorization", JWT_TOKEN)
+                        .header(USER_ID_HEADER, TEST_USER_ID)
                         .queryParam("date", "20221001")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -107,6 +109,35 @@ class GoalControllerTest {
     void getAllGoals() throws Exception{
         //given
         performPostSampleGoalsWithMindsetsAndTodos();
+
+        mockMvc.perform(
+                post("/goals")
+                        .header(USER_ID_HEADER, TEST_USER_ID)
+                        .content(objectMapper.writeValueAsString(CreateGoalRequest.builder()
+                                .title("1년안에 5000만원 모으기")
+                                .categoryCode("CAREER")
+                                .mindsets(Collections.emptyList())
+                                .todos(Collections.emptyList())
+                                .build()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+
+        );
+
+        mockMvc.perform(
+                post("/goals")
+                        .header(USER_ID_HEADER, TEST_USER_ID)
+                        .content(objectMapper.writeValueAsString(CreateGoalRequest.builder()
+                                .title("불안 잠재우기")
+                                .categoryCode("CAREER")
+                                .mindsets(Collections.emptyList())
+                                .todos(Collections.emptyList())
+                                .build()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+
+        );
+
 
         //when
         ResultActions result = performGetWithAuthorizationByUrlTemplate("/goals");
@@ -156,7 +187,7 @@ class GoalControllerTest {
     @DisplayName("random 방식으로 5개의 마인드셋을 가져온다")
     void getFiveGoalsWithMindsetsByRandom() throws Exception {
         mockMvc.perform(get("/goals/mindsets")
-                        .header("Authorization", JWT_TOKEN)
+                        .header(USER_ID_HEADER, TEST_USER_ID)
                         .queryParam("method", "random")
                         .queryParam("count", "5")
                         .accept(MediaType.APPLICATION_JSON))
@@ -239,26 +270,26 @@ class GoalControllerTest {
                 )
         );
 
-        CreateGoalTodoRequest createGoalTodoTaskRequest = getCreateGoalTodoTaskRequest(
-                "최상위 태스크",
-                "20221001",
-                "20221031",
-                "DAY",
-                null,
-                "0900"
-        );
+//        CreateGoalTodoRequest createGoalTodoTaskRequest = getCreateGoalTodoTaskRequest(
+//                "최상위 태스크",
+//                "20221001",
+//                "20221031",
+//                "DAY",
+//                null,
+//                "0900"
+//        );
 
         CreateGoalRequest createGoalRequest = CreateGoalRequest.builder()
                 .title("이직하기")
                 .categoryName("커리어")
                 .categoryCode("CAREER")
                 .mindsets(List.of(createGoalMindsetRequest))
-                .todos(List.of(createGoalTodoRequest1, createGoalTodoRequest7, createGoalTodoTaskRequest))
+                .todos(List.of(createGoalTodoRequest1, createGoalTodoRequest7))
                 .build();
 
         return mockMvc.perform(
                 post("/goals")
-                        .header("Authorization", JWT_TOKEN)
+                        .header(USER_ID_HEADER, TEST_USER_ID)
                         .content(objectMapper.writeValueAsString(createGoalRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -268,7 +299,7 @@ class GoalControllerTest {
 
     private ResultActions performGetWithAuthorizationByUrlTemplate(String urlTemplate) throws Exception {
         return mockMvc.perform(get(urlTemplate)
-                .header("Authorization", JWT_TOKEN)
+                .header(USER_ID_HEADER, TEST_USER_ID)
                 .accept(MediaType.APPLICATION_JSON));
     }
 }
