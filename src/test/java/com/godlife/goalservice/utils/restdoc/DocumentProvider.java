@@ -25,10 +25,10 @@ public class DocumentProvider {
                 fieldWithPath("todos[].type").description("투두 타입"),
                 fieldWithPath("todos[].depth").description("투두 뎁스"),
                 fieldWithPath("todos[].order").description("투두 정렬순서"),
-                fieldWithPath("todos[].startDate").description("투두 정렬순서"),
-                fieldWithPath("todos[].endDate").description("투두 정렬순서"),
-                fieldWithPath("todos[].notification").description("투두 정렬순서"),
-                fieldWithPath("todos[].repetitionType").description("투두 정렬순서"),
+                fieldWithPath("todos[].startDate").optional().description("투두 정렬순서"),
+                fieldWithPath("todos[].endDate").optional().description("투두 정렬순서"),
+                fieldWithPath("todos[].notification").optional().description("투두 정렬순서"),
+                fieldWithPath("todos[].repetitionType").optional().description("투두 정렬순서"),
                 fieldWithPath("todos[].repetitionParams").optional().description("투두 정렬순서")
 
 
