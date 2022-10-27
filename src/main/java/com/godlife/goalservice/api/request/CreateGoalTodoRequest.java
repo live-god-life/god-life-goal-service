@@ -19,7 +19,7 @@ public class CreateGoalTodoRequest {
     private String title;
     private String type;
     private Integer depth;
-    private Integer order;
+    private Integer orderNumber;
     private String startDate;
     private String endDate;
     private String repetitionType;
@@ -32,7 +32,7 @@ public class CreateGoalTodoRequest {
                 .title(title)
                 .type(type)
                 .depth(depth)
-                .order(order)
+                .orderNumber(orderNumber)
                 .startDate(startDate)
                 .endDate(endDate)
                 .repetitionType(repetitionType)
