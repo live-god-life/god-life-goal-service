@@ -170,11 +170,17 @@ class GoalControllerTest {
 
         CreateGoalTodoRequest createGoalTodoRequest1 = getCreateGoalTodoFolderRequest(
                 "포폴완성",
+                1,
+                0,
                 List.of(getCreateGoalTodoFolderRequest(
                         "작업1 완료하기",
+                        2,
+                        0,
                         List.of(
                                 getCreateGoalTodoTaskRequest(
                                         "컨셉잡기",
+                                        3,
+                                        0,
                                         "20221001",
                                         "20221031",
                                         "DAY",
@@ -183,6 +189,8 @@ class GoalControllerTest {
                                 ),
                                 getCreateGoalTodoTaskRequest(
                                         "스케치",
+                                        3,
+                                        1,
                                         "20221101",
                                         "20221131",
                                         "WEEK",
@@ -191,6 +199,8 @@ class GoalControllerTest {
                                 ),
                                 getCreateGoalTodoTaskRequest(
                                         "UI 작업",
+                                        3,
+                                        2,
                                         "20221001",
                                         "20221231",
                                         "NONE",
@@ -203,9 +213,13 @@ class GoalControllerTest {
 
         CreateGoalTodoRequest createGoalTodoRequest7 = getCreateGoalTodoFolderRequest(
                 "개발프로젝트 해보기",
+                1,
+                1,
                 List.of(
                         getCreateGoalTodoTaskRequest(
                                 "IT 동아리 서류 내기",
+                                2,
+                                0,
                                 "20221001",
                                 "20221031",
                                 "NONE",
@@ -214,6 +228,8 @@ class GoalControllerTest {
                         ),
                         getCreateGoalTodoTaskRequest(
                                 "파이썬 공부",
+                                2,
+                                0,
                                 "20221001",
                                 "20221031",
                                 "WEEK",
