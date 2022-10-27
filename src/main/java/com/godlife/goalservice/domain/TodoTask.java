@@ -45,14 +45,17 @@ public class TodoTask extends Todo {
     @JoinColumn(name = "todo_id")
     private List<TodoTaskSchedule> todoTaskSchedules = new ArrayList<>();
 
-    @Builder
-    public TodoTask(Long todoId, String title, Integer depth, Integer orderNumber, LocalDate startDate, LocalDate endDate, RepetitionType repetitionType, List<String> repetitionParams) {
-        super(todoId, title, depth, orderNumber);
+    private TodoTask(String title, Integer depth, Integer orderNumber, LocalDate startDate, LocalDate endDate, RepetitionType repetitionType, List<String> repetitionParams) {
+        super(title, depth, orderNumber);
         this.startDate = startDate;
         this.endDate = endDate;
         this.repetitionType = repetitionType;
         this.repetitionParams = repetitionParams;
         createSchedules();
+    }
+
+    public static TodoTask createTodoTask(String title, Integer depth, Integer orderNumber, LocalDate startDate, LocalDate endDate, RepetitionType repetitionType, List<String> repetitionParams) {
+        return new TodoTask(title, depth, orderNumber, startDate, endDate, repetitionType, repetitionParams);
     }
 
     private void createSchedules() {

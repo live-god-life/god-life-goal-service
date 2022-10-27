@@ -17,10 +17,4 @@ public class MindsetServiceDto {
                 .content(mindset.getContent())
                 .build();
     }
-
-    public Mindset toEntity() {
-        return Mindset.builder()
-                .content(content)
-                .build();
-    }
 }

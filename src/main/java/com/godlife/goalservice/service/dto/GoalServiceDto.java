@@ -58,15 +58,4 @@ public class GoalServiceDto {
                 .todos(goal.getTodos().stream().map(TodoServiceDto::of).collect(Collectors.toList()))
                 .build();
     }
-
-    public Goal toEntity(Long userId) {
-        return Goal.builder()
-                .goalId(goalId)
-                .title(title)
-                .category(category)
-                .userId(userId)
-                .mindsets(mindsets.stream().map(MindsetMapper.INSTANCE::serviceDtoToEntity).collect(Collectors.toList()))
-                .todos(todos.stream().map(TodoServiceDto::toEntity).collect(Collectors.toList()))
-                .build();
-    }
 }

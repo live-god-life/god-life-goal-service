@@ -34,18 +34,16 @@ public class TodoServiceDto {
 
     public Todo toEntity() {
         if (type.equals("folder")) {
-            return TodoFolder.builder()
-                    .title(title)
-                    .childTodos(todos.stream().map(TodoServiceDto::toEntity).collect(Collectors.toList()))
-                    .build();
+            return TodoFolder.createTodoFolder(title, depth, orderNumber, todos.stream().map(TodoServiceDto::toEntity).collect(Collectors.toList()));
         } else {
-            return TodoTask.builder()
-                    .title(title)
-                    .startDate(LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyyMMdd")))
-                    .endDate(LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyyMMdd")))
-                    .repetitionType(RepetitionType.valueOf(repetitionType))
-                    .repetitionParams(repetitionParams)
-                    .build();
+            return TodoTask.createTodoTask(title,
+                            depth,
+                            orderNumber,
+                            (LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyyMMdd"))),
+                            LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyyMMdd")),
+                            RepetitionType.valueOf(repetitionType),
+                            repetitionParams
+                    );
         }
     }
 }

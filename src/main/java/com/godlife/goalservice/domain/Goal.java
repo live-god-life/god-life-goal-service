@@ -32,11 +32,8 @@ import java.util.Objects;
 
     진행중, 완료 투두 카운팅은 완료체크 개발 후 개발
  */
-@Builder
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
-@Data
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Goal extends BaseEntity{

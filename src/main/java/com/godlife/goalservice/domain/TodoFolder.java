@@ -21,10 +21,13 @@ public class TodoFolder extends Todo {
     @JoinColumn(name = "parent_todo_id")
     private List<Todo> childTodos;
 
-    @Builder
-    public TodoFolder(Long todoId, String title, Integer depth, Integer orderNumber, List<Todo> childTodos) {
-        super(todoId, title, depth, orderNumber);
+    private TodoFolder(String title, Integer depth, Integer orderNumber, List<Todo> childTodos) {
+        super(title, depth, orderNumber);
         this.childTodos = childTodos;
+    }
+
+    public static TodoFolder createTodoFolder(String title, Integer depth, Integer orderNumber, List<Todo> childTodos) {
+        return new TodoFolder(title, depth, orderNumber, childTodos);
     }
 }
 
