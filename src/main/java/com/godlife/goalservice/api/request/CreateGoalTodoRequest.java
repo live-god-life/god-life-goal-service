@@ -1,6 +1,6 @@
 package com.godlife.goalservice.api.request;
 
-import com.godlife.goalservice.service.dto.TodoServiceDto;
+import com.godlife.goalservice.dto.TodoDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,8 +27,8 @@ public class CreateGoalTodoRequest {
     private String notification;
     private List<CreateGoalTodoRequest> todos;
 
-    public TodoServiceDto toTodoServiceDto() {
-        return TodoServiceDto.builder()
+    public TodoDto toTodoServiceDto() {
+        return TodoDto.builder()
                 .title(title)
                 .type(type)
                 .depth(depth)

@@ -1,10 +1,18 @@
 package com.godlife.goalservice.service;
 
 import com.godlife.goalservice.domain.Goal;
+import com.godlife.goalservice.domain.Mindset;
+import com.godlife.goalservice.domain.Todo;
+import com.godlife.goalservice.domain.TodoTaskSchedule;
+import com.godlife.goalservice.dto.GoalMindsetDto;
+import com.godlife.goalservice.dto.MindsetDto;
 import com.godlife.goalservice.repository.GoalRepository;
-import com.godlife.goalservice.service.dto.GoalServiceDto;
-import com.godlife.goalservice.service.dto.GoalTodoScheduleDto;
-import com.godlife.goalservice.service.dto.UserDto;
+import com.godlife.goalservice.dto.GoalDto;
+import com.godlife.goalservice.dto.GoalTodoScheduleDto;
+import com.godlife.goalservice.dto.TodoScheduleCountDto;
+import com.godlife.goalservice.dto.TodoDto;
+import com.godlife.goalservice.repository.TodoRepository;
+import com.godlife.goalservice.repository.TodoTaskScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.godlife.goalservice.api.request;
 
 import com.godlife.goalservice.domain.enums.Category;
-import com.godlife.goalservice.service.dto.GoalServiceDto;
+import com.godlife.goalservice.dto.GoalDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -21,9 +21,9 @@ public class CreateGoalRequest {
     private List<CreateGoalMindsetRequest> mindsets;
     private List<CreateGoalTodoRequest> todos;
 
-    public GoalServiceDto toGoalServiceDto() {
+    public GoalDto toGoalServiceDto() {
 
-        return GoalServiceDto.builder()
+        return GoalDto.builder()
                 .title(title)
                 .category(Category.valueOf(categoryCode))
                 .mindsets(mindsets.stream().map(CreateGoalMindsetRequest::toMindServiceDto).collect(Collectors.toList()))

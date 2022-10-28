@@ -1,13 +1,14 @@
 package com.godlife.goalservice.repository;
 
-import com.godlife.goalservice.domain.Goal;
-import com.godlife.goalservice.service.dto.GoalTodoScheduleDto;
+import com.godlife.goalservice.dto.GoalTodoScheduleDto;
+import com.godlife.goalservice.dto.TodoScheduleCountDto;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
 public interface GoalRepositoryCustom {
-    List<Goal> findDailyGoalsAndLowestDepthTodosByUserId(Long userId);
+    List<GoalTodoScheduleDto> findDailyGoalsAndTodosByUserIdAndLocalDate(Long userId, LocalDate localDate);
 
-    List<GoalTodoScheduleDto> findDailyTodosCount(Long userId, YearMonth yearMonth);
+    List<TodoScheduleCountDto> findDailyTodosCount(Long userId, YearMonth yearMonth);
 }

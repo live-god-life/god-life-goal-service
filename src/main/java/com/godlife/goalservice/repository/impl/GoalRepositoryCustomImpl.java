@@ -1,6 +1,10 @@
 package com.godlife.goalservice.repository.impl;
 
-import com.godlife.goalservice.domain.Goal;
+import com.godlife.goalservice.dto.GoalTodoScheduleDto;
+import com.godlife.goalservice.dto.QGoalTodoScheduleDto;
+import com.godlife.goalservice.dto.QGoalTodoScheduleDto_TodoScheduleDto;
+import com.godlife.goalservice.dto.QTodoScheduleCountDto;
+import com.godlife.goalservice.dto.TodoScheduleCountDto;
 import com.godlife.goalservice.repository.GoalRepositoryCustom;
 import com.godlife.goalservice.service.dto.GoalTodoScheduleDto;
 import com.godlife.goalservice.service.dto.QGoalTodoScheduleDto;
@@ -22,11 +26,11 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
     }
 
     @Override
-    public List<GoalTodoScheduleDto> findDailyTodosCount(Long userId, YearMonth yearMonth) {
+    public List<TodoScheduleCountDto> findDailyTodosCount(Long userId, YearMonth yearMonth) {
         return queryFactory
                 .select(
-                        new QGoalTodoScheduleDto(todoTaskSchedule.scheduleDate,
-                                todoTaskSchedule.id.count().intValue().as("todoCount"))
+                        new QTodoScheduleCountDto(todoTaskSchedule.scheduleDate,
+                                todoTaskSchedule.todoTaskScheduleId.count().intValue().as("todoCount"))
                 )
                 .from(goal)
                 .leftJoin(goal.todos, todoTask._super)
