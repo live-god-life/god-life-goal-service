@@ -66,4 +66,100 @@ class TodoTaskTest {
         //then
         assertThat(result.size()).isEqualTo(3);
     }
+    
+    @Test
+    @DisplayName("투두스케줄 완료처리시 투두완료된 스케줄 카운트 +1 확인")
+    void plusCompletedTodoTaskScheduleCount() {
+        //given
+        TodoTask todoTask = TodoTask.createTodoTask("todo",
+                1,
+                0,
+                LocalDate.parse("20221001", DateTimeFormatter.ofPattern("yyyyMMdd")),
+                LocalDate.parse("20221002", DateTimeFormatter.ofPattern("yyyyMMdd")),
+                RepetitionType.DAY,
+                null
+        );
+
+        //when
+        TodoTaskSchedule sampleSchedule = todoTask.getTodoTaskSchedules().get(0);
+
+        assertThat(todoTask.getTotalTodoTaskScheduleCount()).isEqualTo(2);
+        assertThat(todoTask.getCompletedTodoTaskScheduleCount()).isEqualTo(0);
+
+        sampleSchedule.updateCompletionStatus();
+
+        //then
+        assertThat(todoTask.getTotalTodoTaskScheduleCount()).isEqualTo(2);
+        assertThat(todoTask.getCompletedTodoTaskScheduleCount()).isEqualTo(1);
+    }
+    
+    @Test
+    @DisplayName("투두스케줄 미완료처리시 투두완료된 스케줄 카운트 -1 확인")
+    void minusCompletedTodoTaskScheduleCount() {
+        //given
+        TodoTask todoTask = TodoTask.createTodoTask("todo",
+                1,
+                0,
+                LocalDate.parse("20221001", DateTimeFormatter.ofPattern("yyyyMMdd")),
+                LocalDate.parse("20221002", DateTimeFormatter.ofPattern("yyyyMMdd")),
+                RepetitionType.DAY,
+                null
+        );
+
+        //when
+        TodoTaskSchedule sampleSchedule = todoTask.getTodoTaskSchedules().get(0);
+
+
+        assertThat(todoTask.getTotalTodoTaskScheduleCount()).isEqualTo(2);
+        assertThat(todoTask.getCompletedTodoTaskScheduleCount()).isEqualTo(0);
+
+        sampleSchedule.updateCompletionStatus();
+
+        assertThat(todoTask.getTotalTodoTaskScheduleCount()).isEqualTo(2);
+        assertThat(todoTask.getCompletedTodoTaskScheduleCount()).isEqualTo(1);
+
+        sampleSchedule.updateInCompletionStatus();
+
+        //then
+        assertThat(todoTask.getTotalTodoTaskScheduleCount()).isEqualTo(2);
+        assertThat(todoTask.getCompletedTodoTaskScheduleCount()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("미완료 투두스케줄 미완료처리시 투두완료된 스케줄 카운트 변화없음 확인")
+    void minusCompletedTodoTaskScheduleCount_1() {
+        //given
+        TodoTask todoTask = TodoTask.createTodoTask("todo",
+                1,
+                0,
+                LocalDate.parse("20221001", DateTimeFormatter.ofPattern("yyyyMMdd")),
+                LocalDate.parse("20221002", DateTimeFormatter.ofPattern("yyyyMMdd")),
+                RepetitionType.DAY,
+                null
+        );
+
+        //when
+        TodoTaskSchedule sampleSchedule = todoTask.getTodoTaskSchedules().get(0);
+
+
+        assertThat(todoTask.getTotalTodoTaskScheduleCount()).isEqualTo(2);
+        assertThat(todoTask.getCompletedTodoTaskScheduleCount()).isEqualTo(0);
+
+        sampleSchedule.updateCompletionStatus();
+
+        assertThat(todoTask.getTotalTodoTaskScheduleCount()).isEqualTo(2);
+        assertThat(todoTask.getCompletedTodoTaskScheduleCount()).isEqualTo(1);
+
+        sampleSchedule.updateInCompletionStatus();
+
+        assertThat(todoTask.getTotalTodoTaskScheduleCount()).isEqualTo(2);
+        assertThat(todoTask.getCompletedTodoTaskScheduleCount()).isEqualTo(0);
+
+        sampleSchedule.updateInCompletionStatus();
+
+        //then
+        assertThat(todoTask.getTotalTodoTaskScheduleCount()).isEqualTo(2);
+        assertThat(todoTask.getCompletedTodoTaskScheduleCount()).isEqualTo(0);
+    }
+
 }
