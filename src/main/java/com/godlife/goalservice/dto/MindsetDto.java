@@ -1,4 +1,4 @@
-package com.godlife.goalservice.service.dto;
+package com.godlife.goalservice.dto;
 
 import com.godlife.goalservice.domain.Mindset;
 import lombok.Builder;
@@ -6,13 +6,12 @@ import lombok.Data;
 
 @Data
 @Builder
-public class MindsetServiceDto {
+public class MindsetDto {
     private Long mindsetId;
     private String content;
 
-    public static MindsetServiceDto of(Mindset mindset) {
-
-        return MindsetServiceDto.builder()
+    public static MindsetDto of(Mindset mindset) {
+        return MindsetDto.builder()
                 .mindsetId(mindset.getMindsetId())
                 .content(mindset.getContent())
                 .build();
