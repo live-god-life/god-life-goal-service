@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import java.util.List;
 
-
+@Getter
 @DiscriminatorValue("folder")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
