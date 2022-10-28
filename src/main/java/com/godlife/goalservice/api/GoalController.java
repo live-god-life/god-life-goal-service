@@ -1,6 +1,7 @@
 package com.godlife.goalservice.api;
 
 import com.godlife.goalservice.api.request.CreateGoalRequest;
+import com.godlife.goalservice.api.request.UpdateGoalTodoScheduleRequest;
 import com.godlife.goalservice.api.response.ApiResponse;
 import com.godlife.goalservice.service.GoalService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,14 +17,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 
 /*
     todo
     - 목표 추가 후 client 원하는 response 데이터 물어보기
-    - 생각해보니 모든 API에 사용자 정보가 필요하다. 이런식으로 밖에 안될까?
-
-    - 굳이 getGoalsWithMindsets / @RequestParam(value = "method", defaultValue = "normal") String method 랜덤기능이 있어야할 이유가없는듯? 그냥 원하는 갯수만큼 전달하면될거같은데
+    - date : yyyyMM 날짜형태의 좋은 변수명이 뭘까
+    - validation check 추가
  */
 
 @Slf4j
