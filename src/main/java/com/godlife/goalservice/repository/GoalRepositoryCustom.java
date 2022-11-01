@@ -8,7 +8,7 @@ import java.time.YearMonth;
 import java.util.List;
 
 public interface GoalRepositoryCustom {
-    List<GoalTodoScheduleDto> findDailyGoalsAndTodosByUserIdAndLocalDate(Long userId, LocalDate localDate);
+	List<GoalTodoScheduleDto> findDailyGoalsAndTodosByUserIdAndLocalDate(Long userId, LocalDate localDate);
 
-    List<TodoScheduleCountDto> findDailyTodosCount(Long userId, YearMonth yearMonth);
+	List<TodoScheduleCountDto> findDailyTodosCount(Long userId, YearMonth yearMonth);
 }

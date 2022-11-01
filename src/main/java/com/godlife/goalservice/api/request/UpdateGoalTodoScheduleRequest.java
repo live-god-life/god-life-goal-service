@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateGoalTodoScheduleRequest {
-    private Boolean completionStatus;
+	private Boolean completionStatus;
 }
