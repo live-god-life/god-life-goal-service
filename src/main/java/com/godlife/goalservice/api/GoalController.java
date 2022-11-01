@@ -6,6 +6,7 @@ import com.godlife.goalservice.api.response.ApiResponse;
 import com.godlife.goalservice.service.GoalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,53 +33,53 @@ import java.time.YearMonth;
 @RestController
 public class GoalController {
     private final GoalService goalService;
+    private static final String USER_ID_HEADER = "x-user";
 
     @PostMapping("/goals")
-    public ResponseEntity<ApiResponse> createGoal(@RequestHeader("Authorization") String authorization,
+    public ResponseEntity<ApiResponse> createGoal(@RequestHeader(USER_ID_HEADER) Long userId,
                                                   @RequestBody CreateGoalRequest request) {
-        log.info("request: {}", request);
-        goalService.createGoal(authorization, request.toGoalServiceDto());
+        goalService.createGoal(userId, request.toGoalServiceDto());
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.createPostSuccessResponse());
     }
 
-
-
     @GetMapping("/goals/todos/count")
-    public ResponseEntity<ApiResponse> getDailyTodosCount(@RequestHeader("Authorization") String authorization,
+    public ResponseEntity<ApiResponse> getDailyTodosCount(@RequestHeader(USER_ID_HEADER) Long userId,
                                                           @RequestParam(value = "date") YearMonth date) {
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getDailyTodosCount(userId, date)));
+    }
 
-        log.info("date!!: {}", date);
-
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getDailyTodosCount(authorization, date)));
+    @GetMapping("/goals/todos")
+    public ResponseEntity<ApiResponse> getDailyGoalsAndTodos(@RequestHeader(USER_ID_HEADER) Long userId,
+                                                             @RequestParam(value = "date") LocalDate date,
+                                                             @RequestParam(value = "completionStatus", required = false) Boolean completionStatus,
+                                                             Pageable page) {
+        log.info("userId: {}, date: {}, completionStatus: {}, page: {}", userId, date, completionStatus, page);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getDailyGoalsAndTodos(userId, date, completionStatus, page)));
     }
 
     //===================================================================================================================
 
-    @GetMapping("/goals/todos")
-    public ResponseEntity<ApiResponse> getDailyGoalsAndLowestDepthTodos(@RequestHeader("Authorization") String authorization,
-                                                                        @RequestParam(value = "date") String date) {
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getDailyGoalsAndLowestDepthTodos(authorization, date)));
-    }
-
     @GetMapping("/goals/mindsets")
-    public ResponseEntity<ApiResponse> getGoalsWithMindsets(@RequestHeader("Authorization") String authorization,
-                                                            @RequestParam(value = "method", defaultValue = "normal") String method,
-                                                            @RequestParam(value = "count", required = false) Integer count) {
-        log.info("method: {}, count: {}", method, count);
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoalsWithMindsetsByMethodAndCount(method, count, authorization)));
-    }
-
-    @PostMapping("/goals")
-    public ResponseEntity<ApiResponse> createGoal(@RequestHeader("Authorization") String authorization,
-                                                  @RequestBody CreateGoalRequest request) {
-        log.info("request: {}", request);
-        goalService.createGoal(authorization, request.toGoalServiceDto());
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.createPostSuccessResponse());
+    public ResponseEntity<ApiResponse> getGoalsWithMindsets(@RequestHeader(USER_ID_HEADER) Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoalsWithMindsets(userId)));
     }
 
     @GetMapping("/goals")
-    public ResponseEntity<ApiResponse> getGoals(@RequestHeader("Authorization") String authorization) {
-        log.info("Header/Authorization: {}", authorization);
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoals(authorization)));
+    public ResponseEntity<ApiResponse> getGoals(@RequestHeader(USER_ID_HEADER) Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoals(userId)));
+    }
+
+    @GetMapping("/goals/todos/{todoId}")
+    public ResponseEntity<ApiResponse> getTodoDetail(@RequestHeader(USER_ID_HEADER) Long userId,
+                                               @PathVariable(value = "todoId") Long todoId) {
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getTodoDetail(userId, todoId)));
+    }
+
+    @PatchMapping("/goals/todoSchedules/{todoScheduleId}")
+    public ResponseEntity<ApiResponse> patchCompletionStatus(@RequestHeader(USER_ID_HEADER) Long userId,
+                                                             @PathVariable(value = "todoScheduleId") Long todoScheduleId,
+                                                             @RequestBody UpdateGoalTodoScheduleRequest request) {
+        goalService.updateTodoScheduleCompletionStatus(userId, todoScheduleId, request.getCompletionStatus());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createPatchSuccessResponse());
     }
 }
