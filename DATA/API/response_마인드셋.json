@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "data": {
+    "goals": [
+      {
+        "id": 1,
+        "title": "이직하기",
+        "link" : "http://server/goals/1",
+        "mindsets": [
+          {
+            "id": 1,
+            "content": "내용요요용용"
+          }
+        ]
+      }
+    ]
+  },
+  "code": null,
+  "message": null
+}
