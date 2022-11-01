@@ -31,7 +31,7 @@ class GoalRepositoryTest {
     @Autowired
     EntityManager em;
 
-//    @Test
+    @Test
     void save() {
         Goal goal;
         String expectedTitle;
@@ -55,7 +55,7 @@ class GoalRepositoryTest {
                 expectedTitle,
                 1,
                 List.of(mindset1, mindset2),
-                Collections.emptyList()
+                List.of(todoTask)
         );
         //when
         Goal savedGoal = goalRepository.save(goal);
@@ -131,7 +131,7 @@ class GoalRepositoryTest {
                 List.of(todoTask)
         );
 
-        Goal savedGoal = goalRepository.save(goal);
+        goalRepository.save(goal);
 
         //when
         List<TodoScheduleCountDto> result = goalRepository.findDailyTodosCount(1L, YearMonth.of(2022, 10));
@@ -140,15 +140,36 @@ class GoalRepositoryTest {
         assertThat(result.size()).isEqualTo(31);
     }
 
-//    @Test
+    @Test
     @DisplayName("특정일의 최하위 투두리스트 조회하기")
-    void findDailyGoalsAndLowestDepthTodosByUserId() {
+    void getDailyGoalsAndTodos() {
+        //given
+        Mindset mindset1 = createMindsetByContent("사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다.");
 
+        TodoTask todoTask = TodoTask.createTodoTask("todo",
+                1,
+                0,
+                LocalDate.parse("20221001", DateTimeFormatter.ofPattern("yyyyMMdd")),
+                LocalDate.parse("20221031", DateTimeFormatter.ofPattern("yyyyMMdd")),
+                RepetitionType.DAY,
+                Collections.emptyList()
+        );
 
-        Goal savedGoal = goalRepository.save(null);
+        Goal goal = Goal.createGoal(
+                1L,
+                Category.CAREER,
+                "이직하기",
+                1,
+                List.of(mindset1),
+                List.of(todoTask)
+        );
+
+        goalRepository.save(goal);
+
         //when
-        List<Goal> foundGoals = goalRepository.findDailyGoalsAndLowestDepthTodosByUserId(savedGoal.getUserId());
+        List<GoalTodoScheduleDto> result = goalRepository.findDailyGoalsAndTodosByUserIdAndLocalDate(1L, LocalDate.of(2022, 10, 1));
+
         //then
-        assertThat(foundGoals.size()).isEqualTo(1);
+        assertThat(result.size()).isEqualTo(1);
     }
 }
