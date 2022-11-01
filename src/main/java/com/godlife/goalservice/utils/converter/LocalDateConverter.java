@@ -6,8 +6,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class LocalDateConverter implements Converter<String, LocalDate> {
-    @Override
-    public LocalDate convert(String text) {
-        return LocalDate.parse(text, DateTimeFormatter.ofPattern("yyyyMMdd"));
-    }
+	@Override
+	public LocalDate convert(String text) {
+		return LocalDate.parse(text, DateTimeFormatter.ofPattern("yyyyMMdd"));
+	}
 }

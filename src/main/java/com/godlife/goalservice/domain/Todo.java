@@ -1,6 +1,5 @@
 package com.godlife.goalservice.domain;
 
-
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,38 +25,38 @@ import javax.persistence.ManyToOne;
     완료체크할때 날짜별, todo의 상태는 어떻게 저장할까?
  */
 
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Getter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public abstract class Todo extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long todoId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long todoId;
 
-    @Column(nullable = false)
-    private String title;
+	@Column(nullable = false)
+	private String title;
 
-    @Column(nullable = false)
-    private Integer depth;
+	@Column(nullable = false)
+	private Integer depth;
 
-    @Column(nullable = false)
-    private Integer orderNumber;
+	@Column(nullable = false)
+	private Integer orderNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goal_id")
-    private Goal goal;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "goal_id")
+	private Goal goal;
 
-    //===연관관계 편의 메서드===
-    public void setGoal(Goal goal) {
-        this.goal = goal;
-    }
+	//===연관관계 편의 메서드===
+	public void setGoal(Goal goal) {
+		this.goal = goal;
+	}
 
-    protected Todo(String title, Integer depth, Integer orderNumber) {
-        this.title = title;
-        this.depth = depth;
-        this.orderNumber = orderNumber;
-    }
+	protected Todo(String title, Integer depth, Integer orderNumber) {
+		this.title = title;
+		this.depth = depth;
+		this.orderNumber = orderNumber;
+	}
 }

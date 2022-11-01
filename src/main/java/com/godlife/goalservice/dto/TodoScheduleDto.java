@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class TodoScheduleDto {
-    private Boolean completionStatus;
+	private Boolean completionStatus;
 }
