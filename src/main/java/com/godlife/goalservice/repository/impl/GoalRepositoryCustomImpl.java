@@ -6,13 +6,13 @@ import com.godlife.goalservice.dto.QGoalTodoScheduleDto_TodoScheduleDto;
 import com.godlife.goalservice.dto.QTodoScheduleCountDto;
 import com.godlife.goalservice.dto.TodoScheduleCountDto;
 import com.godlife.goalservice.repository.GoalRepositoryCustom;
-import com.godlife.goalservice.service.dto.GoalTodoScheduleDto;
-import com.godlife.goalservice.service.dto.QGoalTodoScheduleDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static com.godlife.goalservice.domain.QGoal.goal;
 import static com.godlife.goalservice.domain.QTodoTask.todoTask;
@@ -41,12 +41,48 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
                 .fetch();
     }
 
+    //TODO 코드가 깔끔하지못해 리팩토링 예정
     @Override
-    public List<Goal> findDailyGoalsAndLowestDepthTodosByUserId(Long userId) {
-        return queryFactory
-                .select(goal)
+    public List<GoalTodoScheduleDto> findDailyGoalsAndTodosByUserIdAndLocalDate(Long userId, LocalDate localDate) {
+        List<GoalTodoScheduleDto> goals = queryFactory
+                .select(
+                        new QGoalTodoScheduleDto(
+                                goal.goalId,
+                                goal.title
+                        )
+                )
                 .from(goal)
-                .where(goal.userId.eq(userId))
+                .leftJoin(goal.todos, todoTask._super)
+                .leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
+                .where(goal.userId.eq(userId),
+                        todoTaskSchedule.scheduleDate.eq(localDate))
+                .groupBy(goal.goalId, goal.title)
                 .fetch();
+
+        List<GoalTodoScheduleDto.TodoScheduleDto> todoSchedules = queryFactory
+                .select(
+                        new QGoalTodoScheduleDto_TodoScheduleDto(
+                                goal.goalId,
+                                todoTaskSchedule.todoTaskScheduleId,
+                                todoTask.title,
+                                todoTaskSchedule.completionStatus
+                        )
+                )
+                .from(goal)
+                .leftJoin(goal.todos, todoTask._super)
+                .leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
+                .where(goal.userId.eq(userId),
+                        todoTaskSchedule.scheduleDate.eq(localDate))
+                .fetch();
+
+        todoSchedules.forEach(todoScheduleDto -> {
+            GoalTodoScheduleDto goalTodoScheduleDto1 = goals.stream()
+                    .filter(goalTodoScheduleDto -> goalTodoScheduleDto.getGoalId().equals(todoScheduleDto.getGoalId()))
+                    .findAny()
+                    .orElseThrow(NoSuchElementException::new);
+            goalTodoScheduleDto1.addTodoSchedule(todoScheduleDto);
+        });
+
+        return goals;
     }
 }
