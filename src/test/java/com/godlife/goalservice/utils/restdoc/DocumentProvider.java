@@ -24,11 +24,11 @@ public class DocumentProvider {
                 fieldWithPath("todos[].title").description("투두 제목"),
                 fieldWithPath("todos[].type").description("투두 타입"),
                 fieldWithPath("todos[].depth").description("투두 뎁스"),
-                fieldWithPath("todos[].order").description("투두 정렬순서"),
-                fieldWithPath("todos[].startDate").description("투두 정렬순서"),
-                fieldWithPath("todos[].endDate").description("투두 정렬순서"),
-                fieldWithPath("todos[].notification").description("투두 정렬순서"),
-                fieldWithPath("todos[].repetitionType").description("투두 정렬순서"),
+                fieldWithPath("todos[].orderNumber").description("투두 정렬순서"),
+                fieldWithPath("todos[].startDate").optional().description("투두 정렬순서"),
+                fieldWithPath("todos[].endDate").optional().description("투두 정렬순서"),
+                fieldWithPath("todos[].notification").optional().description("투두 정렬순서"),
+                fieldWithPath("todos[].repetitionType").optional().description("투두 정렬순서"),
                 fieldWithPath("todos[].repetitionParams").optional().description("투두 정렬순서")
 
 
@@ -59,7 +59,7 @@ public class DocumentProvider {
     }
 
     public static ResponseFieldsSnippet getSuccessResponseFieldsSnippet() {
-        return responseFields(
+        return relaxedResponseFields(
                 fieldWithPath("status").description("api 응답 상태"),
                 fieldWithPath("message").description("api 응답 메시지"),
                 fieldWithPath("data").description("api 응답 데이터")

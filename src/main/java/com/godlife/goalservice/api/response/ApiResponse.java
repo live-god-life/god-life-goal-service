@@ -1,11 +1,16 @@
 package com.godlife.goalservice.api.response;
 
-import com.godlife.goalservice.service.dto.GoalServiceDto;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/*
+    todo
+ */
+
 @Data
+@NoArgsConstructor
 public class ApiResponse {
     private String status;
     private String message;
@@ -17,11 +22,19 @@ public class ApiResponse {
         this.data = data;
     }
 
-    public static ApiResponse createGetSuccessResponse(List<GoalServiceDto> goalServiceDtos) {
-        return new ApiResponse("success", "ok", goalServiceDtos);
+    public static ApiResponse createGetSuccessResponse(List dtos) {
+        return new ApiResponse("success", "ok", dtos);
     }
 
     public static ApiResponse createPostSuccessResponse() {
         return new ApiResponse("success", "created", null);
+    }
+
+    public static ApiResponse createPatchSuccessResponse() {
+        return new ApiResponse("success", "modified", null);
+    }
+
+    public static ApiResponse createGetSuccessResponse(Object o) {
+        return new ApiResponse("success", "ok", o);
     }
 }

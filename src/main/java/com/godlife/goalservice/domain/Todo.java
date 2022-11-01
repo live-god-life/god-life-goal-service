@@ -1,10 +1,22 @@
 package com.godlife.goalservice.domain;
 
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /*
     todo
@@ -12,13 +24,9 @@ import java.util.List;
     childTodos: 양방향 단방향에 대해서는 고민좀 하고 결정, 우선 일대다 단방향으로 설정
 
     완료체크할때 날짜별, todo의 상태는 어떻게 저장할까?
-    투두 완료유무 테이블 생성
-    1. 목표의 투두를 추가할때 기간, 반복에 해당되는 모든 데이터들을 만들어서 디비에 넣어놓는다.
-    2. 완료체크를 할때 이력테이블에 넣는다.
  */
 
 @EqualsAndHashCode(callSuper=false)
-@Data
 @Getter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
@@ -28,19 +36,28 @@ public abstract class Todo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long todoId;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private Integer depth;
+
+    @Column(nullable = false)
     private Integer orderNumber;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "parent_todo_id")
-    private List<Todo> childTodos;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goal_id")
+    private Goal goal;
 
-    protected Todo(Long todoId, String title, Integer depth, Integer orderNumber, List<Todo> childTodos) {
-        this.todoId = todoId;
+    //===연관관계 편의 메서드===
+    public void setGoal(Goal goal) {
+        this.goal = goal;
+    }
+
+    protected Todo(String title, Integer depth, Integer orderNumber) {
         this.title = title;
         this.depth = depth;
         this.orderNumber = orderNumber;
-        this.childTodos = childTodos;
     }
 }

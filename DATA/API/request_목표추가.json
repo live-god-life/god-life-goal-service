@@ -1,0 +1,107 @@
+{
+  "title": "이직하기",
+  "categoryName": "커리어",
+  "categoryCode": "CAREER",
+  "mindsets": [
+    {
+      "content": "사는건 레벨업이 아닌 스펙트럼을..."
+    }
+  ],
+  "todos": [
+    {
+      "title": "포폴 완성",
+      "type": "FOLDER",
+      "depth": 1,
+      "orderNumberNumber": 0,
+      "todos": [
+        {
+          "title": "작업1완료하기",
+          "type": "FOLDER",
+          "depth": 2,
+          "orderNumber": 0,
+          "todos": [
+            {
+              "title": "컨셉잡기",
+              "type": "TASK",
+              "depth": 3,
+              "orderNumber": 0,
+              "startDate": "20221001",
+              "endDate": "20221030",
+              "repetitionType": "DAY",
+              "repetitionParams": null,
+              "notification": "0900"
+            },
+            {
+              "title": "스케치",
+              "type": "TASK",
+              "depth": 3,
+              "orderNumber": 1,
+              "startDate": "20221001",
+              "endDate": "20221030",
+              "repetitionType": "WEEK",
+              "repetitionParams": [
+                "월",
+                "목",
+                "토"
+              ],
+              "notification": "0900"
+            },
+            {
+              "title": "UI작업",
+              "type": "TASK",
+              "depth": 3,
+              "orderNumber": 2,
+              "startDate": "20221001",
+              "endDate": "20221030",
+              "repetitionType": "MONTH",
+              "repetitionParams": [
+                "9",
+                "15",
+                "22"
+              ],
+              "notification": "0900"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "개발프로젝트 해보기",
+      "type": "FOLDER",
+      "depth": 1,
+      "orderNumber": 1,
+      "todos": [
+        {
+          "title": "IT 동아리 서류 내기",
+          "type": "TASK",
+          "depth": 2,
+          "orderNumber": 0,
+          "startDate": "20221001",
+          "endDate": "20221030",
+          "repetitionType": "MONTH",
+          "repetitionParams": [
+            "9",
+            "15",
+            "22"
+          ],
+          "notification": "0900"
+        },
+        {
+          "title": "파이썬공부",
+          "type": "TASK",
+          "depth": 2,
+          "orderNumber": 0,
+          "startDate": "20221001",
+          "endDate": "20221030",
+          "repetitionType": "MONTH",
+          "repetitionParams": [
+            "9",
+            "15",
+            "22"
+          ],
+          "notification": "0900"
+        }
+      ]
+    }
+  ]
+}

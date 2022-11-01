@@ -1,12 +1,16 @@
 package com.godlife.goalservice.domain;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Mindset extends BaseEntity{
@@ -16,4 +20,12 @@ public class Mindset extends BaseEntity{
 
     @Lob
     private String content;
+
+    private Mindset(String content) {
+        this.content = content;
+    }
+
+    public static Mindset createMindset(String content) {
+        return new Mindset(content);
+    }
 }

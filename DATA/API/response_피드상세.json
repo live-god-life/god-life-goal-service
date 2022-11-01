@@ -1,0 +1,54 @@
+{
+  "status": "success",
+  "data": {
+    "feeds": [
+      {
+        "id": 1,
+        "title": "중소기업 식품연구원의 네카라쿠배 개발자 입성기",
+        "viewCount": 0,
+        "가져가기Count": 0,
+        "image": "http://server/feeds/images/feed1.jpg",
+        "bookMarkStatus": false,
+        "content": "안녕하세요. 라인 넥스트 5년차 엔지니어 ......",
+        "user": {
+          "id": 1,
+          "nickname": "네카라구배당돌한얼음이요?",
+          "image": "http://server/users/images/profile1.jpg"
+        },
+        "mindsets": [
+          {
+            "id": 1,
+            "content": "사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다....."
+          }
+        ],
+        "todos": [
+          {
+            "id": 1,
+            "title": "포트폴리오 완성",
+            "type": "TASK",
+            "depth": 1,
+            "orderNumber": 1
+          },
+          {
+            "id": 2,
+            "title": "개발프로젝트 해보기",
+            "type": "FOLDER",
+            "depth": 1,
+            "orderNumber": 2,
+            "childTodos": [
+              {
+                "id": 3,
+                "title": "포트폴리오 완성",
+                "type": "TASK",
+                "depth": 2,
+                "orderNumber": 1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "code": null,
+  "message": null
+}

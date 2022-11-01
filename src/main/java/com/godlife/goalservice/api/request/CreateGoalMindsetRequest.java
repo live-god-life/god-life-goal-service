@@ -1,6 +1,6 @@
 package com.godlife.goalservice.api.request;
 
-import com.godlife.goalservice.service.dto.MindsetServiceDto;
+import com.godlife.goalservice.dto.MindsetDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 public class CreateGoalMindsetRequest {
     private String content;
 
-    public MindsetServiceDto toMindServiceDto() {
-        return MindsetServiceDto.builder()
+    public MindsetDto toMindServiceDto() {
+        return MindsetDto.builder()
                 .content(content)
                 .build();
     }

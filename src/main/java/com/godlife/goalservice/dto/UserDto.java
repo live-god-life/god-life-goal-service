@@ -1,4 +1,4 @@
-package com.godlife.goalservice.service.dto;
+package com.godlife.goalservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
