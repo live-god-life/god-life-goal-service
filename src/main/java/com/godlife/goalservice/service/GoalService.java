@@ -15,11 +15,14 @@ import com.godlife.goalservice.repository.TodoRepository;
 import com.godlife.goalservice.repository.TodoTaskScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 /*  todo
     getGoalsWithMindsetsByMethodAndCount 와 로직이 동일해졌다..
@@ -28,9 +31,6 @@ import java.util.stream.Collectors;
     API 스팩의 변경이 도메인, 서비스 레이어에 영향을 안주는게 가장 좋은 방법일거같은데
     음.....................................................
     일단 생각나는 대로 짜보고, 중복된 코드, 변경에 유연하지 못한 코드를 리팩토링해나가자, 지금 생각하기에는 지식이 부족하다
-
-    todo
-    auth-service 호출하여 jwt payload 담긴 유저정보 받아오기
  */
 @Slf4j
 @Transactional(readOnly = true)
@@ -38,33 +38,62 @@ import java.util.stream.Collectors;
 @Service
 public class GoalService {
     private final GoalRepository goalRepository;
+    private final TodoTaskScheduleRepository todoTaskScheduleRepository;
+    private final TodoRepository todoRepository;
 
     @Transactional
-    public void createGoal(String authorization, GoalServiceDto goalServiceDto) {
-        Long userId = getUserInfo(authorization).getUserId();
-        Goal goal = goalServiceDto.toEntity(userId);
+    public void createGoal(Long userId, GoalDto goalDto) {
+        Goal goal = Goal.createGoal(userId,
+                goalDto.getCategory(),
+                goalDto.getTitle(),
+                goalDto.getOrderNumber(),
+                createMindsets(goalDto.getMindsets()),
+                createTodos(goalDto.getTodos()));
         goalRepository.save(goal);
     }
 
-    public List<GoalTodoScheduleDto> getDailyTodosCount(String authorization, YearMonth yearMonth) {
-        Long userId = getUserInfo(authorization).getUserId();
+    private List<Todo> createTodos(List<TodoDto> todoDtos) {
+        return todoDtos.stream()
+                .map(TodoDto::toEntity)
+                .collect(Collectors.toList());
+    }
+
+    private List<Mindset> createMindsets(List<MindsetDto> mindsetDtos) {
+        return mindsetDtos.stream()
+                .map(mindsetServiceDto -> Mindset.createMindset(mindsetServiceDto.getContent()))
+                .collect(Collectors.toList());
+    }
+
+    public List<TodoScheduleCountDto> getDailyTodosCount(Long userId, YearMonth yearMonth) {
         return goalRepository.findDailyTodosCount(userId, yearMonth);
     }
 
-    public List<GoalServiceDto> getGoalsWithMindsetsByMethodAndCount(String method, Integer count, String authorization) {
-        List<Goal> goals = goalRepository.findByUserId(getUserInfo(authorization).getUserId());
-        return goals.stream().map(GoalServiceDto::of).collect(Collectors.toList());
+    public List<GoalMindsetDto> getGoalsWithMindsets(Long userId) {
+        return goalRepository.findByUserId(userId).stream().map(GoalMindsetDto::of).collect(Collectors.toList());
     }
 
-    public List<GoalServiceDto> getGoals(String authorization) {
-        Long userId = getUserInfo(authorization).getUserId();
+    public List<GoalDto> getGoals(Long userId) {
         List<Goal> goals = goalRepository.findByUserId(userId);
-        log.info("goals: {}",goals);
-        return goals.stream().map(GoalServiceDto::of).collect(Collectors.toList());
+        return goals.stream().map(GoalDto::of).collect(Collectors.toList());
     }
 
-    private static UserDto getUserInfo(String authorization) {
-        UserDto userDto = new UserDto(1L);
-        return userDto;
+    public List<GoalTodoScheduleDto> getDailyGoalsAndTodos(Long userId, LocalDate date, Boolean completionStatus, Pageable page) {
+        return goalRepository.findDailyGoalsAndTodosByUserIdAndLocalDate(userId, date);
+    }
+
+    @Transactional
+    public void updateTodoScheduleCompletionStatus(Long userId, Long todoScheduleId, Boolean completionStatus) {
+        TodoTaskSchedule schedule = todoTaskScheduleRepository.findById(todoScheduleId)
+                .orElseThrow(NoSuchElementException::new);
+        if (completionStatus) {
+            schedule.updateCompletionStatus();
+        } else {
+            schedule.updateInCompletionStatus();
+        }
+    }
+
+    public TodoDto getTodoDetail(Long userId, Long todoId) {
+        return TodoDto.of(todoRepository.findById(todoId)
+                .orElseThrow(NoSuchElementException::new));
     }
 }
