@@ -1,11 +1,11 @@
 package com.godlife.goalservice.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.querydsl.core.annotations.QueryProjection;
 
 import lombok.Data;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class GoalTodoScheduleDto {
@@ -29,7 +29,6 @@ public class GoalTodoScheduleDto {
 		private Long todoId;
 		private String title;
 		private Boolean completionStatue;
-		//        private int attainmentRate;
 
 		@QueryProjection
 		public TodoScheduleDto(Long goalId, Long todoId, String title, Boolean completionStatue) {
@@ -37,7 +36,6 @@ public class GoalTodoScheduleDto {
 			this.todoId = todoId;
 			this.title = title;
 			this.completionStatue = completionStatue;
-			//            this.attainmentRate = attainmentRate;
 		}
 	}
 }
