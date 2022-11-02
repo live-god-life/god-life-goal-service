@@ -1,4 +1,4 @@
-package com.godlife.goalservice.api.request;
+package com.godlife.goalservice.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,12 +1,7 @@
 package com.godlife.goalservice.api;
 
-import com.godlife.goalservice.api.request.CreateGoalRequest;
-import com.godlife.goalservice.api.request.UpdateGoalTodoScheduleRequest;
-import com.godlife.goalservice.api.response.ApiResponse;
-import com.godlife.goalservice.service.GoalService;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
+import java.time.YearMonth;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,8 +15,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.time.YearMonth;
+import com.godlife.goalservice.dto.request.CreateGoalRequest;
+import com.godlife.goalservice.dto.request.UpdateGoalTodoScheduleRequest;
+import com.godlife.goalservice.dto.response.ApiResponse;
+import com.godlife.goalservice.service.GoalService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /*
     todo
@@ -38,15 +38,16 @@ public class GoalController {
 	private static final String USER_ID_HEADER = "x-user";
 
 	@PostMapping("/goals")
-	public ResponseEntity<ApiResponse> createGoal(@RequestHeader(USER_ID_HEADER) Long userId,
-		@RequestBody CreateGoalRequest request) {
-		goalService.createGoal(userId, request.toGoalServiceDto());
+	public ResponseEntity<ApiResponse> createGoal(@RequestHeader(USER_ID_HEADER) Long userId, @RequestBody CreateGoalRequest request) {
+
+		goalService.createGoal(userId, request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.createPostSuccessResponse());
 	}
 
+	//===================================================================================================================
+
 	@GetMapping("/goals/todos/count")
-	public ResponseEntity<ApiResponse> getDailyTodosCount(@RequestHeader(USER_ID_HEADER) Long userId,
-		@RequestParam(value = "date") YearMonth date) {
+	public ResponseEntity<ApiResponse> getDailyTodosCount(@RequestHeader(USER_ID_HEADER) Long userId, @RequestParam(value = "date") YearMonth date) {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(ApiResponse.createGetSuccessResponse(goalService.getDailyTodosCount(userId, date)));
 	}
@@ -62,8 +63,6 @@ public class GoalController {
 				goalService.getDailyGoalsAndTodos(userId, date, completionStatus, page)));
 	}
 
-	//===================================================================================================================
-
 	@GetMapping("/goals/mindsets")
 	public ResponseEntity<ApiResponse> getGoalsWithMindsets(@RequestHeader(USER_ID_HEADER) Long userId) {
 		return ResponseEntity.status(HttpStatus.OK)
@@ -77,8 +76,7 @@ public class GoalController {
 	}
 
 	@GetMapping("/goals/todos/{todoId}")
-	public ResponseEntity<ApiResponse> getTodoDetail(@RequestHeader(USER_ID_HEADER) Long userId,
-		@PathVariable(value = "todoId") Long todoId) {
+	public ResponseEntity<ApiResponse> getTodoDetail(@RequestHeader(USER_ID_HEADER) Long userId, @PathVariable(value = "todoId") Long todoId) {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(ApiResponse.createGetSuccessResponse(goalService.getTodoDetail(userId, todoId)));
 	}

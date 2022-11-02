@@ -1,10 +1,10 @@
 package com.godlife.goalservice.dto;
 
+import java.time.LocalDate;
+
 import com.querydsl.core.annotations.QueryProjection;
 
 import lombok.Data;
-
-import java.time.LocalDate;
 
 @Data
 public class TodoScheduleCountDto {

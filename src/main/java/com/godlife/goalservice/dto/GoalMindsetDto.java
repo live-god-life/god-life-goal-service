@@ -1,12 +1,11 @@
 package com.godlife.goalservice.dto;
 
+import java.util.List;
+
 import com.godlife.goalservice.domain.Goal;
 
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -19,7 +18,6 @@ public class GoalMindsetDto {
 		return GoalMindsetDto.builder()
 			.goalId(goal.getGoalId())
 			.title(goal.getTitle())
-			.mindsets(goal.getMindsets().stream().map(MindsetDto::of).collect(Collectors.toList()))
 			.build();
 	}
 }

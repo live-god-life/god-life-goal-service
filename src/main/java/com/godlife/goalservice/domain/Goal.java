@@ -1,14 +1,7 @@
 package com.godlife.goalservice.domain;
 
-import com.godlife.goalservice.domain.enums.Category;
+import java.time.LocalDate;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import org.hibernate.annotations.Comment;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,13 +9,14 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import org.hibernate.annotations.Comment;
+
+import com.godlife.goalservice.domain.enums.Category;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /*
     todo
@@ -62,77 +56,55 @@ public class Goal extends BaseEntity {
 	@Comment("HEX 색상코드")
 	private String hexColorCode;
 
-	@Comment("정렬순서")
-	private Integer orderNumber;
-
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "goal_id")
-	private List<Mindset> mindsets;
-
-	@OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Todo> todos = new ArrayList<>();
-
 	//===목표 시작일 종료일===
 	private LocalDate startDate;
 	private LocalDate endDate;
 
 	//===카운팅 통계 데이터===
 	@Comment("마인드셋 카운트")
-	private int totalMindsetCount;
-	@Comment("진행중 투두 카운트")
-	private int onProgressTodoCount;
-	@Comment("완료됨 카운트")
-	private int completedTodoCount;
-	private int totalTodoCount;
+	private Integer totalMindsetCount;
+	@Comment("전체 투두 카운트")
+	private Integer totalTodoCount;
+	@Comment("완료된 투두 카운트")
+	private Integer completedTodoCount;
+	@Comment("전체 투두 일정 카운트")
+	private Integer totalTodoTaskScheduleCount;
+	@Comment("완료된 투두 일정 카운트")
+	private Integer completedTodoTaskScheduleCount;
 
-	private Goal(Long userId, Category category, String title, Integer orderNumber, List<Mindset> mindsets) {
+	private Goal(Long userId, Category category, String title) {
 		this.userId = userId;
 		this.category = category;
 		this.title = title;
-		this.orderNumber = orderNumber;
-		this.mindsets = mindsets;
+		this.completedStatus = Boolean.FALSE;
+		this.totalMindsetCount = 0;
+		this.totalTodoCount = 0;
+		this.completedTodoCount = 0;
+		this.totalTodoTaskScheduleCount = 0;
+		this.completedTodoTaskScheduleCount = 0;
 	}
 
-	public static Goal createGoal(Long userId, Category category, String title, Integer orderNumber,
-		List<Mindset> mindsets, List<Todo> todos) {
-		Goal goal = new Goal(userId, category, title, orderNumber, mindsets);
-		goal.setTodos(todos);
-		goal.setMindsetTotalCount(mindsets.size());
-		return goal;
+	public static Goal createGoal(Long userId, Category category, String title) {
+		return new Goal(userId, category, title);
 	}
 
-	private void setTodos(List<Todo> todos) {
-		for (Todo todo : todos) {
-			addTodo(todo);
-			if (todo.getDepth() == 1) {
-				totalTodoCount++;
-			}
-		}
-	}
-
-	private void setMindsetTotalCount(int totalMindsetCount) {
+	public void registerMindsetCount(int totalMindsetCount) {
 		this.totalMindsetCount = totalMindsetCount;
 	}
 
-	private void addTodo(Todo todo) {
-		todo.setGoal(this);
-		if (todo instanceof TodoFolder) {
-			if (Objects.nonNull(((TodoFolder)todo).getChildTodos())) {
-				((TodoFolder)todo).getChildTodos().forEach(todo1 -> todo1.setGoal(this));
-			}
-		}
-		this.todos.add(todo);
+	public void registerStartDate(LocalDate startDate) {
+		this.startDate = startDate;
 	}
 
-	public int getMindsetTotalCount() {
-		return mindsets.size();
+	public void registerEndDate(LocalDate endDate) {
+		this.endDate = endDate;
 	}
 
-	public int getProgressCount() {
-		return 0;
+	public void registerTotalTodoTaskCount(int totalTodoTaskScheduleCount) {
+		this.totalTodoTaskScheduleCount = totalTodoTaskScheduleCount;
 	}
 
-	public int getCompletedCount() {
-		return 0;
+	public void registerTotalTodoTaskScheduleCount(int totalTodoTaskScheduleCount) {
+		this.totalTodoTaskScheduleCount = totalTodoTaskScheduleCount;
 	}
 }

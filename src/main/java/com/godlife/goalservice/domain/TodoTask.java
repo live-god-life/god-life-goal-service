@@ -1,13 +1,11 @@
 package com.godlife.goalservice.domain;
 
-import com.godlife.goalservice.domain.converter.StringListConverter;
-import com.godlife.goalservice.domain.enums.RepetitionType;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import org.hibernate.annotations.Comment;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Convert;
@@ -15,12 +13,14 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
-import java.time.LocalDate;
-import java.time.format.TextStyle;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import org.hibernate.annotations.Comment;
+
+import com.godlife.goalservice.domain.converter.StringListConverter;
+import com.godlife.goalservice.domain.enums.RepetitionType;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /*
     todo
@@ -31,11 +31,6 @@ import java.util.Locale;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class TodoTask extends Todo {
-	@Comment("Task 시작일")
-	private LocalDate startDate;
-	@Comment("Task 종료일")
-	private LocalDate endDate;
-
 	@Comment("기간 type")
 	private RepetitionType repetitionType;
 
@@ -55,13 +50,11 @@ public class TodoTask extends Todo {
 	private Integer completedTodoTaskScheduleCount;
 
 	private TodoTask(String title, Integer depth, Integer orderNumber, LocalDate startDate, LocalDate endDate,
-		RepetitionType repetitionType, List<String> repetitionParams) {
-		super(title, depth, orderNumber);
-		this.startDate = startDate;
-		this.endDate = endDate;
+		RepetitionType repetitionType, List<String> repetitionParams, Goal goal) {
+		super(title, depth, orderNumber, startDate, endDate, goal);
 		this.repetitionType = repetitionType;
 		this.repetitionParams = repetitionParams;
-		createSchedules();
+		createSchedules(startDate, endDate);
 		setScheduleCount();
 	}
 
@@ -71,26 +64,26 @@ public class TodoTask extends Todo {
 	}
 
 	public static TodoTask createTodoTask(String title, Integer depth, Integer orderNumber, LocalDate startDate,
-		LocalDate endDate, RepetitionType repetitionType, List<String> repetitionParams) {
-		return new TodoTask(title, depth, orderNumber, startDate, endDate, repetitionType, repetitionParams);
+		LocalDate endDate, RepetitionType repetitionType, List<String> repetitionParams, Goal goal) {
+		return new TodoTask(title, depth, orderNumber, startDate, endDate, repetitionType, repetitionParams, goal);
 	}
 
-	private void createSchedules() {
+	private void createSchedules(LocalDate startDate, LocalDate endDate) {
 		switch (repetitionType) {
 			case DAY:
-				createDaySchedule();
+				createDaySchedule(startDate, endDate);
 				break;
 			case WEEK:
-				createWeekSchedule();
+				createWeekSchedule(startDate, endDate);
 				break;
 			case MONTH:
-				createMonthSchedule();
+				createMonthSchedule(startDate, endDate);
 				break;
 		}
 	}
 
 	//TODO 뭔가 리팩토링이 필요해보인다??
-	private void createDaySchedule() {
+	private void createDaySchedule(LocalDate startDate, LocalDate endDate) {
 		for (int i = 0; i <= ChronoUnit.DAYS.between(startDate, endDate); i++) {
 			TodoTaskSchedule todoTaskSchedule = new TodoTaskSchedule(startDate.plusDays(i));
 			todoTaskSchedule.setTodoTask(this);
@@ -98,7 +91,7 @@ public class TodoTask extends Todo {
 		}
 	}
 
-	private void createWeekSchedule() {
+	private void createWeekSchedule(LocalDate startDate, LocalDate endDate) {
 		for (int i = 0; i <= ChronoUnit.DAYS.between(startDate, endDate); i++) {
 			if (repetitionParams.contains(
 				startDate.plusDays(i).getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREA))) {
@@ -109,7 +102,7 @@ public class TodoTask extends Todo {
 		}
 	}
 
-	private void createMonthSchedule() {
+	private void createMonthSchedule(LocalDate startDate, LocalDate endDate) {
 		for (int i = 0; i <= ChronoUnit.DAYS.between(startDate, endDate); i++) {
 			if (repetitionParams.contains(String.valueOf(startDate.plusDays(i).getDayOfMonth()))) {
 				TodoTaskSchedule todoTaskSchedule = new TodoTaskSchedule(startDate.plusDays(i));

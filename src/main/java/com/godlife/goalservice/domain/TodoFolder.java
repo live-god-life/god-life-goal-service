@@ -1,16 +1,15 @@
 package com.godlife.goalservice.domain;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-
-import java.util.List;
 
 @Getter
 @DiscriminatorValue("folder")
@@ -18,17 +17,17 @@ import java.util.List;
 @Entity
 public class TodoFolder extends Todo {
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "parent_todo_id")
-	private List<Todo> childTodos;
+	@Embedded
+	private Todos childTodos;
 
-	private TodoFolder(String title, Integer depth, Integer orderNumber, List<Todo> childTodos) {
-		super(title, depth, orderNumber);
+	private TodoFolder(String title, Integer depth, Integer orderNumber, LocalDate startDate, LocalDate endDate, Todos childTodos, Goal goal) {
+		super(title, depth, orderNumber, startDate, endDate, goal);
 		this.childTodos = childTodos;
 	}
 
-	public static TodoFolder createTodoFolder(String title, Integer depth, Integer orderNumber, List<Todo> childTodos) {
-		return new TodoFolder(title, depth, orderNumber, childTodos);
+	public static TodoFolder createTodoFolder(String title, Integer depth, Integer orderNumber, List<Todo> childTodos, Goal goal) {
+		Todos todos = new Todos(childTodos);
+		return new TodoFolder(title, depth, orderNumber, todos.getFistStartDate(), todos.getLastEndDate(), todos, goal);
 	}
 }
 

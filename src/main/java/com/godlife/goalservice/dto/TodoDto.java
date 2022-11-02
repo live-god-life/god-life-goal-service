@@ -1,20 +1,17 @@
 package com.godlife.goalservice.dto;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.godlife.goalservice.domain.Todo;
 import com.godlife.goalservice.domain.TodoFolder;
 import com.godlife.goalservice.domain.TodoTask;
-import com.godlife.goalservice.domain.enums.RepetitionType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -61,22 +58,6 @@ public class TodoDto {
 				.depth(todoFolder.getDepth())
 				.orderNumber(todoFolder.getOrderNumber())
 				.build();
-		}
-	}
-
-	public Todo toEntity() {
-		if (type.equals("folder")) {
-			return TodoFolder.createTodoFolder(title, depth, orderNumber,
-				todos.stream().map(TodoDto::toEntity).collect(Collectors.toList()));
-		} else {
-			return TodoTask.createTodoTask(title,
-				depth,
-				orderNumber,
-				(LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyyMMdd"))),
-				LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyyMMdd")),
-				RepetitionType.valueOf(repetitionType),
-				repetitionParams
-			);
 		}
 	}
 }

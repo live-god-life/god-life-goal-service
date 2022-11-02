@@ -1,6 +1,6 @@
 package com.godlife.goalservice.utils;
 
-import com.godlife.goalservice.api.request.CreateGoalTodoRequest;
+import com.godlife.goalservice.dto.request.CreateGoalTodoRequest;
 
 import java.util.List;
 
