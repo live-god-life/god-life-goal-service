@@ -1,10 +1,10 @@
 package com.godlife.goalservice.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.godlife.goalservice.api.request.CreateGoalMindsetRequest;
-import com.godlife.goalservice.api.request.CreateGoalRequest;
-import com.godlife.goalservice.api.request.CreateGoalTodoRequest;
-import com.godlife.goalservice.api.request.UpdateGoalTodoScheduleRequest;
+import com.godlife.goalservice.dto.request.CreateGoalMindsetRequest;
+import com.godlife.goalservice.dto.request.CreateGoalRequest;
+import com.godlife.goalservice.dto.request.CreateGoalTodoRequest;
+import com.godlife.goalservice.dto.request.UpdateGoalTodoScheduleRequest;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /*
     todo
