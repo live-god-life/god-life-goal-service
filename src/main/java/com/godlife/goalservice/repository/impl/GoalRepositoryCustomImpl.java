@@ -33,10 +33,9 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 				new QTodoScheduleCountDto(todoTaskSchedule.scheduleDate,
 					todoTaskSchedule.todoTaskScheduleId.count().intValue().as("todoCount"))
 			)
-			.from(goal)
-			.leftJoin(goal.todos, todoTask._super)
+			.from(todoTask)
 			.leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
-			.where(goal.userId.eq(userId),
+			.where(todoTask.goal.userId.eq(userId),
 				todoTaskSchedule.scheduleDate.yearMonth().eq(yearMonth.getYear() * 100 + yearMonth.getMonthValue()))
 			.groupBy(todoTaskSchedule.scheduleDate)
 			.fetch();
@@ -52,8 +51,8 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 					goal.title
 				)
 			)
-			.from(goal)
-			.leftJoin(goal.todos, todoTask._super)
+			.from(todoTask)
+			.rightJoin(todoTask.goal, goal)
 			.leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
 			.where(goal.userId.eq(userId),
 				todoTaskSchedule.scheduleDate.eq(localDate))
@@ -69,8 +68,8 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 					todoTaskSchedule.completionStatus
 				)
 			)
-			.from(goal)
-			.leftJoin(goal.todos, todoTask._super)
+			.from(todoTask)
+			.leftJoin(todoTask.goal, goal)
 			.leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
 			.where(goal.userId.eq(userId),
 				todoTaskSchedule.scheduleDate.eq(localDate))
