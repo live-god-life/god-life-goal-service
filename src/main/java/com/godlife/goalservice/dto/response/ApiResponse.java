@@ -1,4 +1,4 @@
-package com.godlife.goalservice.api.response;
+package com.godlife.goalservice.dto.response;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
