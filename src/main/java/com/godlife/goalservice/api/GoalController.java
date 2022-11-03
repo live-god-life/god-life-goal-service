@@ -42,18 +42,32 @@ public class GoalController {
 	private static final int DEFAULT_PAGE = 25;
 
 	@PostMapping("/goals")
-	public ResponseEntity<ApiResponse> createGoal(@RequestHeader(USER_ID_HEADER) Long userId, @RequestBody CreateGoalRequest request) {
+	public ResponseEntity<ApiResponse> createGoal(@RequestHeader(USER_ID_HEADER) Long userId,
+		@RequestBody CreateGoalRequest request) {
 
 		goalService.createGoal(userId, request);
-		return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.createPostSuccessResponse());
+		return ResponseEntity
+			.status(HttpStatus.CREATED)
+			.body(ApiResponse.createPostSuccessResponse());
 	}
 
 	@GetMapping("/goals")
 	public ResponseEntity<ApiResponse> getGoals(@PageableDefault(size = DEFAULT_PAGE) Pageable page,
 		@RequestHeader(USER_ID_HEADER) Long userId,
 		@RequestParam(required = false) Boolean completionStatus) {
-		return ResponseEntity.status(HttpStatus.OK)
+
+		return ResponseEntity
+			.status(HttpStatus.OK)
 			.body(ApiResponse.createGetSuccessResponse(goalService.getGoals(page, userId, completionStatus)));
+	}
+
+	@GetMapping("/goals/mindsets")
+	public ResponseEntity<ApiResponse> getGoalsWithMindsets(@PageableDefault(size = DEFAULT_PAGE) Pageable page,
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@RequestParam(required = false) Boolean completionStatus) {
+
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(ApiResponse.createGetSuccessResponse(goalService.getGoalsWithMindsets(page, userId, completionStatus)));
 	}
 
 	//======================================리팩토링 완료======================================
@@ -73,12 +87,6 @@ public class GoalController {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(ApiResponse.createGetSuccessResponse(
 				goalService.getDailyGoalsAndTodos(userId, date, completionStatus, page)));
-	}
-
-	@GetMapping("/goals/mindsets")
-	public ResponseEntity<ApiResponse> getGoalsWithMindsets(@RequestHeader(USER_ID_HEADER) Long userId) {
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(ApiResponse.createGetSuccessResponse(goalService.getGoalsWithMindsets(userId)));
 	}
 
 	@GetMapping("/goals/todos/{todoId}")

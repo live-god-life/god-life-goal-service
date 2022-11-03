@@ -1,23 +1,34 @@
 package com.godlife.goalservice.repository.impl;
 
-import com.godlife.goalservice.dto.GoalTodoScheduleDto;
-import com.godlife.goalservice.dto.QGoalTodoScheduleDto;
-import com.godlife.goalservice.dto.QGoalTodoScheduleDto_TodoScheduleDto;
-import com.godlife.goalservice.dto.QTodoScheduleCountDto;
-import com.godlife.goalservice.dto.TodoScheduleCountDto;
-import com.godlife.goalservice.repository.GoalRepositoryCustom;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import javax.persistence.EntityManager;
+import static com.godlife.goalservice.domain.QGoal.*;
+import static com.godlife.goalservice.domain.QMindset.*;
+import static com.godlife.goalservice.domain.QTodoTask.*;
+import static com.godlife.goalservice.domain.QTodoTaskSchedule.*;
+import static com.querydsl.core.group.GroupBy.*;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-import static com.godlife.goalservice.domain.QGoal.goal;
-import static com.godlife.goalservice.domain.QTodoTask.todoTask;
-import static com.godlife.goalservice.domain.QTodoTaskSchedule.todoTaskSchedule;
+import javax.persistence.EntityManager;
+
+import org.springframework.data.domain.Pageable;
+
+import com.godlife.goalservice.dto.GoalMindsetDto;
+import com.godlife.goalservice.dto.GoalTodoScheduleDto;
+import com.godlife.goalservice.dto.QGoalMindsetDto;
+import com.godlife.goalservice.dto.QGoalTodoScheduleDto;
+import com.godlife.goalservice.dto.QGoalTodoScheduleDto_TodoScheduleDto;
+import com.godlife.goalservice.dto.QMindsetDto;
+import com.godlife.goalservice.dto.QTodoScheduleCountDto;
+import com.godlife.goalservice.dto.TodoScheduleCountDto;
+import com.godlife.goalservice.repository.GoalRepositoryCustom;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
@@ -39,6 +50,34 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 				todoTaskSchedule.scheduleDate.yearMonth().eq(yearMonth.getYear() * 100 + yearMonth.getMonthValue()))
 			.groupBy(todoTaskSchedule.scheduleDate)
 			.fetch();
+	}
+
+	@Override
+	public List<GoalMindsetDto> findGoalsAndMindsetsByUserIdAndCompletionStatus(Pageable page, Long userId, Boolean completionStatus) {
+		Map<Long, GoalMindsetDto> resultMap = queryFactory
+			.from(goal)
+			.join(mindset).on(goal.eq(mindset.goal))
+			.where(eqCompletionStatus(completionStatus))
+			.offset(page.getOffset())
+			.limit(page.getPageSize())
+			.transform(groupBy(goal.goalId).as(
+				new QGoalMindsetDto(
+					goal.goalId,
+					goal.title,
+					list(new QMindsetDto(mindset.mindsetId, mindset.content))
+				)
+			));
+
+		return resultMap.keySet().stream()
+			.map(resultMap::get)
+			.collect(Collectors.toList());
+	}
+
+	private BooleanExpression eqCompletionStatus(Boolean completionStatus) {
+		if (Objects.isNull(completionStatus)) {
+			return null;
+		}
+		return goal.completionStatus.eq(completionStatus);
 	}
 
 	//TODO 코드가 깔끔하지못해 리팩토링 예정
