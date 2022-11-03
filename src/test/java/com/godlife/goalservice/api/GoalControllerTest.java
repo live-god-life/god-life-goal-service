@@ -166,18 +166,17 @@ class GoalControllerTest {
 		//then
 	}
 
-	//======================================리팩토링 완료======================================
-
-	// @Test
+	@Test
 	@DisplayName("MyList/캘린더 특정 년월일의 투두리스트를 조회한다_미완료,완료 전체")
 	void getDailyGoalsAndLowestDepthTodos1() throws Exception {
 		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
 		performPostSampleGoalsWithMindsetsAndTodos();
 
 		//when
 		mockMvc.perform(get("/goals/todos")
 				.header(USER_ID_HEADER, TEST_USER_ID)
-				.queryParam("date", "20221003")
+				.queryParam("date", "20221031")
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andDo(document("get-goals-with-todos", getSuccessResponseFieldsSnippet()))
@@ -185,17 +184,18 @@ class GoalControllerTest {
 		//then
 	}
 
-	// @Test
+	@Test
 	@DisplayName("MyList/캘린더 특정 년월일의 투두리스트를 조회한다_미완료")
 	void getDailyGoalsAndLowestDepthTodos2() throws Exception {
 		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
 		performPostSampleGoalsWithMindsetsAndTodos();
 
 		//when
 		mockMvc.perform(get("/goals/todos")
 				.header(USER_ID_HEADER, TEST_USER_ID)
-				.queryParam("date", "20221003")
-				.queryParam("size", "5")
+				.queryParam("date", "20221031")
+				.queryParam("size", "1")
 				.queryParam("completionStatus", "false")
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -203,6 +203,8 @@ class GoalControllerTest {
 			.andDo(print());
 		//then
 	}
+
+	//======================================리팩토링 완료======================================
 
 	// @Test
 	@DisplayName("특정 년월일의 투두리스트에 완료체크를 한다")
