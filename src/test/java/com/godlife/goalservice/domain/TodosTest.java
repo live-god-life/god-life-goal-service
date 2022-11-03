@@ -24,6 +24,7 @@ class TodosTest {
 			LocalDate.of(2022, 10, 3),
 			RepetitionType.DAY,
 			List.of(),
+			"0900",
 			null
 		);
 		Todo todo2 = TodoTask.createTodoTask(
@@ -34,6 +35,7 @@ class TodosTest {
 			LocalDate.of(2022, 10, 31),
 			RepetitionType.DAY,
 			List.of(),
+			"0900",
 			null
 		);
 
@@ -59,6 +61,7 @@ class TodosTest {
 			LocalDate.of(2022, 10, 3),
 			RepetitionType.DAY,
 			List.of(),
+			"0900",
 			null
 		);
 		Todo todo2 = TodoTask.createTodoTask(
@@ -69,6 +72,7 @@ class TodosTest {
 			LocalDate.of(2022, 10, 31),
 			RepetitionType.DAY,
 			List.of(),
+			"0900",
 			null
 		);
 		Todo todo3_1 = TodoTask.createTodoTask(
@@ -79,6 +83,7 @@ class TodosTest {
 			LocalDate.of(2022, 10, 31),
 			RepetitionType.DAY,
 			List.of(),
+			"0900",
 			null
 		);
 		Todo todo3_2 = TodoTask.createTodoTask(
@@ -89,6 +94,7 @@ class TodosTest {
 			LocalDate.of(2022, 10, 31),
 			RepetitionType.DAY,
 			List.of(),
+			"0900",
 			null
 		);
 		Todo todo3 = TodoFolder.createTodoFolder("투두폴더", 1, 3, List.of(todo3_1, todo3_2), null);
@@ -110,6 +116,7 @@ class TodosTest {
 			LocalDate.of(2022, 10, 3),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			null
 		);
 		TodoTask todo2 = TodoTask.createTodoTask(
@@ -120,6 +127,7 @@ class TodosTest {
 			LocalDate.of(2022, 10, 31),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			null
 		);
 	    //when

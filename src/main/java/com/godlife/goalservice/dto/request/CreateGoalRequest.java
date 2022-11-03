@@ -64,6 +64,7 @@ public class CreateGoalRequest {
 				LocalDate.parse(todoDto.getEndDate(), DateTimeFormatter.ofPattern("yyyyMMdd")),
 				RepetitionType.valueOf(todoDto.getRepetitionType()),
 				todoDto.getRepetitionParams(),
+				todoDto.getNotification(),
 				goal);
 		}
 	}

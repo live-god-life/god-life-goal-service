@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.godlife.goalservice.dto.request.CreateGoalRequest;
 import com.godlife.goalservice.dto.request.UpdateGoalTodoScheduleRequest;
 import com.godlife.goalservice.dto.response.ApiResponse;
-import com.godlife.goalservice.exception.NoSuchTodosInTodoEntityException;
+import com.godlife.goalservice.exception.NoSuchTodoException;
+import com.godlife.goalservice.exception.NoSuchTodosInTodoException;
 import com.godlife.goalservice.service.GoalService;
 
 import lombok.RequiredArgsConstructor;
@@ -93,13 +94,15 @@ public class GoalController {
 			.body(ApiResponse.createGetSuccessResponse(goalService.getDailyGoalsAndTodos(page, userId, searchedDate, completionStatus)));
 	}
 
-	//======================================리팩토링 완료======================================
-
 	@GetMapping("/goals/todos/{todoId}")
-	public ResponseEntity<ApiResponse> getTodoDetail(@RequestHeader(USER_ID_HEADER) Long userId, @PathVariable(value = "todoId") Long todoId) {
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(ApiResponse.createGetSuccessResponse(goalService.getTodoDetail(userId, todoId)));
+	public ResponseEntity<ApiResponse> getTodoDetail(
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@PathVariable(value = "todoId") Long todoId) {
+
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getTodoDetail(userId, todoId)));
 	}
+
+	//======================================리팩토링 완료======================================
 
 	@PatchMapping("/goals/todoSchedules/{todoScheduleId}")
 	public ResponseEntity<ApiResponse> patchCompletionStatus(@RequestHeader(USER_ID_HEADER) Long userId,
@@ -110,7 +113,12 @@ public class GoalController {
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<ApiResponse> noSuchTodosInTodoException(NoSuchTodosInTodoEntityException e) {
+	public ResponseEntity<ApiResponse> noSuchTodosInTodoException(NoSuchTodosInTodoException e) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.createErrorResponse(e.getMessage()));
+	}
+
+	@ExceptionHandler
+	public ResponseEntity<ApiResponse> noSuchTodoException(NoSuchTodoException e) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.createErrorResponse(e.getMessage()));
 	}
 }

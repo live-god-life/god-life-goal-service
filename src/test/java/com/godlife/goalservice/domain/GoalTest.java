@@ -46,6 +46,7 @@ class GoalTest {
 			LocalDate.of(2022, 10, 31),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			goal);
 		Todo todo2 = TodoTask.createTodoTask(
 			"title",
@@ -55,6 +56,7 @@ class GoalTest {
 			LocalDate.of(2022, 10, 31),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			goal);
 		Todo todo3_1 = TodoTask.createTodoTask(
 			"title",
@@ -64,6 +66,7 @@ class GoalTest {
 			LocalDate.of(2022, 10, 31),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			goal);
 
 		Todo todo3 = TodoFolder.createTodoFolder(
@@ -96,6 +99,7 @@ class GoalTest {
 			LocalDate.of(2022, 10, 31),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			goal);
 		Todo todo2 = TodoTask.createTodoTask(
 			"title",
@@ -105,6 +109,7 @@ class GoalTest {
 			LocalDate.of(2022, 10, 31),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			goal);
 		Todo todo3_1 = TodoTask.createTodoTask(
 			"title",
@@ -114,6 +119,7 @@ class GoalTest {
 			LocalDate.of(2022, 10, 31),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			goal);
 
 		Todo todo3 = TodoFolder.createTodoFolder(

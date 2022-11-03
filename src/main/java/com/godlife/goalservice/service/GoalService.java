@@ -18,9 +18,10 @@ import com.godlife.goalservice.domain.Todos;
 import com.godlife.goalservice.dto.GoalDto;
 import com.godlife.goalservice.dto.GoalMindsetDto;
 import com.godlife.goalservice.dto.GoalTodoScheduleDto;
-import com.godlife.goalservice.dto.TodoDto;
+import com.godlife.goalservice.dto.TodoDetailDto;
 import com.godlife.goalservice.dto.TodoScheduleCountDto;
 import com.godlife.goalservice.dto.request.CreateGoalRequest;
+import com.godlife.goalservice.exception.NoSuchTodoException;
 import com.godlife.goalservice.repository.GoalRepository;
 import com.godlife.goalservice.repository.MindsetRepository;
 import com.godlife.goalservice.repository.TodoRepository;
@@ -79,6 +80,10 @@ public class GoalService {
 		return goalRepository.findDailyGoalsAndTodosByUserIdAndLocalDate(page, userId, searchedDate, completionStatus);
 	}
 
+	public TodoDetailDto getTodoDetail(Long userId, Long todoId) {
+		return TodoDetailDto.of(todoRepository.findById(todoId).orElseThrow(NoSuchTodoException::new));
+	}
+
 	//======================================리팩토링 완료======================================
 
 	@Transactional
@@ -90,10 +95,5 @@ public class GoalService {
 		} else {
 			schedule.updateInCompletionStatus();
 		}
-	}
-
-	public TodoDto getTodoDetail(Long userId, Long todoId) {
-		return TodoDto.of(todoRepository.findById(todoId)
-			.orElseThrow(NoSuchElementException::new));
 	}
 }

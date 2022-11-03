@@ -24,6 +24,7 @@ class TodoTaskTest {
 			LocalDate.parse("20221031", DateTimeFormatter.ofPattern("yyyyMMdd")),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			Goal.createGoal(1L, Category.CAREER, "제목"));
 		//when
 		List<TodoTaskSchedule> result = todoTask.getTodoTaskSchedules();
@@ -42,7 +43,9 @@ class TodoTaskTest {
 			LocalDate.parse("20221001", DateTimeFormatter.ofPattern("yyyyMMdd")),
 			LocalDate.parse("20221031", DateTimeFormatter.ofPattern("yyyyMMdd")),
 			RepetitionType.WEEK,
-			List.of("월", "수", "금"), Goal.createGoal(1L, Category.CAREER, "제목"));
+			List.of("월", "수", "금"),
+			"0900",
+			Goal.createGoal(1L, Category.CAREER, "제목"));
 		//when
 		List<TodoTaskSchedule> result = todoTask.getTodoTaskSchedules();
 
@@ -61,7 +64,9 @@ class TodoTaskTest {
 			LocalDate.parse("20221001", DateTimeFormatter.ofPattern("yyyyMMdd")),
 			LocalDate.parse("20221031", DateTimeFormatter.ofPattern("yyyyMMdd")),
 			RepetitionType.MONTH,
-			List.of("1", "13", "21"), Goal.createGoal(1L, Category.CAREER, "제목"));
+			List.of("1", "13", "21"),
+			"0900",
+			Goal.createGoal(1L, Category.CAREER, "제목"));
 		//when
 		List<TodoTaskSchedule> result = todoTask.getTodoTaskSchedules();
 
@@ -80,6 +85,7 @@ class TodoTaskTest {
 			LocalDate.parse("20221002", DateTimeFormatter.ofPattern("yyyyMMdd")),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			Goal.createGoal(1L, Category.CAREER, "제목"));
 
 		//when
@@ -106,6 +112,7 @@ class TodoTaskTest {
 			LocalDate.parse("20221002", DateTimeFormatter.ofPattern("yyyyMMdd")),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			Goal.createGoal(1L, Category.CAREER, "제목"));
 
 		//when
@@ -137,6 +144,7 @@ class TodoTaskTest {
 			LocalDate.parse("20221002", DateTimeFormatter.ofPattern("yyyyMMdd")),
 			RepetitionType.DAY,
 			null,
+			"0900",
 			Goal.createGoal(1L, Category.CAREER, "제목"));
 
 		//when

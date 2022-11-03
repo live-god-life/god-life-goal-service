@@ -204,6 +204,22 @@ class GoalControllerTest {
 		//then
 	}
 
+	@Test
+	@DisplayName("투두의 상세정보를 조회한다")
+	void getTodoDetail() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
+
+		//when
+		mockMvc.perform(get("/goals/todos/{todoId}", 2)
+				.header(USER_ID_HEADER, TEST_USER_ID)
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			//                .andDo(document("get-goals-with-todos", getSuccessResponseFieldsSnippet()))
+			.andDo(print());
+		//then
+	}
+
 	//======================================리팩토링 완료======================================
 
 	// @Test
@@ -224,22 +240,6 @@ class GoalControllerTest {
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			//                .andDo(document("patch-goals-todoSchedule", getSuccessResponseFieldsSnippet()))
-			.andDo(print());
-		//then
-	}
-
-	// @Test
-	@DisplayName("투두의 상세정보를 조회한다")
-	void getTodoDetail() throws Exception {
-		//given
-		performPostSampleGoalsWithMindsetsAndTodos();
-
-		//when
-		mockMvc.perform(get("/goals/todos/{todoId}", 2)
-				.header(USER_ID_HEADER, TEST_USER_ID)
-				.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			//                .andDo(document("get-goals-with-todos", getSuccessResponseFieldsSnippet()))
 			.andDo(print());
 		//then
 	}
