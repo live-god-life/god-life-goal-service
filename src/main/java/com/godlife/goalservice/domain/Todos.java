@@ -4,12 +4,13 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+
+import com.godlife.goalservice.exception.NoSuchTodosInTodoEntityException;
 
 @Embeddable
 public class Todos {
@@ -24,13 +25,15 @@ public class Todos {
 	public LocalDate getFistStartDate() {
 		return childTodos.stream()
 			.min(Comparator.comparing(Todo::getStartDate))
-			.orElseThrow(NoSuchElementException::new).getStartDate();
+			.orElseThrow(NoSuchTodosInTodoEntityException::new)
+			.getStartDate();
 	}
 
 	public LocalDate getLastEndDate() {
 		return childTodos.stream()
 			.max(Comparator.comparing(Todo::getEndDate))
-			.orElseThrow(NoSuchElementException::new).getEndDate();
+			.orElseThrow(NoSuchTodosInTodoEntityException::new)
+			.getEndDate();
 	}
 
 	public List<Todo> get() {
