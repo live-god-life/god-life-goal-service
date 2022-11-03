@@ -1,20 +1,6 @@
 package com.godlife.goalservice.repository;
 
-import com.godlife.goalservice.domain.Goal;
-import com.godlife.goalservice.domain.Mindset;
-import com.godlife.goalservice.domain.TodoTask;
-import com.godlife.goalservice.domain.enums.Category;
-import com.godlife.goalservice.domain.enums.RepetitionType;
-import com.godlife.goalservice.dto.GoalTodoScheduleDto;
-import com.godlife.goalservice.dto.TodoScheduleCountDto;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import javax.persistence.EntityManager;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -23,7 +9,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javax.persistence.EntityManager;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Pageable;
+
+import com.godlife.goalservice.domain.Goal;
+import com.godlife.goalservice.domain.Mindset;
+import com.godlife.goalservice.domain.TodoTask;
+import com.godlife.goalservice.domain.enums.Category;
+import com.godlife.goalservice.domain.enums.RepetitionType;
+import com.godlife.goalservice.dto.GoalTodoScheduleDto;
+import com.godlife.goalservice.dto.TodoScheduleCountDto;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
@@ -155,8 +156,11 @@ class GoalRepositoryTest {
 		goalRepository.save(goal);
 
 		//when
-		List<GoalTodoScheduleDto> result = goalRepository.findDailyGoalsAndTodosByUserIdAndLocalDate(1L,
-			LocalDate.of(2022, 10, 1));
+		List<GoalTodoScheduleDto> result = goalRepository.findDailyGoalsAndTodosByUserIdAndLocalDate(
+			Pageable.ofSize(25),
+			1L,
+			LocalDate.of(2022, 10, 1),
+			false);
 
 		//then
 		assertThat(result.size()).isEqualTo(1);

@@ -82,18 +82,18 @@ public class GoalController {
 			.body(ApiResponse.createGetSuccessResponse(goalService.getDailyTodosCount(userId, date)));
 	}
 
-	//======================================리팩토링 완료======================================
-
 	@GetMapping("/goals/todos")
-	public ResponseEntity<ApiResponse> getDailyGoalsAndTodos(@RequestHeader(USER_ID_HEADER) Long userId,
-		@RequestParam(value = "date") LocalDate date,
-		@RequestParam(value = "completionStatus", required = false) Boolean completionStatus,
-		Pageable page) {
-		log.info("userId: {}, date: {}, completionStatus: {}, page: {}", userId, date, completionStatus, page);
+	public ResponseEntity<ApiResponse> getDailyGoalsAndTodos(
+		@PageableDefault(size = DEFAULT_PAGE) Pageable page,
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@RequestParam(value = "date") LocalDate searchedDate,
+		@RequestParam(value = "completionStatus", required = false) Boolean completionStatus) {
+
 		return ResponseEntity.status(HttpStatus.OK)
-			.body(ApiResponse.createGetSuccessResponse(
-				goalService.getDailyGoalsAndTodos(userId, date, completionStatus, page)));
+			.body(ApiResponse.createGetSuccessResponse(goalService.getDailyGoalsAndTodos(page, userId, searchedDate, completionStatus)));
 	}
+
+	//======================================리팩토링 완료======================================
 
 	@GetMapping("/goals/todos/{todoId}")
 	public ResponseEntity<ApiResponse> getTodoDetail(@RequestHeader(USER_ID_HEADER) Long userId, @PathVariable(value = "todoId") Long todoId) {

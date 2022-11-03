@@ -1,0 +1,40 @@
+{
+  "status": "success",
+  "message": "ok",
+  "data": [
+    {
+      "goalId": 1,
+      "title": "이직하기",
+      "todoSchedules": [
+        {
+          "todoScheduleId": 31,
+          "todoId": 2,
+          "title": "컨셉잡기",
+          "completionStatue": false,
+          "taskType": "Todo"
+        },
+        {
+          "todoScheduleId": 50,
+          "todoId": 6,
+          "title": "IT 동아리 서류 내기",
+          "completionStatue": false,
+          "taskType": "D-day"
+        },
+        {
+          "todoScheduleId": 63,
+          "todoId": 7,
+          "title": "파이썬 공부",
+          "completionStatue": false,
+          "taskType": "Todo"
+        },
+        {
+          "todoScheduleId": 64,
+          "todoId": 8,
+          "title": "외주",
+          "completionStatue": false,
+          "taskType": "D-day"
+        }
+      ]
+    }
+  ]
+}
