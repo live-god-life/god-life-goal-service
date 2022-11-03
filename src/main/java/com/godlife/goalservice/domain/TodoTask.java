@@ -53,10 +53,12 @@ public class TodoTask extends Todo {
 	private Integer completedTodoTaskScheduleCount;
 
 	private TodoTask(String title, Integer depth, Integer orderNumber, LocalDate startDate, LocalDate endDate,
-		RepetitionType repetitionType, List<String> repetitionParams, Goal goal) {
+		RepetitionType repetitionType, List<String> repetitionParams, String notification, Goal goal) {
+
 		super(title, depth, orderNumber, startDate, endDate, goal);
 		this.repetitionType = repetitionType;
 		this.repetitionParams = repetitionParams;
+		this.notification = notification;
 		createSchedules(startDate, endDate);
 		setScheduleCount();
 	}
@@ -67,8 +69,9 @@ public class TodoTask extends Todo {
 	}
 
 	public static TodoTask createTodoTask(String title, Integer depth, Integer orderNumber, LocalDate startDate,
-		LocalDate endDate, RepetitionType repetitionType, List<String> repetitionParams, Goal goal) {
-		return new TodoTask(title, depth, orderNumber, startDate, endDate, repetitionType, repetitionParams, goal);
+		LocalDate endDate, RepetitionType repetitionType, List<String> repetitionParams, String notification, Goal goal) {
+
+		return new TodoTask(title, depth, orderNumber, startDate, endDate, repetitionType, repetitionParams, notification, goal);
 	}
 
 	private void createSchedules(LocalDate startDate, LocalDate endDate) {
