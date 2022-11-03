@@ -62,7 +62,7 @@ class GoalControllerTest {
 			.andDo(print());
 	}
 
-	@Test
+	// @Test
 	@DisplayName("MyList/캘린더 특정 년월의 일자별 투두카운트를 조회한다")
 	void getDailyTodosCount() throws Exception {
 		//given
@@ -80,7 +80,7 @@ class GoalControllerTest {
 		//then
 	}
 
-	@Test
+	// @Test
 	@DisplayName("MyList/캘린더 특정 년월일의 투두리스트를 조회한다_미완료,완료 전체")
 	void getDailyGoalsAndLowestDepthTodos1() throws Exception {
 		//given
@@ -97,7 +97,7 @@ class GoalControllerTest {
 		//then
 	}
 
-	@Test
+	// @Test
 	@DisplayName("MyList/캘린더 특정 년월일의 투두리스트를 조회한다_미완료")
 	void getDailyGoalsAndLowestDepthTodos2() throws Exception {
 		//given
@@ -116,7 +116,7 @@ class GoalControllerTest {
 		//then
 	}
 
-	@Test
+	// @Test
 	@DisplayName("특정 년월일의 투두리스트에 완료체크를 한다")
 	void put() throws Exception {
 		//given
@@ -144,52 +144,54 @@ class GoalControllerTest {
 		//given
 		performPostSampleGoalsWithMindsetsAndTodos();
 
-		mockMvc.perform(
-			post("/goals")
-				.header(USER_ID_HEADER, TEST_USER_ID)
-				.content(objectMapper.writeValueAsString(CreateGoalRequest.builder()
-					.title("1년안에 5000만원 모으기")
-					.categoryCode("CAREER")
-					.mindsets(Collections.emptyList())
-					.todos(Collections.emptyList())
-					.build()))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-		);
-
-		mockMvc.perform(
-			post("/goals")
-				.header(USER_ID_HEADER, TEST_USER_ID)
-				.content(objectMapper.writeValueAsString(CreateGoalRequest.builder()
-					.title("불안 잠재우기")
-					.categoryCode("CAREER")
-					.mindsets(Collections.emptyList())
-					.todos(Collections.emptyList())
-					.build()))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-		);
-
 		//when
 		ResultActions result = performGetWithAuthorizationByUrlTemplate("/goals");
 
 		//then
 		result
 			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.[0]").exists())
+			.andDo(document("get-goals",
+				relaxedResponseFields(
+					fieldWithPath("status").description("api 응답 상태"),
+					fieldWithPath("message").description("api 응답 메시지"),
+					fieldWithPath("data").description("api 응답 데이터"),
+					fieldWithPath("data[].goalId").description("목표 아이디"),
+					fieldWithPath("data[].title").description("목표 제목")
+				)))
+			.andDo(print());
+	}
+
+	@Test
+	@DisplayName("미완료인 모든 목표를 가져온다")
+	void getAllGoals1() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
+
+		//when
+		ResultActions result = mockMvc.perform(get("/goals")
+			.header(USER_ID_HEADER, TEST_USER_ID)
+			.queryParam("completionStatus", "false")
+			.accept(MediaType.APPLICATION_JSON)
+		);
+
+		//then
+		result
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.[0]").exists())
 			.andDo(document("get-goals",
 				relaxedResponseFields(
 					fieldWithPath("status").description("api 응답 상태"),
 					fieldWithPath("message").description("api 응답 메시지"),
 					fieldWithPath("data").description("api 응답 데이터"),
 
-					fieldWithPath("data[].goalId").description("목표 아이디"),
-					fieldWithPath("data[].title").description("목표 제목"),
-					fieldWithPath("data[].userId").description("사용자 아이디")
+					fieldWithPath("data[].goalId").optional().description("목표 아이디").type(Object.class),
+					fieldWithPath("data[].title").optional().description("목표 제목").type(Object.class)
 				)))
 			.andDo(print());
 	}
 
-	@Test
+	// @Test
 	@DisplayName("모든 마인드셋을 가져온다")
 	void getAllGoalsWithMindsets() throws Exception {
 		//given
@@ -213,7 +215,7 @@ class GoalControllerTest {
 			.andDo(print());
 	}
 
-	@Test
+	// @Test
 	@DisplayName("투두의 상세정보를 조회한다")
 	void getTodoDetail() throws Exception {
 		//given
@@ -299,7 +301,7 @@ class GoalControllerTest {
 			)
 		);
 
-		CreateGoalTodoRequest createGoalTodoTaskRequest = getCreateGoalTodoTaskRequest(
+		CreateGoalTodoRequest todoTask1 = getCreateGoalTodoTaskRequest(
 			"외주",
 			1,
 			3,
@@ -315,7 +317,7 @@ class GoalControllerTest {
 			.categoryName("커리어")
 			.categoryCode("CAREER")
 			.mindsets(List.of(createGoalMindsetRequest))
-			.todos(List.of(todoFolder1, todoFolder2))
+			.todos(List.of(todoFolder1, todoFolder2, todoTask1))
 			.build();
 
 		return mockMvc.perform(
