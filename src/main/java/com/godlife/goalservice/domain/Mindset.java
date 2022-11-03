@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import com.sun.istack.NotNull;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +36,8 @@ public class Mindset extends BaseEntity {
 		this.goal = goal;
 	}
 
-	public static Mindset createMindset(String content, Goal goal) {
+	public static Mindset createMindset(String content, @NotNull Goal goal) {
+		goal.addMindsetCount();
 		return new Mindset(content, goal);
 	}
 }
