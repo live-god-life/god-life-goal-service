@@ -11,7 +11,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 public interface GoalRepositoryCustom {
-	List<GoalTodoScheduleDto> findDailyGoalsAndTodosByUserIdAndLocalDate(Long userId, LocalDate localDate);
+	List<GoalTodoScheduleDto> findDailyGoalsAndTodosByUserIdAndLocalDate(Pageable page, Long userId, LocalDate searchedDate, Boolean completionStatus);
 
 	List<TodoScheduleCountDto> findDailyTodosCount(Long userId, YearMonth yearMonth);
 

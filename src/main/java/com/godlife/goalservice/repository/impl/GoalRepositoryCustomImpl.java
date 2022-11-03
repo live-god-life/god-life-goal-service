@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -53,9 +52,7 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 						.when(todoTask.repetitionType.eq(RepetitionType.NONE))
 						.then(1)
 						.otherwise((Integer)null)
-						.count().intValue().as("dDayCount")
-				)
-			)
+						.count().intValue().as("dDayCount")))
 			.from(todoTask)
 			.leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
 			.where(todoTask.goal.userId.eq(userId),
@@ -69,45 +66,43 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 		Map<Long, GoalMindsetDto> resultMap = queryFactory
 			.from(goal)
 			.join(mindset).on(goal.eq(mindset.goal))
-			.where(eqCompletionStatus(completionStatus))
+			.where(eqGoalCompletionStatus(completionStatus))
 			.offset(page.getOffset())
 			.limit(page.getPageSize())
-			.transform(groupBy(goal.goalId).as(
-				new QGoalMindsetDto(
-					goal.goalId,
-					goal.title,
-					list(new QMindsetDto(mindset.mindsetId, mindset.content))
-				)
-			));
+			.transform(
+				groupBy(goal.goalId).as(
+					new QGoalMindsetDto(
+						goal.goalId,
+						goal.title,
+						list(new QMindsetDto(mindset.mindsetId, mindset.content)))));
 
 		return resultMap.keySet().stream()
 			.map(resultMap::get)
 			.collect(Collectors.toList());
 	}
 
-	private BooleanExpression eqCompletionStatus(Boolean completionStatus) {
+	private BooleanExpression eqGoalCompletionStatus(Boolean completionStatus) {
 		if (Objects.isNull(completionStatus)) {
 			return null;
 		}
 		return goal.completionStatus.eq(completionStatus);
 	}
 
-	//TODO 코드가 깔끔하지못해 리팩토링 예정
 	@Override
-	public List<GoalTodoScheduleDto> findDailyGoalsAndTodosByUserIdAndLocalDate(Long userId, LocalDate localDate) {
+	public List<GoalTodoScheduleDto> findDailyGoalsAndTodosByUserIdAndLocalDate(Pageable page, Long userId, LocalDate searchedDate, Boolean completionStatus) {
 		List<GoalTodoScheduleDto> goals = queryFactory
 			.select(
 				new QGoalTodoScheduleDto(
 					goal.goalId,
-					goal.title
-				)
-			)
+					goal.title))
 			.from(todoTask)
 			.rightJoin(todoTask.goal, goal)
 			.leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
 			.where(goal.userId.eq(userId),
-				todoTaskSchedule.scheduleDate.eq(localDate))
+				todoTaskSchedule.scheduleDate.eq(searchedDate))
 			.groupBy(goal.goalId, goal.title)
+			.offset(page.getOffset())
+			.limit(page.getPageSize())
 			.fetch();
 
 		List<GoalTodoScheduleDto.TodoScheduleDto> todoSchedules = queryFactory
@@ -115,25 +110,28 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 				new QGoalTodoScheduleDto_TodoScheduleDto(
 					goal.goalId,
 					todoTaskSchedule.todoTaskScheduleId,
+					todoTask.todoId,
 					todoTask.title,
-					todoTaskSchedule.completionStatus
-				)
-			)
+					todoTaskSchedule.completionStatus,
+					todoTask.repetitionType))
 			.from(todoTask)
 			.leftJoin(todoTask.goal, goal)
 			.leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
 			.where(goal.userId.eq(userId),
-				todoTaskSchedule.scheduleDate.eq(localDate))
+				todoTaskSchedule.scheduleDate.eq(searchedDate),
+				eqTodoTaskScheduleCompletionStatus(completionStatus))
 			.fetch();
 
-		todoSchedules.forEach(todoScheduleDto -> {
-			GoalTodoScheduleDto goalTodoScheduleDto1 = goals.stream()
-				.filter(goalTodoScheduleDto -> goalTodoScheduleDto.getGoalId().equals(todoScheduleDto.getGoalId()))
-				.findAny()
-				.orElseThrow(NoSuchElementException::new);
-			goalTodoScheduleDto1.addTodoSchedule(todoScheduleDto);
-		});
-
+		goals.forEach(goal -> goal.addTodoSchedule(todoSchedules.stream()
+			.filter(todoSchedule -> todoSchedule.getGoalId().equals(goal.getGoalId()))
+			.collect(Collectors.toList())));
 		return goals;
+	}
+
+	private BooleanExpression eqTodoTaskScheduleCompletionStatus(Boolean completionStatus) {
+		if (Objects.isNull(completionStatus)) {
+			return null;
+		}
+		return todoTaskSchedule.completionStatus.eq(completionStatus);
 	}
 }

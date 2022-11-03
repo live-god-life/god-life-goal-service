@@ -74,12 +74,12 @@ public class GoalService {
 		return goalRepository.findDailyTodosCount(userId, yearMonth);
 	}
 
-	//======================================리팩토링 완료======================================
+	public List<GoalTodoScheduleDto> getDailyGoalsAndTodos(Pageable page, Long userId, LocalDate searchedDate, Boolean completionStatus) {
 
-	public List<GoalTodoScheduleDto> getDailyGoalsAndTodos(Long userId, LocalDate date, Boolean completionStatus,
-		Pageable page) {
-		return goalRepository.findDailyGoalsAndTodosByUserIdAndLocalDate(userId, date);
+		return goalRepository.findDailyGoalsAndTodosByUserIdAndLocalDate(page, userId, searchedDate, completionStatus);
 	}
+
+	//======================================리팩토링 완료======================================
 
 	@Transactional
 	public void updateTodoScheduleCompletionStatus(Long userId, Long todoScheduleId, Boolean completionStatus) {
