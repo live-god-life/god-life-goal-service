@@ -2,8 +2,8 @@ package com.godlife.goalservice.exception;
 
 import java.util.NoSuchElementException;
 
-public class NoSuchTodosInTodoEntityException extends NoSuchElementException {
-	public NoSuchTodosInTodoEntityException() {
+public class NoSuchTodosInTodoException extends NoSuchElementException {
+	public NoSuchTodosInTodoException() {
 		super("Not found Todos in Todo");
 	}
 }
