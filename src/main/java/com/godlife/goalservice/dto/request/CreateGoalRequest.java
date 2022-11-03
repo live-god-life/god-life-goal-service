@@ -45,8 +45,7 @@ public class CreateGoalRequest {
 
 	//TODO 자식 인스턴스를 만들때 뭔가 깔끔하지 못한데,,,, 다른 방법이 없나?
 	private Todo createTodo(CreateGoalTodoRequest todoDto, Goal goal) {
-		String type = todoDto.getType();
-		if (type.equals("folder")) {
+		if ("folder".equals(todoDto.getType())) {
 			return TodoFolder.createTodoFolder(
 				todoDto.getTitle(),
 				todoDto.getDepth(),
@@ -55,8 +54,7 @@ public class CreateGoalRequest {
 					.stream()
 					.map(createGoalTodoRequest -> createTodo(createGoalTodoRequest, goal))
 					.collect(Collectors.toList()),
-				goal
-			);
+				goal);
 		} else {
 			return TodoTask.createTodoTask(
 				todoDto.getTitle(),
@@ -66,8 +64,7 @@ public class CreateGoalRequest {
 				LocalDate.parse(todoDto.getEndDate(), DateTimeFormatter.ofPattern("yyyyMMdd")),
 				RepetitionType.valueOf(todoDto.getRepetitionType()),
 				todoDto.getRepetitionParams(),
-				goal
-			);
+				goal);
 		}
 	}
 }

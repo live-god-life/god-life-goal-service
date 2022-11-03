@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 
 import org.springframework.data.domain.Pageable;
 
+import com.godlife.goalservice.domain.enums.RepetitionType;
 import com.godlife.goalservice.dto.GoalMindsetDto;
 import com.godlife.goalservice.dto.GoalTodoScheduleDto;
 import com.godlife.goalservice.dto.QGoalMindsetDto;
@@ -28,6 +29,7 @@ import com.godlife.goalservice.dto.QTodoScheduleCountDto;
 import com.godlife.goalservice.dto.TodoScheduleCountDto;
 import com.godlife.goalservice.repository.GoalRepositoryCustom;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
@@ -42,7 +44,17 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 		return queryFactory
 			.select(
 				new QTodoScheduleCountDto(todoTaskSchedule.scheduleDate,
-					todoTaskSchedule.todoTaskScheduleId.count().intValue().as("todoCount"))
+					new CaseBuilder()
+						.when(todoTask.repetitionType.ne(RepetitionType.NONE))
+						.then(1)
+						.otherwise((Integer)null)
+						.count().intValue().as("todoCount"),
+					new CaseBuilder()
+						.when(todoTask.repetitionType.eq(RepetitionType.NONE))
+						.then(1)
+						.otherwise((Integer)null)
+						.count().intValue().as("dDayCount")
+				)
 			)
 			.from(todoTask)
 			.leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
