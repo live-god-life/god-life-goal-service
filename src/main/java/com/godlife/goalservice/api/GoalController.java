@@ -48,7 +48,15 @@ public class GoalController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.createPostSuccessResponse());
 	}
 
-	//===================================================================================================================
+	@GetMapping("/goals")
+	public ResponseEntity<ApiResponse> getGoals(@PageableDefault(size = DEFAULT_PAGE) Pageable page,
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@RequestParam(required = false) Boolean completionStatus) {
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(ApiResponse.createGetSuccessResponse(goalService.getGoals(page, userId, completionStatus)));
+	}
+
+	//======================================리팩토링 완료======================================
 
 	@GetMapping("/goals/todos/count")
 	public ResponseEntity<ApiResponse> getDailyTodosCount(@RequestHeader(USER_ID_HEADER) Long userId, @RequestParam(value = "date") YearMonth date) {
@@ -71,14 +79,6 @@ public class GoalController {
 	public ResponseEntity<ApiResponse> getGoalsWithMindsets(@RequestHeader(USER_ID_HEADER) Long userId) {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(ApiResponse.createGetSuccessResponse(goalService.getGoalsWithMindsets(userId)));
-	}
-
-	@GetMapping("/goals")
-	public ResponseEntity<ApiResponse> getGoals(@PageableDefault(size = DEFAULT_PAGE) Pageable page,
-		@RequestHeader(USER_ID_HEADER) Long userId,
-		@RequestParam(required = false) Boolean completionStatus) {
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(ApiResponse.createGetSuccessResponse(goalService.getGoals(page, userId, completionStatus)));
 	}
 
 	@GetMapping("/goals/todos/{todoId}")
