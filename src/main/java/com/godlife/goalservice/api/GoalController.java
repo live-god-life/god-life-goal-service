@@ -4,8 +4,10 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.godlife.goalservice.dto.request.CreateGoalRequest;
 import com.godlife.goalservice.dto.request.UpdateGoalTodoScheduleRequest;
 import com.godlife.goalservice.dto.response.ApiResponse;
+import com.godlife.goalservice.exception.NoSuchTodosInTodoEntityException;
 import com.godlife.goalservice.service.GoalService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GoalController {
 	private final GoalService goalService;
 	private static final String USER_ID_HEADER = "x-user";
+	private static final int DEFAULT_PAGE = 25;
 
 	@PostMapping("/goals")
 	public ResponseEntity<ApiResponse> createGoal(@RequestHeader(USER_ID_HEADER) Long userId, @RequestBody CreateGoalRequest request) {
@@ -70,9 +74,11 @@ public class GoalController {
 	}
 
 	@GetMapping("/goals")
-	public ResponseEntity<ApiResponse> getGoals(@RequestHeader(USER_ID_HEADER) Long userId) {
+	public ResponseEntity<ApiResponse> getGoals(@PageableDefault(size = DEFAULT_PAGE) Pageable page,
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@RequestParam(required = false) Boolean completionStatus) {
 		return ResponseEntity.status(HttpStatus.OK)
-			.body(ApiResponse.createGetSuccessResponse(goalService.getGoals(userId)));
+			.body(ApiResponse.createGetSuccessResponse(goalService.getGoals(page, userId, completionStatus)));
 	}
 
 	@GetMapping("/goals/todos/{todoId}")
@@ -87,5 +93,10 @@ public class GoalController {
 		@RequestBody UpdateGoalTodoScheduleRequest request) {
 		goalService.updateTodoScheduleCompletionStatus(userId, todoScheduleId, request.getCompletionStatus());
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createPatchSuccessResponse());
+	}
+
+	@ExceptionHandler
+	public ResponseEntity<ApiResponse> noSuchTodosInTodoException(NoSuchTodosInTodoEntityException e) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.createErrorResponse(e.getMessage()));
 	}
 }
