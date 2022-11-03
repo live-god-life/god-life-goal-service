@@ -20,14 +20,6 @@ import lombok.NoArgsConstructor;
 
 /*
     todo
-    - 완료유무
-    - 시작일 구하기(todos 시작일중 제일 빠른 날짜)
-    - 종료일 구하기(todos 종료일중 제일 느린 날짜)
-    - D-Day 구하기(오늘부터 종료일까지)
-    - 진행중 투두 카운팅(최상위 뎁스의 완료 유무로 확인)
-    - 완료된 투두 카운팅(최상위 뎁스의 완료 유무로 확인)
-
-    - 진행중, 완료 투두 카운팅은 완료체크 개발 후 개발
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -51,7 +43,7 @@ public class Goal extends BaseEntity {
 	private String title;
 
 	@Comment("완료유무")
-	private Boolean completedStatus;
+	private Boolean completionStatus;
 
 	@Comment("HEX 색상코드")
 	private String hexColorCode;
@@ -76,7 +68,7 @@ public class Goal extends BaseEntity {
 		this.userId = userId;
 		this.category = category;
 		this.title = title;
-		this.completedStatus = Boolean.FALSE;
+		this.completionStatus = Boolean.FALSE;
 		this.totalMindsetCount = 0;
 		this.totalTodoCount = 0;
 		this.completedTodoCount = 0;
@@ -88,23 +80,29 @@ public class Goal extends BaseEntity {
 		return new Goal(userId, category, title);
 	}
 
-	public void registerMindsetCount(int totalMindsetCount) {
-		this.totalMindsetCount = totalMindsetCount;
+	public void addMindsetCount() {
+		this.totalMindsetCount++;
+	}
+	public void registerTodosInfo(Todos todos) {
+		registerStartDate(todos.getFistStartDate());
+		registerEndDate(todos.getLastEndDate());
+		registerTotalTodoTaskCount(todos.getTotalTodoTaskCount());
+		registerTotalTodoTaskScheduleCount(todos.getTotalTodoTaskScheduleCount());
 	}
 
-	public void registerStartDate(LocalDate startDate) {
+	private void registerStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
 
-	public void registerEndDate(LocalDate endDate) {
+	private void registerEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
 
-	public void registerTotalTodoTaskCount(int totalTodoTaskScheduleCount) {
-		this.totalTodoTaskScheduleCount = totalTodoTaskScheduleCount;
+	private void registerTotalTodoTaskCount(int totalTodoCount) {
+		this.totalTodoCount = totalTodoCount;
 	}
 
-	public void registerTotalTodoTaskScheduleCount(int totalTodoTaskScheduleCount) {
+	private void registerTotalTodoTaskScheduleCount(int totalTodoTaskScheduleCount) {
 		this.totalTodoTaskScheduleCount = totalTodoTaskScheduleCount;
 	}
 }
