@@ -115,8 +115,6 @@ class GoalControllerTest {
 			.andDo(print());
 	}
 
-	//======================================리팩토링 완료======================================
-
 	@Test
 	@DisplayName("모든 마인드셋을 가져온다")
 	void getAllGoalsWithMindsets() throws Exception {
@@ -130,7 +128,7 @@ class GoalControllerTest {
 			.header(USER_ID_HEADER, TEST_USER_ID)
 			.queryParam("page", "0")
 			.queryParam("size", "5")
-				.queryParam("completionStatus","false")
+			.queryParam("completionStatus","false")
 			.accept(MediaType.APPLICATION_JSON));
 
 		//then
@@ -149,7 +147,7 @@ class GoalControllerTest {
 			.andDo(print());
 	}
 
-	// @Test
+	@Test
 	@DisplayName("MyList/캘린더 특정 년월의 일자별 투두카운트를 조회한다")
 	void getDailyTodosCount() throws Exception {
 		//given
@@ -161,11 +159,14 @@ class GoalControllerTest {
 				.queryParam("date", "202210")
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.[0].date").exists())
 			.andDo(document("get-goals-with-todos-count", getSuccessResponseFieldsSnippet()))
 			.andDo(print());
 
 		//then
 	}
+
+	//======================================리팩토링 완료======================================
 
 	// @Test
 	@DisplayName("MyList/캘린더 특정 년월일의 투두리스트를 조회한다_미완료,완료 전체")
