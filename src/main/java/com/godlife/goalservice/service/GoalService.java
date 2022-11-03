@@ -60,18 +60,20 @@ public class GoalService {
 		todoRepository.saveAll(todos.get());
 	}
 
-	public List<TodoScheduleCountDto> getDailyTodosCount(Long userId, YearMonth yearMonth) {
-		return goalRepository.findDailyTodosCount(userId, yearMonth);
-	}
-
-	public List<GoalMindsetDto> getGoalsWithMindsets(Long userId) {
-		return goalRepository.findByUserId(userId).stream().map(GoalMindsetDto::of).collect(Collectors.toList());
-	}
-
 	public List<GoalDto> getGoals(Pageable page, Long userId, Boolean completionStatus) {
 		return Objects.isNull(completionStatus) ?
 			goalRepository.findAllByUserId(page, userId).stream().map(GoalDto::of).collect(Collectors.toList()) :
 			goalRepository.findAllByUserIdAndCompletionStatus(page, userId, completionStatus).stream().map(GoalDto::of).collect(Collectors.toList());
+	}
+
+	public List<GoalMindsetDto> getGoalsWithMindsets(Pageable page, Long userId, Boolean completionStatus) {
+		return goalRepository.findGoalsAndMindsetsByUserIdAndCompletionStatus(page, userId, completionStatus);
+	}
+
+	//======================================리팩토링 완료======================================
+
+	public List<TodoScheduleCountDto> getDailyTodosCount(Long userId, YearMonth yearMonth) {
+		return goalRepository.findDailyTodosCount(userId, yearMonth);
 	}
 
 	public List<GoalTodoScheduleDto> getDailyGoalsAndTodos(Long userId, LocalDate date, Boolean completionStatus,
