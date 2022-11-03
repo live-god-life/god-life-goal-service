@@ -42,7 +42,8 @@ public class GoalController {
 	private static final int DEFAULT_PAGE = 25;
 
 	@PostMapping("/goals")
-	public ResponseEntity<ApiResponse> createGoal(@RequestHeader(USER_ID_HEADER) Long userId,
+	public ResponseEntity<ApiResponse> createGoal(
+		@RequestHeader(USER_ID_HEADER) Long userId,
 		@RequestBody CreateGoalRequest request) {
 
 		goalService.createGoal(userId, request);
@@ -52,7 +53,8 @@ public class GoalController {
 	}
 
 	@GetMapping("/goals")
-	public ResponseEntity<ApiResponse> getGoals(@PageableDefault(size = DEFAULT_PAGE) Pageable page,
+	public ResponseEntity<ApiResponse> getGoals(
+		@PageableDefault(size = DEFAULT_PAGE) Pageable page,
 		@RequestHeader(USER_ID_HEADER) Long userId,
 		@RequestParam(required = false) Boolean completionStatus) {
 
@@ -62,7 +64,8 @@ public class GoalController {
 	}
 
 	@GetMapping("/goals/mindsets")
-	public ResponseEntity<ApiResponse> getGoalsWithMindsets(@PageableDefault(size = DEFAULT_PAGE) Pageable page,
+	public ResponseEntity<ApiResponse> getGoalsWithMindsets(
+		@PageableDefault(size = DEFAULT_PAGE) Pageable page,
 		@RequestHeader(USER_ID_HEADER) Long userId,
 		@RequestParam(required = false) Boolean completionStatus) {
 
@@ -70,13 +73,16 @@ public class GoalController {
 			.body(ApiResponse.createGetSuccessResponse(goalService.getGoalsWithMindsets(page, userId, completionStatus)));
 	}
 
-	//======================================리팩토링 완료======================================
-
 	@GetMapping("/goals/todos/count")
-	public ResponseEntity<ApiResponse> getDailyTodosCount(@RequestHeader(USER_ID_HEADER) Long userId, @RequestParam(value = "date") YearMonth date) {
+	public ResponseEntity<ApiResponse> getDailyTodosCount(
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@RequestParam(value = "date") YearMonth date) {
+
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(ApiResponse.createGetSuccessResponse(goalService.getDailyTodosCount(userId, date)));
 	}
+
+	//======================================리팩토링 완료======================================
 
 	@GetMapping("/goals/todos")
 	public ResponseEntity<ApiResponse> getDailyGoalsAndTodos(@RequestHeader(USER_ID_HEADER) Long userId,

@@ -70,11 +70,11 @@ public class GoalService {
 		return goalRepository.findGoalsAndMindsetsByUserIdAndCompletionStatus(page, userId, completionStatus);
 	}
 
-	//======================================리팩토링 완료======================================
-
 	public List<TodoScheduleCountDto> getDailyTodosCount(Long userId, YearMonth yearMonth) {
 		return goalRepository.findDailyTodosCount(userId, yearMonth);
 	}
+
+	//======================================리팩토링 완료======================================
 
 	public List<GoalTodoScheduleDto> getDailyGoalsAndTodos(Long userId, LocalDate date, Boolean completionStatus,
 		Pageable page) {
