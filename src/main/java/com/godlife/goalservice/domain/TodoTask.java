@@ -11,6 +11,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Comment;
@@ -31,6 +33,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class TodoTask extends Todo {
+	@Enumerated(EnumType.STRING)
 	@Comment("기간 type")
 	private RepetitionType repetitionType;
 
@@ -79,7 +82,16 @@ public class TodoTask extends Todo {
 			case MONTH:
 				createMonthSchedule(startDate, endDate);
 				break;
+			case NONE:
+				createNoneSchedule(endDate);
+				break;
 		}
+	}
+
+	private void createNoneSchedule(LocalDate endDate) {
+		TodoTaskSchedule todoTaskSchedule = new TodoTaskSchedule(endDate);
+		todoTaskSchedule.setTodoTask(this);
+		todoTaskSchedules.add(todoTaskSchedule);
 	}
 
 	//TODO 뭔가 리팩토링이 필요해보인다??
