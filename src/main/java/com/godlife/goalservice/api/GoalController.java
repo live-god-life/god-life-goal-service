@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.godlife.goalservice.dto.request.CreateGoalRequest;
 import com.godlife.goalservice.dto.request.UpdateGoalTodoScheduleRequest;
 import com.godlife.goalservice.dto.response.ApiResponse;
+import com.godlife.goalservice.exception.NoSuchGoalException;
 import com.godlife.goalservice.exception.NoSuchTodoException;
 import com.godlife.goalservice.exception.NoSuchTodosInTodoException;
 import com.godlife.goalservice.service.GoalService;
@@ -102,6 +103,14 @@ public class GoalController {
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getTodoDetail(userId, todoId)));
 	}
 
+	@GetMapping("/goals/{goalId}")
+	public ResponseEntity<ApiResponse> getGoalDetail(
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@PathVariable(value = "goalId") Long goalId) {
+
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoalDetail(userId, goalId)));
+	}
+
 	//======================================리팩토링 완료======================================
 
 	@PatchMapping("/goals/todoSchedules/{todoScheduleId}")
@@ -121,4 +130,11 @@ public class GoalController {
 	public ResponseEntity<ApiResponse> noSuchTodoException(NoSuchTodoException e) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.createErrorResponse(e.getMessage()));
 	}
+
+	@ExceptionHandler
+	public ResponseEntity<ApiResponse> noSuchGoalException(NoSuchGoalException e) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.createErrorResponse(e.getMessage()));
+	}
 }
+
+
