@@ -11,6 +11,7 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
+#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         format_sql: true
     generate-ddl: true
 
