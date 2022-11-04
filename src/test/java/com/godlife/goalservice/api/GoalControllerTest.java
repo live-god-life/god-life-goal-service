@@ -220,6 +220,24 @@ class GoalControllerTest {
 		//then
 	}
 
+	@Test
+	@DisplayName("목표의 상세정보를 조회한다")
+	void getGoalDetail() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
+
+		//when
+		ResultActions result = mockMvc.perform(get("/goals/{goalId}", 1)
+			.header(USER_ID_HEADER, TEST_USER_ID)
+			.accept(MediaType.APPLICATION_JSON));;
+
+		//then
+		result
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.goalId").exists())
+			.andDo(print());
+	}
+
 	//======================================리팩토링 완료======================================
 
 	// @Test
@@ -261,7 +279,7 @@ class GoalControllerTest {
 			List.of(
 				getCreateGoalTodoTaskRequest(
 					"컨셉잡기",
-					3,
+					2,
 					0,
 					"20221001",
 					"20221031",
@@ -271,7 +289,7 @@ class GoalControllerTest {
 				),
 				getCreateGoalTodoTaskRequest(
 					"스케치",
-					3,
+					2,
 					1,
 					"20221101",
 					"20221131",
@@ -281,7 +299,7 @@ class GoalControllerTest {
 				),
 				getCreateGoalTodoTaskRequest(
 					"UI 작업",
-					3,
+					2,
 					2,
 					"20221001",
 					"20221231",
