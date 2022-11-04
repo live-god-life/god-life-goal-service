@@ -17,6 +17,7 @@ import com.godlife.goalservice.domain.TodoTaskSchedule;
 import com.godlife.goalservice.domain.Todos;
 import com.godlife.goalservice.dto.GoalDto;
 import com.godlife.goalservice.dto.GoalMindsetDto;
+import com.godlife.goalservice.dto.GoalMindsetsTodosDto;
 import com.godlife.goalservice.dto.GoalTodoScheduleDto;
 import com.godlife.goalservice.dto.TodoDetailDto;
 import com.godlife.goalservice.dto.TodoScheduleCountDto;
@@ -82,6 +83,10 @@ public class GoalService {
 
 	public TodoDetailDto getTodoDetail(Long userId, Long todoId) {
 		return TodoDetailDto.of(todoRepository.findById(todoId).orElseThrow(NoSuchTodoException::new));
+	}
+
+	public GoalMindsetsTodosDto getGoalDetail(Long userId, Long goalId) {
+		return goalRepository.findGoalWithMindsetsAndTodosByUserIdAndGoalId(userId, goalId);
 	}
 
 	//======================================리팩토링 완료======================================

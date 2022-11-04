@@ -33,6 +33,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class TodoTask extends Todo {
+	private Long parent_todo_id;
+
 	@Enumerated(EnumType.STRING)
 	@Comment("기간 type")
 	private RepetitionType repetitionType;
@@ -44,13 +46,13 @@ public class TodoTask extends Todo {
 	@Comment("알림")
 	private String notification;
 
-	@OneToMany(mappedBy = "todoTask", cascade = CascadeType.ALL, orphanRemoval = true)
-	private final List<TodoTaskSchedule> todoTaskSchedules = new ArrayList<>();
-
 	@Comment("모든 스케줄 카운트")
 	private Integer totalTodoTaskScheduleCount;
 	@Comment("완료된 스케줄 카운트")
 	private Integer completedTodoTaskScheduleCount;
+
+	@OneToMany(mappedBy = "todoTask", cascade = CascadeType.ALL, orphanRemoval = true)
+	private final List<TodoTaskSchedule> todoTaskSchedules = new ArrayList<>();
 
 	private TodoTask(String title, Integer depth, Integer orderNumber, LocalDate startDate, LocalDate endDate,
 		RepetitionType repetitionType, List<String> repetitionParams, String notification, Goal goal) {

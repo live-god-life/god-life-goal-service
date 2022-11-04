@@ -2,6 +2,8 @@ package com.godlife.goalservice.repository.impl;
 
 import static com.godlife.goalservice.domain.QGoal.*;
 import static com.godlife.goalservice.domain.QMindset.*;
+import static com.godlife.goalservice.domain.QTodo.*;
+import static com.godlife.goalservice.domain.QTodoFolder.*;
 import static com.godlife.goalservice.domain.QTodoTask.*;
 import static com.godlife.goalservice.domain.QTodoTaskSchedule.*;
 import static com.querydsl.core.group.GroupBy.*;
@@ -19,12 +21,17 @@ import org.springframework.data.domain.Pageable;
 
 import com.godlife.goalservice.domain.enums.RepetitionType;
 import com.godlife.goalservice.dto.GoalMindsetDto;
+import com.godlife.goalservice.dto.GoalMindsetsTodosDto;
 import com.godlife.goalservice.dto.GoalTodoScheduleDto;
+import com.godlife.goalservice.dto.MindsetDto;
 import com.godlife.goalservice.dto.QGoalMindsetDto;
+import com.godlife.goalservice.dto.QGoalMindsetsTodosDto;
 import com.godlife.goalservice.dto.QGoalTodoScheduleDto;
 import com.godlife.goalservice.dto.QGoalTodoScheduleDto_TodoScheduleDto;
 import com.godlife.goalservice.dto.QMindsetDto;
+import com.godlife.goalservice.dto.QTodoDto;
 import com.godlife.goalservice.dto.QTodoScheduleCountDto;
+import com.godlife.goalservice.dto.TodoDto;
 import com.godlife.goalservice.dto.TodoScheduleCountDto;
 import com.godlife.goalservice.repository.GoalRepositoryCustom;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -33,6 +40,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
+	private static final int FIRST_DEPTH = 1;
+	private static final int SECOND_DEPTH = 2;
 
 	public GoalRepositoryCustomImpl(EntityManager em) {
 		this.queryFactory = new JPAQueryFactory(em);
@@ -86,6 +95,96 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 			return null;
 		}
 		return goal.completionStatus.eq(completionStatus);
+	}
+
+	@Override
+	public GoalMindsetsTodosDto findGoalWithMindsetsAndTodosByUserIdAndGoalId(Long userId, Long goalId) {
+		GoalMindsetsTodosDto goalMindsetsTodosDto = queryFactory
+			.select(
+				new QGoalMindsetsTodosDto(
+					goal.goalId,
+					goal.category,
+					goal.title,
+					goal.startDate,
+					goal.endDate,
+					goal.totalMindsetCount,
+					goal.totalTodoCount,
+					goal.completedTodoCount,
+					goal.totalTodoTaskScheduleCount,
+					goal.completedTodoTaskScheduleCount))
+			.from(goal)
+			.where(goal.goalId.eq(goalId))
+			.fetchOne();
+
+		List<MindsetDto> mindsetDtos = queryFactory
+			.select(
+				new QMindsetDto(
+					mindset.mindsetId,
+					mindset.content))
+			.from(mindset)
+			.where(mindset.goal.goalId.eq(goalId))
+			.fetch();
+
+		goalMindsetsTodosDto.registerMindsetDtos(mindsetDtos);
+
+		List<TodoDto> todoDtos = queryFactory
+			.select(
+				new QTodoDto(
+					todo.todoId,
+					todo.type,
+					todo.title,
+					todo.depth,
+					todo.orderNumber,
+					todo.startDate.stringValue(),
+					todo.endDate.stringValue(),
+					todoTask.repetitionType.stringValue(),
+					todoTask.repetitionParams,
+					todoTask.notification,
+					todoTask.totalTodoTaskScheduleCount,
+					todoTask.completedTodoTaskScheduleCount
+				)
+			)
+			.from(todo)
+			.leftJoin(todoTask).on(todoTask.eq(todo))
+			.leftJoin(todoFolder).on(todoFolder.eq(todo))
+			.where(todo.goal.goalId.eq(goalId),
+				todo.depth.eq(FIRST_DEPTH))
+			.fetch();
+
+		List<TodoDto> childTodoDtos = queryFactory
+			.select(
+				new QTodoDto(
+					todo.todoId,
+					todoTask.parent_todo_id,
+					todo.type,
+					todo.title,
+					todo.depth,
+					todo.orderNumber,
+					todo.startDate.stringValue(),
+					todo.endDate.stringValue(),
+					todoTask.repetitionType.stringValue(),
+					todoTask.repetitionParams,
+					todoTask.notification,
+					todoTask.totalTodoTaskScheduleCount,
+					todoTask.completedTodoTaskScheduleCount
+				)
+			)
+			.from(todo)
+			.leftJoin(todoTask).on(todoTask.eq(todo))
+			.leftJoin(todoFolder).on(todoFolder.eq(todo))
+			.where(todo.goal.goalId.eq(goalId),
+				todo.depth.eq(SECOND_DEPTH))
+			.fetch();
+
+		todoDtos.forEach(todoDto -> todoDto.registerChildTodos(
+			childTodoDtos.stream()
+				.filter(childTodos -> childTodos.getParentTodoId().equals(todoDto.getTodoId()))
+				.collect(Collectors.toList())
+		));
+
+		goalMindsetsTodosDto.registerTodoDtos(todoDtos);
+
+		return goalMindsetsTodosDto;
 	}
 
 	@Override

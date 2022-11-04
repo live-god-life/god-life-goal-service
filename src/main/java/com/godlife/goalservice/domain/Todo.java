@@ -37,6 +37,9 @@ public abstract class Todo extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long todoId;
 
+	@Column(insertable = false, updatable = false)
+	private String type;
+
 	@Column(nullable = false)
 	private String title;
 
