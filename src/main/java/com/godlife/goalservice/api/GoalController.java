@@ -103,6 +103,24 @@ public class GoalController {
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getTodoDetail(userId, todoId)));
 	}
 
+	@GetMapping("/goals/todos/{todoId}/todoSchedules")
+	public ResponseEntity<ApiResponse> getTodoSchedules(
+		@PageableDefault(size = DEFAULT_PAGE) Pageable page,
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@PathVariable(value = "todoId") Long todoId,
+		@RequestParam(value = "criteria", required = false, defaultValue = "after") String criteria) {
+
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getTodoSchedules(page, userId, todoId, criteria)));
+	}
+
+	@PatchMapping("/goals/todoSchedules/{todoScheduleId}")
+	public ResponseEntity<ApiResponse> patchCompletionStatus(@RequestHeader(USER_ID_HEADER) Long userId,
+		@PathVariable(value = "todoScheduleId") Long todoScheduleId,
+		@RequestBody UpdateGoalTodoScheduleRequest request) {
+		goalService.updateTodoScheduleCompletionStatus(userId, todoScheduleId, request.getCompletionStatus());
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createPatchSuccessResponse());
+	}
+
 	@GetMapping("/goals/{goalId}")
 	public ResponseEntity<ApiResponse> getGoalDetail(
 		@RequestHeader(USER_ID_HEADER) Long userId,
@@ -112,14 +130,6 @@ public class GoalController {
 	}
 
 	//======================================리팩토링 완료======================================
-
-	@PatchMapping("/goals/todoSchedules/{todoScheduleId}")
-	public ResponseEntity<ApiResponse> patchCompletionStatus(@RequestHeader(USER_ID_HEADER) Long userId,
-		@PathVariable(value = "todoScheduleId") Long todoScheduleId,
-		@RequestBody UpdateGoalTodoScheduleRequest request) {
-		goalService.updateTodoScheduleCompletionStatus(userId, todoScheduleId, request.getCompletionStatus());
-		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createPatchSuccessResponse());
-	}
 
 	@ExceptionHandler
 	public ResponseEntity<ApiResponse> noSuchTodosInTodoException(NoSuchTodosInTodoException e) {
