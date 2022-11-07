@@ -1,0 +1,223 @@
+{
+  "status": "success",
+  "message": "ok",
+  "data": [
+    {
+      "todoScheduleId": 1,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221001",
+      "dayOfWeek": "토",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 2,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221002",
+      "dayOfWeek": "일",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 3,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221003",
+      "dayOfWeek": "월",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 4,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221004",
+      "dayOfWeek": "화",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 5,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221005",
+      "dayOfWeek": "수",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 6,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221006",
+      "dayOfWeek": "목",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 7,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221007",
+      "dayOfWeek": "금",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 8,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221008",
+      "dayOfWeek": "토",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 9,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221009",
+      "dayOfWeek": "일",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 10,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221010",
+      "dayOfWeek": "월",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 11,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221011",
+      "dayOfWeek": "화",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 12,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221012",
+      "dayOfWeek": "수",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 13,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221013",
+      "dayOfWeek": "목",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 14,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221014",
+      "dayOfWeek": "금",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 15,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221015",
+      "dayOfWeek": "토",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 16,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221016",
+      "dayOfWeek": "일",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 17,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221017",
+      "dayOfWeek": "월",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 18,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221018",
+      "dayOfWeek": "화",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 19,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221019",
+      "dayOfWeek": "수",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 20,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221020",
+      "dayOfWeek": "목",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 21,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221021",
+      "dayOfWeek": "금",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 22,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221022",
+      "dayOfWeek": "토",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 23,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221023",
+      "dayOfWeek": "일",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 24,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221024",
+      "dayOfWeek": "월",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 25,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221025",
+      "dayOfWeek": "화",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 26,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221026",
+      "dayOfWeek": "수",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 27,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221027",
+      "dayOfWeek": "목",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 28,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221028",
+      "dayOfWeek": "금",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 29,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221029",
+      "dayOfWeek": "토",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 30,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221030",
+      "dayOfWeek": "일",
+      "completionStatus": false
+    },
+    {
+      "todoScheduleId": 31,
+      "title": "컨셉잡기",
+      "scheduleDate": "20221031",
+      "dayOfWeek": "월",
+      "completionStatus": false
+    }
+  ]
+}

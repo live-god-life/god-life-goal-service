@@ -21,6 +21,7 @@ import com.godlife.goalservice.dto.GoalMindsetsTodosDto;
 import com.godlife.goalservice.dto.GoalTodoScheduleDto;
 import com.godlife.goalservice.dto.TodoDetailDto;
 import com.godlife.goalservice.dto.TodoScheduleCountDto;
+import com.godlife.goalservice.dto.TodoSchedulesDto;
 import com.godlife.goalservice.dto.request.CreateGoalRequest;
 import com.godlife.goalservice.exception.NoSuchTodoException;
 import com.godlife.goalservice.repository.GoalRepository;
@@ -100,5 +101,9 @@ public class GoalService {
 		} else {
 			schedule.updateInCompletionStatus();
 		}
+	}
+
+	public List<TodoSchedulesDto> getTodoSchedules(Pageable page, Long userId, Long todoId, String criteria) {
+		return todoTaskScheduleRepository.findAllByTodoId(page, todoId, criteria);
 	}
 }
