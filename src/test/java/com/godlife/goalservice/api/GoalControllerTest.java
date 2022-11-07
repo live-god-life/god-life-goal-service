@@ -238,6 +238,26 @@ class GoalControllerTest {
 			.andDo(print());
 	}
 
+	@Test
+	@DisplayName("투두상세 투두 일정을 조회한다.")
+	void getTodoSchedules() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
+
+		//when
+		ResultActions result = mockMvc.perform(get("/goals/todos/{todoId}/todoSchedules", 2)
+			.header(USER_ID_HEADER, TEST_USER_ID)
+			.queryParam("page", "1")
+			.queryParam("criteria", "before")
+			.accept(MediaType.APPLICATION_JSON));
+
+		//then
+		result
+			.andExpect(status().isOk())
+			// .andExpect(jsonPath("$.data.goalId").exists())
+			.andDo(print());
+	}
+
 	//======================================리팩토링 완료======================================
 
 	// @Test
