@@ -1,0 +1,16 @@
+{
+  "status": "success",
+  "message": "ok",
+  "data": {
+    "todoId": 2,
+    "title": "컨셉잡기",
+    "type": "TASK",
+    "startDate": "20221001",
+    "endDate": "20221031",
+    "repetitionType": "DAY",
+    "repetitionParams": null,
+    "notification": "0900",
+    "totalTodoTaskScheduleCount": 31,
+    "completedTodoTaskScheduleCount": 0
+  }
+}

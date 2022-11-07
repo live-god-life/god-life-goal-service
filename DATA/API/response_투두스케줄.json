@@ -1,0 +1,22 @@
+{
+  "status": "success",
+  "data": {
+    "goals": [
+      {
+        "id": 1,
+        "title": "이직하기",
+        "todos": [
+          {
+            "id": 1,
+            "title": "파이썬 공부",
+            "completionStatus": true,
+            "attainmentRate": 50,
+            "todoDday": 50
+          }
+        ]
+      }
+    ]
+  },
+  "code": null,
+  "message": null
+}

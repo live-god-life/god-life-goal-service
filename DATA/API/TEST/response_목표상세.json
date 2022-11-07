@@ -1,0 +1,171 @@
+{
+  "status": "success",
+  "message": "ok",
+  "data": {
+    "goalId": 1,
+    "category": "CAREER",
+    "title": "이직하기",
+    "startDate": "20221001",
+    "endDate": "20221231",
+    "totalMindsetCount": 3,
+    "totalTodoCount": 6,
+    "completedTodoCount": 0,
+    "totalTodoTaskScheduleCount": 64,
+    "completedTodoTaskScheduleCount": 0,
+    "mindsets": [
+      {
+        "mindsetId": 1,
+        "content": "사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다111."
+      },
+      {
+        "mindsetId": 2,
+        "content": "사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다222."
+      },
+      {
+        "mindsetId": 3,
+        "content": "사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다333."
+      }
+    ],
+    "todos": [
+      {
+        "todoId": 1,
+        "parentTodoId": null,
+        "type": "folder",
+        "title": "포폴완성",
+        "depth": 1,
+        "orderNumber": 1,
+        "startDate": "20221001",
+        "endDate": "20221231",
+        "repetitionType": null,
+        "repetitionParams": null,
+        "notification": null,
+        "totalTodoTaskScheduleCount": null,
+        "completedTodoTaskScheduleCount": null,
+        "childTodos": [
+          {
+            "todoId": 2,
+            "parentTodoId": 1,
+            "type": "task",
+            "title": "컨셉잡기",
+            "depth": 2,
+            "orderNumber": 0,
+            "startDate": "2022-10-01",
+            "endDate": "2022-10-31",
+            "repetitionType": "DAY",
+            "repetitionParams": null,
+            "notification": "0900",
+            "totalTodoTaskScheduleCount": 31,
+            "completedTodoTaskScheduleCount": 0,
+            "childTodos": null
+          },
+          {
+            "todoId": 3,
+            "parentTodoId": 1,
+            "type": "task",
+            "title": "스케치",
+            "depth": 2,
+            "orderNumber": 1,
+            "startDate": "2022-11-01",
+            "endDate": "2022-11-30",
+            "repetitionType": "WEEK",
+            "repetitionParams": [
+              "월",
+              "수",
+              "금",
+              "토"
+            ],
+            "notification": "0900",
+            "totalTodoTaskScheduleCount": 17,
+            "completedTodoTaskScheduleCount": 0,
+            "childTodos": null
+          },
+          {
+            "todoId": 4,
+            "parentTodoId": 1,
+            "type": "task",
+            "title": "UI 작업",
+            "depth": 2,
+            "orderNumber": 2,
+            "startDate": "2022-10-01",
+            "endDate": "2022-12-31",
+            "repetitionType": "NONE",
+            "repetitionParams": null,
+            "notification": "0900",
+            "totalTodoTaskScheduleCount": 1,
+            "completedTodoTaskScheduleCount": 0,
+            "childTodos": null
+          }
+        ]
+      },
+      {
+        "todoId": 5,
+        "parentTodoId": null,
+        "type": "folder",
+        "title": "개발프로젝트 해보기",
+        "depth": 1,
+        "orderNumber": 2,
+        "startDate": "20221001",
+        "endDate": "20221031",
+        "repetitionType": null,
+        "repetitionParams": null,
+        "notification": null,
+        "totalTodoTaskScheduleCount": null,
+        "completedTodoTaskScheduleCount": null,
+        "childTodos": [
+          {
+            "todoId": 6,
+            "parentTodoId": 5,
+            "type": "task",
+            "title": "IT 동아리 서류 내기",
+            "depth": 2,
+            "orderNumber": 0,
+            "startDate": "2022-10-01",
+            "endDate": "2022-10-31",
+            "repetitionType": "NONE",
+            "repetitionParams": null,
+            "notification": "0900",
+            "totalTodoTaskScheduleCount": 1,
+            "completedTodoTaskScheduleCount": 0,
+            "childTodos": null
+          },
+          {
+            "todoId": 7,
+            "parentTodoId": 5,
+            "type": "task",
+            "title": "파이썬 공부",
+            "depth": 2,
+            "orderNumber": 0,
+            "startDate": "2022-10-01",
+            "endDate": "2022-10-31",
+            "repetitionType": "WEEK",
+            "repetitionParams": [
+              "월",
+              "수",
+              "금"
+            ],
+            "notification": "0900",
+            "totalTodoTaskScheduleCount": 13,
+            "completedTodoTaskScheduleCount": 0,
+            "childTodos": null
+          }
+        ]
+      },
+      {
+        "todoId": 8,
+        "parentTodoId": null,
+        "type": "task",
+        "title": "외주",
+        "depth": 1,
+        "orderNumber": 3,
+        "startDate": "20221001",
+        "endDate": "20221031",
+        "repetitionType": "NONE",
+        "repetitionParams": null,
+        "notification": "0900",
+        "totalTodoTaskScheduleCount": 1,
+        "completedTodoTaskScheduleCount": 0,
+        "childTodos": []
+      }
+    ]
+  }
+}

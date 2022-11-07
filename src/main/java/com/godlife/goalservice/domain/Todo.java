@@ -1,37 +1,76 @@
 package com.godlife.goalservice.domain;
 
+import java.time.LocalDate;
 
-import lombok.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-import javax.persistence.*;
-import java.util.List;
+import org.hibernate.annotations.Comment;
 
-@EqualsAndHashCode(callSuper=false)
-@Data
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+/*
+    todo
+*/
+
+@EqualsAndHashCode(callSuper = false)
 @Getter
-//TODO 엔티티 - 테이블 상속관계 전략을 SINGLE_TABLE로 설정, 추후 변경가능하지만 코드의 복잡성을 생각하면 SINGLE_TABLE이 좋아보임, 보류
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public abstract class Todo extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long todoId;
-    private String title;
-    private Integer depth;
-    private Integer orderNumber;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long todoId;
 
-    //TODO 양방향 단방향에 대해서는 고민좀 하고 결정, 우선 일대다 단방향으로 설정
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "parent_todo_id")
-    private List<Todo> childTodos;
+	@Column(insertable = false, updatable = false)
+	private String type;
 
-    protected Todo(Long todoId, String title, Integer depth, Integer orderNumber, List<Todo> childTodos) {
-        this.todoId = todoId;
-        this.title = title;
-        this.depth = depth;
-        this.orderNumber = orderNumber;
-        this.childTodos = childTodos;
-    }
+	@Column(nullable = false)
+	private String title;
+
+	@Column(nullable = false)
+	private Integer depth;
+
+	@Column(nullable = false)
+	private Integer orderNumber;
+
+	@Comment("Task 시작일")
+	private LocalDate startDate;
+	@Comment("Task 종료일")
+	private LocalDate endDate;
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "goal_id")
+	private Goal goal;
+
+	protected Todo(String title, Integer depth, Integer orderNumber, Goal goal) {
+		this.title = title;
+		this.depth = depth;
+		this.orderNumber = orderNumber;
+		this.goal = goal;
+	}
+
+	public Todo(String title, Integer depth, Integer orderNumber, LocalDate startDate, LocalDate endDate, Goal goal) {
+		this.title = title;
+		this.depth = depth;
+		this.orderNumber = orderNumber;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.goal = goal;
+	}
 }

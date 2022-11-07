@@ -1,9 +1,11 @@
 package com.godlife.goalservice.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.godlife.goalservice.api.request.CreateGoalMindsetRequest;
-import com.godlife.goalservice.api.request.CreateGoalRequest;
-import com.godlife.goalservice.api.request.CreateGoalTodoRequest;
+import com.godlife.goalservice.dto.request.CreateGoalMindsetRequest;
+import com.godlife.goalservice.dto.request.CreateGoalRequest;
+import com.godlife.goalservice.dto.request.CreateGoalTodoRequest;
+import com.godlife.goalservice.dto.request.UpdateGoalTodoScheduleRequest;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,135 +13,381 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.ResponseFieldsSnippet;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Collections;
 import java.util.List;
 
-import static com.godlife.goalservice.util.SampleDataCreator.getCreateGoalTodoFolderRequest;
-import static com.godlife.goalservice.util.SampleDataCreator.getCreateGoalTodoTaskRequest;
+import static com.godlife.goalservice.utils.SampleTestDataCreator.getCreateGoalTodoFolderRequest;
+import static com.godlife.goalservice.utils.SampleTestDataCreator.getCreateGoalTodoTaskRequest;
+import static com.godlife.goalservice.utils.restdoc.DocumentProvider.getPostGoalsRequestFieldsSnippet;
+import static com.godlife.goalservice.utils.restdoc.DocumentProvider.getSuccessResponseFieldsSnippet;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+/*
+    todo
+    - 리스폰스, 리퀘스트 확정전까진 relaxed
+ */
 
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @SpringBootTest
 class GoalControllerTest {
-    @Autowired private MockMvc mockMvc;
-    @Autowired private ObjectMapper objectMapper;
+	@Autowired
+	private MockMvc mockMvc;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    @Test
-    void postGoals() throws Exception {
-        //given
-        //=========================sample mindset=========================
-        CreateGoalMindsetRequest createGoalMindsetRequest = new CreateGoalMindsetRequest("사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다.");
+	private static final String USER_ID_HEADER = "x-user";
+	private static final Long TEST_USER_ID = 1L;
 
-        //=========================sample todo1 작업1완료하기=========================
-        CreateGoalTodoRequest createGoalTodoRequest1 = getCreateGoalTodoFolderRequest(
-                "포폴완성",
-                List.of(getCreateGoalTodoFolderRequest(
-                        "작업1 완료하기",
-                        List.of(
-                                getCreateGoalTodoTaskRequest("컨셉잡기"),
-                                getCreateGoalTodoTaskRequest("스케치")
-                        )
-                ))
-        );
+	@Test
+	@DisplayName("목표를 저장한다")
+	void postGoals() throws Exception {
+		//given & when
+		ResultActions result = performPostSampleGoalsWithMindsetsAndTodos();
 
-        //=========================sample todo2 개발프로젝트 해보기=========================
-        CreateGoalTodoRequest createGoalTodoRequest7 = getCreateGoalTodoFolderRequest(
-                "개발프로젝트 해보기",
-                List.of(
-                        getCreateGoalTodoTaskRequest("IT 동아리 서류 내기"),
-                        getCreateGoalTodoTaskRequest("파이썬 공부")
-                )
-        );
+		//then
+		result
+			.andExpect(status().isCreated())
+			.andDo(document("post-goals", getPostGoalsRequestFieldsSnippet(), getSuccessResponseFieldsSnippet()))
+			.andDo(print());
+	}
 
-        //=========================sample goal=========================
-        CreateGoalRequest createGoalRequest = CreateGoalRequest.builder()
-                .title("이직하기")
-                .categoryName("커리어")
-                .categoryCode("001")
-                .mindsets(List.of(createGoalMindsetRequest))
-                .todos(List.of(createGoalTodoRequest1, createGoalTodoRequest7))
-                .build();
+	@Test
+	@DisplayName("모든 목표를 가져온다")
+	void getAllGoals() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
 
-        //when
-        ResultActions result = mockMvc.perform(
-                post("/goals")
-                        .content(objectMapper.writeValueAsString(createGoalRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
+		//when
+		ResultActions result = performGetWithAuthorizationByUrlTemplate("/goals");
 
-        );
+		//then
+		result
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.[0]").exists())
+			.andDo(document("get-goals",
+				relaxedResponseFields(
+					fieldWithPath("status").description("api 응답 상태"),
+					fieldWithPath("message").description("api 응답 메시지"),
+					fieldWithPath("data").description("api 응답 데이터"),
+					fieldWithPath("data[].goalId").description("목표 아이디"),
+					fieldWithPath("data[].title").description("목표 제목")
+				)))
+			.andDo(print());
+	}
 
-        //then
-        result.andExpect(status().isCreated());
+	@Test
+	@DisplayName("미완료인 모든 목표를 가져온다")
+	void getAllGoals1() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
 
-        //rest-doc
-        result.andDo(document("post-goals",
-                        requestFields(
-                                fieldWithPath("title").description("목표 제목"),
-                                fieldWithPath("categoryName").description("목표 카테고리명"),
-                                fieldWithPath("categoryCode").description("목표 카테고리코드"),
+		//when
+		ResultActions result = mockMvc.perform(get("/goals")
+			.header(USER_ID_HEADER, TEST_USER_ID)
+			.queryParam("completionStatus", "false")
+			.accept(MediaType.APPLICATION_JSON)
+		);
 
-                                fieldWithPath("mindsets[].content").description("마인드셋 내용"),
+		//then
+		result
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.[0]").exists())
+			.andDo(document("get-goals",
+				relaxedResponseFields(
+					fieldWithPath("status").description("api 응답 상태"),
+					fieldWithPath("message").description("api 응답 메시지"),
+					fieldWithPath("data").description("api 응답 데이터"),
 
-                                fieldWithPath("todos[].title").description("목표 제목"),
-                                fieldWithPath("todos[].type").description("목표 제목"),
-                                fieldWithPath("todos[].depth").description("목표 제목"),
-                                fieldWithPath("todos[].order").description("목표 제목"),
-                                fieldWithPath("todos[].todos").optional().description("목표 제목"),
+					fieldWithPath("data[].goalId").optional().description("목표 아이디").type(Object.class),
+					fieldWithPath("data[].title").optional().description("목표 제목").type(Object.class)
+				)))
+			.andDo(print());
+	}
 
-                                fieldWithPath("todos[].todos[].title").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].type").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].depth").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].order").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].todos").optional().description("목표 제목"),
+	@Test
+	@DisplayName("모든 마인드셋을 가져온다")
+	void getAllGoalsWithMindsets() throws Exception {
+		//given
+		for (int i = 0; i < 1; i++) {
+			performPostSampleGoalsWithMindsetsAndTodos();
+		}
 
-                                fieldWithPath("todos[].todos[].todos[].title").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].todos[].type").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].todos[].depth").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].todos[].order").description("목표 제목"),
-                                fieldWithPath("todos[].todos[].todos[].todos").optional().description("목표 제목")
-                        ),
-                        getSuccessResponseFieldsSnippet()
-                )
-        );
-    }
+		//when
+		ResultActions result = mockMvc.perform(get("/goals/mindsets")
+			.header(USER_ID_HEADER, TEST_USER_ID)
+			.queryParam("page", "0")
+			.queryParam("size", "5")
+			.queryParam("completionStatus","false")
+			.accept(MediaType.APPLICATION_JSON));
 
-    @Test
-    @DisplayName("random 방식으로 5개의 마인드셋을 가져온다")
-    void getFiveGoalsWithMindsetsByRandom() throws Exception {
-        mockMvc.perform(get("/goals/mindsets")
-                        .queryParam("method", "random")
-                        .queryParam("count", "5")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("get-goals-with-mindsets", getSuccessResponseFieldsSnippet()))
-                .andDo(print());
-    }
+		//then
+		result
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.[0].mindsets").exists())
+			.andDo(document("get-goals-with-mindsets",
+				relaxedResponseFields(
+					fieldWithPath("status").description("api 응답 상태"),
+					fieldWithPath("message").description("api 응답 메시지"),
+					fieldWithPath("data").description("api 응답 데이터"),
 
-    @Test
-    @DisplayName("normal 방식으로 모든 마인드셋을 가져온다")
-    void getAllGoalsWithMindsets() throws Exception {
-        mockMvc.perform(get("/goals/mindsets")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("get-goals-with-mindsets", getSuccessResponseFieldsSnippet()))
-                .andDo(print());
-    }
+					fieldWithPath("data[].goalId").description("목표 아이디"),
+					fieldWithPath("data[].title").description("목표 제목")
+				)))
+			.andDo(print());
+	}
 
-    private static ResponseFieldsSnippet getSuccessResponseFieldsSnippet() {
-        return responseFields(
-                fieldWithPath("status").description("api 응답 상태"),
-                fieldWithPath("message").description("api 응답 메시지"),
-                fieldWithPath("data").description("api 응답 데이터")
-        );
-    }
+	@Test
+	@DisplayName("MyList/캘린더 특정 년월의 일자별 투두카운트를 조회한다")
+	void getDailyTodosCount() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
+
+		//when
+		mockMvc.perform(get("/goals/todos/count")
+				.header(USER_ID_HEADER, TEST_USER_ID)
+				.queryParam("date", "202210")
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.[0].date").exists())
+			.andDo(document("get-goals-with-todos-count", getSuccessResponseFieldsSnippet()))
+			.andDo(print());
+
+		//then
+	}
+
+	@Test
+	@DisplayName("MyList/캘린더 특정 년월일의 투두리스트를 조회한다_미완료,완료 전체")
+	void getDailyGoalsAndLowestDepthTodos1() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
+		performPostSampleGoalsWithMindsetsAndTodos();
+
+		//when
+		mockMvc.perform(get("/goals/todos")
+				.header(USER_ID_HEADER, TEST_USER_ID)
+				.queryParam("date", "20221031")
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andDo(document("get-goals-with-todos", getSuccessResponseFieldsSnippet()))
+			.andDo(print());
+		//then
+	}
+
+	@Test
+	@DisplayName("MyList/캘린더 특정 년월일의 투두리스트를 조회한다_미완료")
+	void getDailyGoalsAndLowestDepthTodos2() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
+		performPostSampleGoalsWithMindsetsAndTodos();
+
+		//when
+		mockMvc.perform(get("/goals/todos")
+				.header(USER_ID_HEADER, TEST_USER_ID)
+				.queryParam("date", "20221031")
+				.queryParam("size", "1")
+				.queryParam("completionStatus", "false")
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andDo(document("get-goals-with-todos", getSuccessResponseFieldsSnippet()))
+			.andDo(print());
+		//then
+	}
+
+	@Test
+	@DisplayName("투두의 상세정보를 조회한다")
+	void getTodoDetail() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
+
+		//when
+		mockMvc.perform(get("/goals/todos/{todoId}", 2)
+				.header(USER_ID_HEADER, TEST_USER_ID)
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			//                .andDo(document("get-goals-with-todos", getSuccessResponseFieldsSnippet()))
+			.andDo(print());
+		//then
+	}
+
+	@Test
+	@DisplayName("목표의 상세정보를 조회한다")
+	void getGoalDetail() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
+
+		//when
+		ResultActions result = mockMvc.perform(get("/goals/{goalId}", 1)
+			.header(USER_ID_HEADER, TEST_USER_ID)
+			.accept(MediaType.APPLICATION_JSON));;
+
+		//then
+		result
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.goalId").exists())
+			.andDo(print());
+	}
+
+	@Test
+	@DisplayName("투두상세 투두 일정을 조회한다.")
+	void getTodoSchedules() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
+
+		//when
+		ResultActions result = mockMvc.perform(get("/goals/todos/{todoId}/todoSchedules", 2)
+			.header(USER_ID_HEADER, TEST_USER_ID)
+			.queryParam("page", "1")
+			.queryParam("criteria", "before")
+			.accept(MediaType.APPLICATION_JSON));
+
+		//then
+		result
+			.andExpect(status().isOk())
+			// .andExpect(jsonPath("$.data.goalId").exists())
+			.andDo(print());
+	}
+
+	@Test
+	@DisplayName("특정 년월일의 투두리스트에 완료체크를 한다")
+	void put() throws Exception {
+		//given
+		performPostSampleGoalsWithMindsetsAndTodos();
+
+		UpdateGoalTodoScheduleRequest updateGoalTodoScheduleRequest = UpdateGoalTodoScheduleRequest.builder()
+			.completionStatus(true)
+			.build();
+
+		//when
+		mockMvc.perform(patch("/goals/todoSchedules/{todoScheduleId}", 1)
+				.header(USER_ID_HEADER, TEST_USER_ID)
+				.content(objectMapper.writeValueAsString(updateGoalTodoScheduleRequest))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			//                .andDo(document("patch-goals-todoSchedule", getSuccessResponseFieldsSnippet()))
+			.andDo(print());
+		//then
+	}
+
+	private ResultActions performPostSampleGoalsWithMindsetsAndTodos() throws Exception {
+		CreateGoalMindsetRequest createGoalMindsetRequest1 = new CreateGoalMindsetRequest(
+			"사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다111.");
+
+		CreateGoalMindsetRequest createGoalMindsetRequest2 = new CreateGoalMindsetRequest(
+			"사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다222.");
+
+		CreateGoalMindsetRequest createGoalMindsetRequest3 = new CreateGoalMindsetRequest(
+			"사는건 레벨업이 아닌 스펙트럼을 넓히는 거란 얘길 들었다. 어떤 말보다 용기가 된다333.");
+
+		CreateGoalTodoRequest todoFolder1 = getCreateGoalTodoFolderRequest(
+			"포폴완성",
+			1,
+			1,
+			List.of(
+				getCreateGoalTodoTaskRequest(
+					"컨셉잡기",
+					2,
+					0,
+					"20221001",
+					"20221031",
+					"DAY",
+					null,
+					"0900"
+				),
+				getCreateGoalTodoTaskRequest(
+					"스케치",
+					2,
+					1,
+					"20221101",
+					"20221131",
+					"WEEK",
+					List.of("월", "수", "금", "토"),
+					"0900"
+				),
+				getCreateGoalTodoTaskRequest(
+					"UI 작업",
+					2,
+					2,
+					"20221001",
+					"20221231",
+					"NONE",
+					null,
+					"0900"
+				)
+			)
+		);
+
+		CreateGoalTodoRequest todoFolder2 = getCreateGoalTodoFolderRequest(
+			"개발프로젝트 해보기",
+			1,
+			2,
+			List.of(
+				getCreateGoalTodoTaskRequest(
+					"IT 동아리 서류 내기",
+					2,
+					0,
+					"20221001",
+					"20221031",
+					"NONE",
+					null,
+					"0900"
+				),
+				getCreateGoalTodoTaskRequest(
+					"파이썬 공부",
+					2,
+					0,
+					"20221001",
+					"20221031",
+					"WEEK",
+					List.of("월", "수", "금"),
+					"0900"
+				)
+			)
+		);
+
+		CreateGoalTodoRequest todoTask1 = getCreateGoalTodoTaskRequest(
+			"외주",
+			1,
+			3,
+			"20221001",
+			"20221031",
+			"NONE",
+			null,
+			"0900"
+		);
+
+		CreateGoalRequest createGoalRequest = CreateGoalRequest.builder()
+			.title("이직하기")
+			.categoryName("커리어")
+			.categoryCode("CAREER")
+			.mindsets(List.of(createGoalMindsetRequest1, createGoalMindsetRequest2, createGoalMindsetRequest3))
+			.todos(List.of(todoFolder1, todoFolder2, todoTask1))
+			.build();
+
+		return mockMvc.perform(
+			post("/goals")
+				.header(USER_ID_HEADER, TEST_USER_ID)
+				.content(objectMapper.writeValueAsString(createGoalRequest))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+
+		);
+	}
+
+	private ResultActions performGetWithAuthorizationByUrlTemplate(String urlTemplate) throws Exception {
+		return mockMvc.perform(get(urlTemplate)
+			.header(USER_ID_HEADER, TEST_USER_ID)
+			.accept(MediaType.APPLICATION_JSON));
+	}
 }
