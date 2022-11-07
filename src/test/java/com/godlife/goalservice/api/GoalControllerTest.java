@@ -154,7 +154,7 @@ class GoalControllerTest {
 		performPostSampleGoalsWithMindsetsAndTodos();
 
 		//when
-		mockMvc.perform(get("/goals/todos/count")
+		mockMvc.perform(get("/goals/todos/counts")
 				.header(USER_ID_HEADER, TEST_USER_ID)
 				.queryParam("date", "202210")
 				.accept(MediaType.APPLICATION_JSON))
