@@ -12,6 +12,7 @@ import com.godlife.goalservice.domain.TodoFolder;
 import com.godlife.goalservice.domain.TodoTask;
 import com.godlife.goalservice.domain.enums.Category;
 import com.godlife.goalservice.domain.enums.RepetitionType;
+import com.godlife.goalservice.domain.enums.TodoType;
 
 import lombok.Builder;
 import lombok.Data;
@@ -45,7 +46,7 @@ public class CreateGoalRequest {
 
 	//TODO 자식 인스턴스를 만들때 뭔가 깔끔하지 못한데,,,, 다른 방법이 없나?
 	private Todo createTodo(CreateGoalTodoRequest todoDto, Goal goal) {
-		if ("folder".equals(todoDto.getType())) {
+		if (TodoType.FOLDER.name().equals(todoDto.getType())) {
 			return TodoFolder.createTodoFolder(
 				todoDto.getTitle(),
 				todoDto.getDepth(),

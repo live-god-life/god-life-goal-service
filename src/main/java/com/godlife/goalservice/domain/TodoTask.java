@@ -131,9 +131,11 @@ public class TodoTask extends Todo {
 
 	public void plusCompletedTodoTaskScheduleCount() {
 		completedTodoTaskScheduleCount++;
+		getGoal().plusCompletedTodoTaskScheduleCount();
 	}
 
 	public void minusCompletedTodoTaskScheduleCount() {
 		completedTodoTaskScheduleCount--;
+		getGoal().minusCompletedTodoTaskScheduleCount();
 	}
 }

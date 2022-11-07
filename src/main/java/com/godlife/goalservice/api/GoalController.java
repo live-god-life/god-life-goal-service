@@ -65,6 +65,14 @@ public class GoalController {
 			.body(ApiResponse.createGetSuccessResponse(goalService.getGoals(page, userId, completionStatus)));
 	}
 
+	@GetMapping("/goals/{goalId}")
+	public ResponseEntity<ApiResponse> getGoalDetail(
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@PathVariable(value = "goalId") Long goalId) {
+
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoalDetail(userId, goalId)));
+	}
+
 	@GetMapping("/goals/mindsets")
 	public ResponseEntity<ApiResponse> getGoalsWithMindsets(
 		@PageableDefault(size = DEFAULT_PAGE) Pageable page,
@@ -75,10 +83,12 @@ public class GoalController {
 			.body(ApiResponse.createGetSuccessResponse(goalService.getGoalsWithMindsets(page, userId, completionStatus)));
 	}
 
-	@GetMapping("/goals/todos/count")
+	@GetMapping("/goals/todos/counts")
 	public ResponseEntity<ApiResponse> getDailyTodosCount(
 		@RequestHeader(USER_ID_HEADER) Long userId,
 		@RequestParam(value = "date") YearMonth date) {
+
+		log.info("userId: {userId}");
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(ApiResponse.createGetSuccessResponse(goalService.getDailyTodosCount(userId, date)));
@@ -114,19 +124,13 @@ public class GoalController {
 	}
 
 	@PatchMapping("/goals/todoSchedules/{todoScheduleId}")
-	public ResponseEntity<ApiResponse> patchCompletionStatus(@RequestHeader(USER_ID_HEADER) Long userId,
+	public ResponseEntity<ApiResponse> patchCompletionStatus(
+		@RequestHeader(USER_ID_HEADER) Long userId,
 		@PathVariable(value = "todoScheduleId") Long todoScheduleId,
 		@RequestBody UpdateGoalTodoScheduleRequest request) {
+
 		goalService.updateTodoScheduleCompletionStatus(userId, todoScheduleId, request.getCompletionStatus());
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createPatchSuccessResponse());
-	}
-
-	@GetMapping("/goals/{goalId}")
-	public ResponseEntity<ApiResponse> getGoalDetail(
-		@RequestHeader(USER_ID_HEADER) Long userId,
-		@PathVariable(value = "goalId") Long goalId) {
-
-		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createGetSuccessResponse(goalService.getGoalDetail(userId, goalId)));
 	}
 
 	//======================================리팩토링 완료======================================

@@ -3,7 +3,6 @@ package com.godlife.goalservice.service;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -24,6 +23,7 @@ import com.godlife.goalservice.dto.TodoScheduleCountDto;
 import com.godlife.goalservice.dto.TodoSchedulesDto;
 import com.godlife.goalservice.dto.request.CreateGoalRequest;
 import com.godlife.goalservice.exception.NoSuchTodoException;
+import com.godlife.goalservice.exception.NoSuchTodoScheduleException;
 import com.godlife.goalservice.repository.GoalRepository;
 import com.godlife.goalservice.repository.MindsetRepository;
 import com.godlife.goalservice.repository.TodoRepository;
@@ -90,12 +90,11 @@ public class GoalService {
 		return goalRepository.findGoalWithMindsetsAndTodosByUserIdAndGoalId(userId, goalId);
 	}
 
-	//======================================리팩토링 완료======================================
-
 	@Transactional
 	public void updateTodoScheduleCompletionStatus(Long userId, Long todoScheduleId, Boolean completionStatus) {
 		TodoTaskSchedule schedule = todoTaskScheduleRepository.findById(todoScheduleId)
-			.orElseThrow(NoSuchElementException::new);
+			.orElseThrow(NoSuchTodoScheduleException::new);
+
 		if (completionStatus) {
 			schedule.updateCompletionStatus();
 		} else {

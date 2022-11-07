@@ -105,4 +105,12 @@ public class Goal extends BaseEntity {
 	private void registerTotalTodoTaskScheduleCount(int totalTodoTaskScheduleCount) {
 		this.totalTodoTaskScheduleCount = totalTodoTaskScheduleCount;
 	}
+
+	public void plusCompletedTodoTaskScheduleCount() {
+		this.completedTodoTaskScheduleCount++;
+	}
+
+	public void minusCompletedTodoTaskScheduleCount() {
+		this.completedTodoTaskScheduleCount--;
+	}
 }
