@@ -258,9 +258,7 @@ class GoalControllerTest {
 			.andDo(print());
 	}
 
-	//======================================리팩토링 완료======================================
-
-	// @Test
+	@Test
 	@DisplayName("특정 년월일의 투두리스트에 완료체크를 한다")
 	void put() throws Exception {
 		//given
