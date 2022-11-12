@@ -99,7 +99,89 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 
 	@Override
 	public GoalMindsetsTodosDto findGoalWithMindsetsAndTodosByUserIdAndGoalId(Long userId, Long goalId) {
-		GoalMindsetsTodosDto goalMindsetsTodosDto = queryFactory
+		GoalMindsetsTodosDto goalMindsetsTodosDto = findGoalMindsetsTodosDto(goalId);
+
+		List<MindsetDto> mindsetDtos = findMindsetDtos(goalId);
+		goalMindsetsTodosDto.registerMindsetDtos(mindsetDtos);
+
+		List<TodoDto> parentTodoDtos = findParentTodoDtos(goalId);
+		List<TodoDto> childTodoDtos = findChildTodoDtos(goalId);
+		setChildTodoDtosInParentTodoDtos(parentTodoDtos, childTodoDtos);
+		goalMindsetsTodosDto.registerTodoDtos(parentTodoDtos);
+
+		return goalMindsetsTodosDto;
+	}
+
+	private static void setChildTodoDtosInParentTodoDtos(List<TodoDto> parentTodoDtos, List<TodoDto> childTodoDtos) {
+		parentTodoDtos.forEach(todoDto -> todoDto.registerChildTodos(
+			childTodoDtos.stream()
+				.filter(childTodos -> childTodos.getParentTodoId().equals(todoDto.getTodoId()))
+				.collect(Collectors.toList())
+		));
+	}
+
+	private List<TodoDto> findChildTodoDtos(Long goalId) {
+		return queryFactory
+			.select(
+				new QTodoDto(
+					todo.todoId,
+					todoTask.parent_todo_id,
+					todo.type,
+					todo.title,
+					todo.depth,
+					todo.orderNumber,
+					todo.startDate.stringValue(),
+					todo.endDate.stringValue(),
+					todoTask.repetitionType.stringValue(),
+					todoTask.repetitionParams,
+					todoTask.notification,
+					todoTask.totalTodoTaskScheduleCount,
+					todoTask.completedTodoTaskScheduleCount))
+			.from(todo)
+			.leftJoin(todoTask).on(todoTask.eq(todo))
+			.leftJoin(todoFolder).on(todoFolder.eq(todo))
+			.where(todo.goal.goalId.eq(goalId),
+				todo.depth.eq(SECOND_DEPTH))
+			.fetch();
+	}
+
+	private List<TodoDto> findParentTodoDtos(Long goalId) {
+		return queryFactory
+			.select(
+				new QTodoDto(
+					todo.todoId,
+					todo.type,
+					todo.title,
+					todo.depth,
+					todo.orderNumber,
+					todo.startDate.stringValue(),
+					todo.endDate.stringValue(),
+					todoTask.repetitionType.stringValue(),
+					todoTask.repetitionParams,
+					todoTask.notification,
+					todoTask.totalTodoTaskScheduleCount,
+					todoTask.completedTodoTaskScheduleCount))
+			.from(todo)
+			.leftJoin(todoTask).on(todoTask.eq(todo))
+			.leftJoin(todoFolder).on(todoFolder.eq(todo))
+			.where(todo.goal.goalId.eq(goalId),
+				todo.depth.eq(FIRST_DEPTH))
+			.fetch();
+	}
+
+	private List<MindsetDto> findMindsetDtos(Long goalId) {
+		return queryFactory
+			.select(
+				new QMindsetDto(
+					mindset.mindsetId,
+					mindset.content))
+			.from(mindset)
+			.where(mindset.goal.goalId.eq(goalId))
+			.fetch();
+	}
+
+	private GoalMindsetsTodosDto findGoalMindsetsTodosDto(Long goalId) {
+		return queryFactory
 			.select(
 				new QGoalMindsetsTodosDto(
 					goal.goalId,
@@ -115,81 +197,50 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 			.from(goal)
 			.where(goal.goalId.eq(goalId))
 			.fetchOne();
-
-		List<MindsetDto> mindsetDtos = queryFactory
-			.select(
-				new QMindsetDto(
-					mindset.mindsetId,
-					mindset.content))
-			.from(mindset)
-			.where(mindset.goal.goalId.eq(goalId))
-			.fetch();
-
-		goalMindsetsTodosDto.registerMindsetDtos(mindsetDtos);
-
-		List<TodoDto> todoDtos = queryFactory
-			.select(
-				new QTodoDto(
-					todo.todoId,
-					todo.type,
-					todo.title,
-					todo.depth,
-					todo.orderNumber,
-					todo.startDate.stringValue(),
-					todo.endDate.stringValue(),
-					todoTask.repetitionType.stringValue(),
-					todoTask.repetitionParams,
-					todoTask.notification,
-					todoTask.totalTodoTaskScheduleCount,
-					todoTask.completedTodoTaskScheduleCount
-				)
-			)
-			.from(todo)
-			.leftJoin(todoTask).on(todoTask.eq(todo))
-			.leftJoin(todoFolder).on(todoFolder.eq(todo))
-			.where(todo.goal.goalId.eq(goalId),
-				todo.depth.eq(FIRST_DEPTH))
-			.fetch();
-
-		List<TodoDto> childTodoDtos = queryFactory
-			.select(
-				new QTodoDto(
-					todo.todoId,
-					todoTask.parent_todo_id,
-					todo.type,
-					todo.title,
-					todo.depth,
-					todo.orderNumber,
-					todo.startDate.stringValue(),
-					todo.endDate.stringValue(),
-					todoTask.repetitionType.stringValue(),
-					todoTask.repetitionParams,
-					todoTask.notification,
-					todoTask.totalTodoTaskScheduleCount,
-					todoTask.completedTodoTaskScheduleCount
-				)
-			)
-			.from(todo)
-			.leftJoin(todoTask).on(todoTask.eq(todo))
-			.leftJoin(todoFolder).on(todoFolder.eq(todo))
-			.where(todo.goal.goalId.eq(goalId),
-				todo.depth.eq(SECOND_DEPTH))
-			.fetch();
-
-		todoDtos.forEach(todoDto -> todoDto.registerChildTodos(
-			childTodoDtos.stream()
-				.filter(childTodos -> childTodos.getParentTodoId().equals(todoDto.getTodoId()))
-				.collect(Collectors.toList())
-		));
-
-		goalMindsetsTodosDto.registerTodoDtos(todoDtos);
-
-		return goalMindsetsTodosDto;
 	}
 
 	@Override
 	public List<GoalTodoScheduleDto> findDailyGoalsAndTodosByUserIdAndLocalDate(Pageable page, Long userId, LocalDate searchedDate, Boolean completionStatus) {
-		List<GoalTodoScheduleDto> goals = queryFactory
+		List<GoalTodoScheduleDto> goals = findGoalTodoScheduleDtos(page, userId, searchedDate);
+
+		List<GoalTodoScheduleDto.TodoScheduleDto> todoSchedules = findTodoScheduleDtos(userId, searchedDate, completionStatus);
+		setTodoScheduleDtoInGoalTodoScheduleDto(goals, todoSchedules);
+
+		return goals;
+	}
+
+	private static void setTodoScheduleDtoInGoalTodoScheduleDto(List<GoalTodoScheduleDto> goals, List<GoalTodoScheduleDto.TodoScheduleDto> todoSchedules) {
+		goals.forEach(goal -> goal.addTodoSchedule(todoSchedules.stream()
+			.filter(todoSchedule -> todoSchedule.getGoalId().equals(goal.getGoalId()))
+			.collect(Collectors.toList())));
+	}
+
+	private List<GoalTodoScheduleDto.TodoScheduleDto> findTodoScheduleDtos(Long userId, LocalDate searchedDate, Boolean completionStatus) {
+		return queryFactory
+			.select(
+				new QGoalTodoScheduleDto_TodoScheduleDto(
+					goal.goalId,
+					todoTaskSchedule.todoTaskScheduleId,
+					todoTask.todoId,
+					todoTask.title,
+					todoTaskSchedule.completionStatus,
+					todoTask.repetitionType,
+					todoTask.repetitionParams,
+					todoTask.totalTodoTaskScheduleCount,
+					todoTask.completedTodoTaskScheduleCount,
+					todoTask.endDate))
+			.from(todoTask)
+			.leftJoin(todoTask.goal, goal)
+			.leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
+			.where(goal.userId.eq(userId),
+				todoTaskSchedule.scheduleDate.eq(searchedDate),
+				eqTodoTaskScheduleCompletionStatus(completionStatus))
+			.fetch();
+		// return null;
+	}
+
+	private List<GoalTodoScheduleDto> findGoalTodoScheduleDtos(Pageable page, Long userId, LocalDate searchedDate) {
+		return queryFactory
 			.select(
 				new QGoalTodoScheduleDto(
 					goal.goalId,
@@ -203,28 +254,6 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 			.offset(page.getOffset())
 			.limit(page.getPageSize())
 			.fetch();
-
-		List<GoalTodoScheduleDto.TodoScheduleDto> todoSchedules = queryFactory
-			.select(
-				new QGoalTodoScheduleDto_TodoScheduleDto(
-					goal.goalId,
-					todoTaskSchedule.todoTaskScheduleId,
-					todoTask.todoId,
-					todoTask.title,
-					todoTaskSchedule.completionStatus,
-					todoTask.repetitionType))
-			.from(todoTask)
-			.leftJoin(todoTask.goal, goal)
-			.leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
-			.where(goal.userId.eq(userId),
-				todoTaskSchedule.scheduleDate.eq(searchedDate),
-				eqTodoTaskScheduleCompletionStatus(completionStatus))
-			.fetch();
-
-		goals.forEach(goal -> goal.addTodoSchedule(todoSchedules.stream()
-			.filter(todoSchedule -> todoSchedule.getGoalId().equals(goal.getGoalId()))
-			.collect(Collectors.toList())));
-		return goals;
 	}
 
 	private BooleanExpression eqTodoTaskScheduleCompletionStatus(Boolean completionStatus) {
