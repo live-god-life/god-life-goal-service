@@ -7,32 +7,50 @@
       "title": "이직하기",
       "todoSchedules": [
         {
-          "todoScheduleId": 31,
+          "todoScheduleId": 43,
           "todoId": 2,
           "title": "컨셉잡기",
-          "completionStatue": false,
-          "taskType": "Todo"
+          "completionStatus": false,
+          "taskType": "Todo",
+          "repetitionType": "DAY",
+          "repetitionParams": null,
+          "totalTodoTaskScheduleCount": 91,
+          "completedTodoTaskScheduleCount": 0,
+          "todoDay": -48
+        }
+      ]
+    },
+    {
+      "goalId": 2,
+      "title": "이직하기",
+      "todoSchedules": [
+        {
+          "todoScheduleId": 157,
+          "todoId": 10,
+          "title": "컨셉잡기",
+          "completionStatus": false,
+          "taskType": "Todo",
+          "repetitionType": "DAY",
+          "repetitionParams": null,
+          "totalTodoTaskScheduleCount": 91,
+          "completedTodoTaskScheduleCount": 0,
+          "todoDay": -48
         },
         {
-          "todoScheduleId": 50,
-          "todoId": 6,
-          "title": "IT 동아리 서류 내기",
-          "completionStatue": false,
-          "taskType": "D-day"
-        },
-        {
-          "todoScheduleId": 63,
-          "todoId": 7,
-          "title": "파이썬 공부",
-          "completionStatue": false,
-          "taskType": "Todo"
-        },
-        {
-          "todoScheduleId": 64,
-          "todoId": 8,
-          "title": "외주",
-          "completionStatue": false,
-          "taskType": "D-day"
+          "todoScheduleId": 224,
+          "todoId": 11,
+          "title": "스케치",
+          "completionStatus": false,
+          "taskType": "Todo",
+          "repetitionType": "WEEK",
+          "repetitionParams": [
+            "월",
+            "목",
+            "토"
+          ],
+          "totalTodoTaskScheduleCount": 39,
+          "completedTodoTaskScheduleCount": 0,
+          "todoDay": -48
         }
       ]
     }
