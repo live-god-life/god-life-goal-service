@@ -8,7 +8,7 @@ public class SampleTestDataCreator {
 	public static CreateGoalTodoRequest getCreateGoalTodoTaskRequest(String title, Integer depth, Integer orderNumber,
 		String startDate, String endDate, String repetitionType, List<String> repetitionParams, String notification) {
 		return CreateGoalTodoRequest.builder()
-			.type("task")
+			.type("TASK")
 			.title(title)
 			.depth(depth)
 			.orderNumber(orderNumber)
@@ -23,7 +23,7 @@ public class SampleTestDataCreator {
 	public static CreateGoalTodoRequest getCreateGoalTodoFolderRequest(String title, Integer depth, Integer orderNumber,
 		List<CreateGoalTodoRequest> childTodoRequest) {
 		return CreateGoalTodoRequest.builder()
-			.type("folder")
+			.type("FOLDER")
 			.depth(depth)
 			.orderNumber(orderNumber)
 			.title(title)

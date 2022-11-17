@@ -30,15 +30,15 @@ logging:
         SQL: debug
         type.descriptor.sql: trace
 
-#eureka:
-#  client:
-#    register-with-eureka: true
-#    fetch-registry: true
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka
-#  instance:
-#    instance-id: ${spring.application.name}:${eureka.instance.instance-id:${random.value}
-#    prefer-ip-address: true
-#
-#url:
-#  apiGateway: http://localhost:8000
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+
+url:
+  apiGateway: http://localhost:8000

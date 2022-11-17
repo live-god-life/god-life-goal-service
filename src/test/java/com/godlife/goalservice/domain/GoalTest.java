@@ -29,7 +29,7 @@ class GoalTest {
 		// assertThat(result).isEqualTo(2);
 	}
 
-	@Test
+	// @Test
 	@DisplayName("진행중 투두의 카운트를 조회한다")
 	void getTotalTodoCount() {
 		//given
@@ -82,7 +82,7 @@ class GoalTest {
 		assertThat(result).isEqualTo(3);
 	}
 
-	@Test
+	// @Test
 	@DisplayName("진행중 투두의 카운트를 조회한다")
 	void getOnProgressTodoCount() {
 		//given

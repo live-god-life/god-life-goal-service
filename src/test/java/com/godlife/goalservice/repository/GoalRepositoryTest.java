@@ -106,7 +106,7 @@ class GoalRepositoryTest {
 		return Mindset.createMindset(content, goal);
 	}
 
-	@Test
+	// @Test
 	@DisplayName("MyList/캘린더 일별 투두 카운팅 조회")
 	void findDailyTodosCount() {
 		//given
@@ -137,7 +137,7 @@ class GoalRepositoryTest {
 		assertThat(result.size()).isEqualTo(31);
 	}
 
-	@Test
+	// @Test
 	@DisplayName("특정일의 최하위 투두리스트 조회하기")
 	void getDailyGoalsAndTodos() {
 		//given
