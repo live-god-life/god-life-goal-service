@@ -1,0 +1,22 @@
+{
+  "status": "success",
+  "data": {
+    "feeds": [
+      {
+        "id": 1,
+        "title": "중소기업 식품연구원의 네카라쿠배 개발자 입성기",
+        "viewCount": 0,
+        "가져가기Count": 0,
+        "image": "http://server/feeds/images/feed1.jpg",
+        "bookMarkStatus": false,
+        "user": {
+          "id": 1,
+          "nickname": "네카라구배당돌한얼음이요?",
+          "image": "http://server/users/images/profile1.jpg"
+        }
+      }
+    ]
+  },
+  "code": null,
+  "message": null
+}
