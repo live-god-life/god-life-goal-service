@@ -112,7 +112,7 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 		return goalMindsetsTodosDto;
 	}
 
-	private static void setChildTodoDtosInParentTodoDtos(List<TodoDto> parentTodoDtos, List<TodoDto> childTodoDtos) {
+	private void setChildTodoDtosInParentTodoDtos(List<TodoDto> parentTodoDtos, List<TodoDto> childTodoDtos) {
 		parentTodoDtos.forEach(todoDto -> todoDto.registerChildTodos(
 			childTodoDtos.stream()
 				.filter(childTodos -> childTodos.getParentTodoId().equals(todoDto.getTodoId()))
@@ -204,15 +204,18 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 		List<GoalTodoScheduleDto> goals = findGoalTodoScheduleDtos(page, userId, searchedDate);
 
 		List<GoalTodoScheduleDto.TodoScheduleDto> todoSchedules = findTodoScheduleDtos(userId, searchedDate, completionStatus);
-		setTodoScheduleDtoInGoalTodoScheduleDto(goals, todoSchedules);
-
-		return goals;
+		return makeTodoScheduleDtoInGoalTodoScheduleDto(goals, todoSchedules);
 	}
 
-	private static void setTodoScheduleDtoInGoalTodoScheduleDto(List<GoalTodoScheduleDto> goals, List<GoalTodoScheduleDto.TodoScheduleDto> todoSchedules) {
-		goals.forEach(goal -> goal.addTodoSchedule(todoSchedules.stream()
-			.filter(todoSchedule -> todoSchedule.getGoalId().equals(goal.getGoalId()))
-			.collect(Collectors.toList())));
+	private List<GoalTodoScheduleDto> makeTodoScheduleDtoInGoalTodoScheduleDto(List<GoalTodoScheduleDto> goals, List<GoalTodoScheduleDto.TodoScheduleDto> todoSchedules) {
+		return goals.stream().filter(goal -> {
+			List<GoalTodoScheduleDto.TodoScheduleDto> todoScheduleDtos = todoSchedules.stream()
+				.filter(todoSchedule -> todoSchedule.getGoalId().equals(goal.getGoalId()))
+				.collect(Collectors.toList());
+			goal.addTodoSchedule(todoScheduleDtos);
+			return todoScheduleDtos.size() > 0;
+		}).collect(Collectors.toList());
+
 	}
 
 	private List<GoalTodoScheduleDto.TodoScheduleDto> findTodoScheduleDtos(Long userId, LocalDate searchedDate, Boolean completionStatus) {
@@ -236,7 +239,6 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 				todoTaskSchedule.scheduleDate.eq(searchedDate),
 				eqTodoTaskScheduleCompletionStatus(completionStatus))
 			.fetch();
-		// return null;
 	}
 
 	private List<GoalTodoScheduleDto> findGoalTodoScheduleDtos(Pageable page, Long userId, LocalDate searchedDate) {
