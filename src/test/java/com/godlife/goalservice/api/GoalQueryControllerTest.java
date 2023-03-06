@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @SpringBootTest
-class GoalControllerTest {
+class GoalQueryControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired

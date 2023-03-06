@@ -34,6 +34,10 @@ public class ApiResponse {
 		return new ApiResponse("success", "modified", null);
 	}
 
+	public static ApiResponse createDeleteSuccessResponse() {
+		return new ApiResponse("success", "deleted", null);
+	}
+
 	public static ApiResponse createGetSuccessResponse(Object o) {
 		return new ApiResponse("success", "ok", o);
 	}

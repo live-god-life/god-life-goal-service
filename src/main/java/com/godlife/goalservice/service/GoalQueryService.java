@@ -45,23 +45,12 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
-public class GoalService {
+public class GoalQueryService {
 	private final GoalRepository goalRepository;
 	private final TodoTaskScheduleRepository todoTaskScheduleRepository;
 	private final TodoRepository todoRepository;
 	private final MindsetRepository mindsetRepository;
 
-	@Transactional
-	public void createGoal(Long userId, CreateGoalRequest goalMindsetsTodosDto) {
-		Goal goal = goalMindsetsTodosDto.createGoalEntity(userId);
-		List<Mindset> mindsets = goalMindsetsTodosDto.createMindsetsEntity(goal);
-		Todos todos = new Todos(goalMindsetsTodosDto.createTodosEntity(goal));
-
-		goal.registerTodosInfo(todos);
-
-		mindsetRepository.saveAll(mindsets);
-		todoRepository.saveAll(todos.get());
-	}
 
 	public List<GoalDto> getGoals(Pageable page, Long userId, Boolean completionStatus) {
 		return Objects.isNull(completionStatus) ?
@@ -90,17 +79,7 @@ public class GoalService {
 		return goalRepository.findGoalWithMindsetsAndTodosByUserIdAndGoalId(userId, goalId);
 	}
 
-	@Transactional
-	public void updateTodoScheduleCompletionStatus(Long userId, Long todoScheduleId, Boolean completionStatus) {
-		TodoTaskSchedule schedule = todoTaskScheduleRepository.findById(todoScheduleId)
-			.orElseThrow(NoSuchTodoScheduleException::new);
 
-		if (completionStatus) {
-			schedule.updateCompletionStatus();
-		} else {
-			schedule.updateInCompletionStatus();
-		}
-	}
 
 	public List<TodoSchedulesDto> getTodoSchedules(Pageable page, Long userId, Long todoId, String criteria) {
 		return todoTaskScheduleRepository.findAllByTodoId(page, todoId, criteria);
