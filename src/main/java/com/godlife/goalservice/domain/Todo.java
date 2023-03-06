@@ -54,7 +54,7 @@ public abstract class Todo extends BaseEntity {
 	@Comment("Task 종료일")
 	private LocalDate endDate;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "goal_id")
 	private Goal goal;
 

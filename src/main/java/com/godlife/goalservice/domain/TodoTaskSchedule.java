@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.Comment;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,7 +31,7 @@ public class TodoTaskSchedule {
 	@Comment("완료여부")
 	private Boolean completionStatus = false;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "todo_task_id")
 	private TodoTask todoTask;
 
