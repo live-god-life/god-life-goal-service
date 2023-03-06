@@ -13,6 +13,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class TodoDetailDto {
+	private Long goalId;
 	private Long todoId;
 	private String title;
 	private String type;
@@ -28,6 +29,7 @@ public class TodoDetailDto {
 		if (todo instanceof TodoTask) {
 			TodoTask todoTask = (TodoTask)todo;
 			return TodoDetailDto.builder()
+				.goalId(todoTask.getGoal().getGoalId())
 				.todoId(todoTask.getTodoId())
 				.title(todoTask.getTitle())
 				.type("TASK")
