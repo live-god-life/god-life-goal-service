@@ -61,7 +61,12 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 						.when(todoTask.repetitionType.eq(RepetitionType.NONE))
 						.then(1)
 						.otherwise((Integer)null)
-						.count().intValue().as("dDayCount")))
+						.count().intValue().as("dDayCount"),
+					new CaseBuilder()
+						.when(todoTaskSchedule.completionStatus.eq(true))
+						.then(1)
+						.otherwise((Integer)null)
+						.count().intValue().as("completedCount")))
 			.from(todoTask)
 			.leftJoin(todoTask.todoTaskSchedules, todoTaskSchedule)
 			.where(todoTask.goal.userId.eq(userId),
