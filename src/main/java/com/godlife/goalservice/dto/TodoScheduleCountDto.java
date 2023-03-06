@@ -16,10 +16,13 @@ public class TodoScheduleCountDto {
 	@JsonProperty("dDayCount")
 	private Integer dDayCount;
 
+	private Integer completedCount;
+
 	@QueryProjection
-	public TodoScheduleCountDto(LocalDate date, Integer todoCount, Integer dDayCount) {
+	public TodoScheduleCountDto(LocalDate date, Integer todoCount, Integer dDayCount, Integer completedCount) {
 		this.date = date;
 		this.todoCount = todoCount;
 		this.dDayCount = dDayCount;
+		this.completedCount = completedCount;
 	}
 }
