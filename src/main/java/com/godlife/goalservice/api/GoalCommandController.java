@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,5 +53,17 @@ public class GoalCommandController {
 		@PathVariable(value = "todoId") Long todoId) {
 		goalCommandService.deleteTodo(userId, todoId);
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createDeleteSuccessResponse());
+	}
+
+	@DeleteMapping("/goals/{goalId}")
+	public ResponseEntity<ApiResponse> deleteGoal(@RequestHeader(USER_ID_HEADER) Long userId, @PathVariable(value = "goalId") Long goalId) {
+		goalCommandService.deleteGoal(userId, goalId);
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createDeleteSuccessResponse());
+	}
+
+	@PutMapping("/goals/{goalId}")
+	public ResponseEntity<ApiResponse> modifyGoal(@RequestHeader(USER_ID_HEADER) Long userId, @PathVariable(value = "goalId") Long goalId, @RequestBody CreateGoalRequest request) {
+		goalCommandService.modifyGoal(userId, goalId, request);
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createPutSuccessResponse());
 	}
 }
