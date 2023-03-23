@@ -11,6 +11,7 @@ import com.godlife.goalservice.domain.Todo;
 import com.godlife.goalservice.domain.TodoTask;
 import com.godlife.goalservice.domain.TodoTaskSchedule;
 import com.godlife.goalservice.domain.Todos;
+import com.godlife.goalservice.domain.enums.Category;
 import com.godlife.goalservice.dto.request.CreateGoalRequest;
 import com.godlife.goalservice.exception.NoSuchGoalException;
 import com.godlife.goalservice.exception.NoSuchTodoException;
@@ -62,7 +63,6 @@ public class GoalCommandService {
 		todoRepository.delete(todo);
 	}
 
-	@Transactional
 	public void deleteGoal(Long userId, Long goalId) {
 		Goal goal = goalRepository.findById(goalId).orElseThrow(NoSuchGoalException::new);
 		deleteMindsets(goal);
@@ -81,9 +81,12 @@ public class GoalCommandService {
 		mindsets.forEach(mindsetRepository::delete);
 	}
 
-	@Transactional
 	public void modifyGoal(Long userId, Long goalId, CreateGoalRequest request) {
 		Goal goal = goalRepository.findById(goalId).orElseThrow(NoSuchGoalException::new);
+
+		goal.changeTitle(request.getTitle());
+		goal.changeCategory(Category.valueOf(request.getCategoryCode()));
+
 		deleteMindsets(goal);
 		deleteTodos(goal);
 		List<Mindset> mindsets = request.createMindsetsEntity(goal);

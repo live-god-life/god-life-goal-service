@@ -83,6 +83,7 @@ public class Goal extends BaseEntity {
 	public void addMindsetCount() {
 		this.totalMindsetCount++;
 	}
+
 	public void registerTodosInfo(Todos todos) {
 		registerStartDate(todos.getFistStartDate());
 		registerEndDate(todos.getLastEndDate());
@@ -112,5 +113,13 @@ public class Goal extends BaseEntity {
 
 	public void minusCompletedTodoTaskScheduleCount() {
 		this.completedTodoTaskScheduleCount--;
+	}
+
+	public void changeTitle(String title) {
+		this.title = title;
+	}
+
+	public void changeCategory(Category category) {
+		this.category = category;
 	}
 }
