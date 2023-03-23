@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.godlife.goalservice.domain.Goal;
 import com.godlife.goalservice.domain.Mindset;
+import com.godlife.goalservice.domain.Todo;
+import com.godlife.goalservice.domain.TodoTask;
 import com.godlife.goalservice.domain.TodoTaskSchedule;
 import com.godlife.goalservice.domain.Todos;
 import com.godlife.goalservice.dto.GoalDto;
@@ -22,6 +24,7 @@ import com.godlife.goalservice.dto.TodoDetailDto;
 import com.godlife.goalservice.dto.TodoScheduleCountDto;
 import com.godlife.goalservice.dto.TodoSchedulesDto;
 import com.godlife.goalservice.dto.request.CreateGoalRequest;
+import com.godlife.goalservice.exception.NoSuchGoalException;
 import com.godlife.goalservice.exception.NoSuchTodoException;
 import com.godlife.goalservice.exception.NoSuchTodoScheduleException;
 import com.godlife.goalservice.repository.GoalRepository;
@@ -104,5 +107,44 @@ public class GoalService {
 
 	public List<TodoSchedulesDto> getTodoSchedules(Pageable page, Long userId, Long todoId, String criteria) {
 		return todoTaskScheduleRepository.findAllByTodoId(page, todoId, criteria);
+	}
+
+	@Transactional
+	public void deleteGoal(Long userId, Long goalId) {
+		Goal goal = goalRepository.findById(goalId)
+			.orElseThrow(NoSuchGoalException::new);
+		deleteMindsets(goal);
+		deleteTodos(goal);
+
+		goalRepository.delete(goal);
+
+	}
+
+	private void deleteTodos(Goal goal) {
+		List<Todo> todos = todoRepository.findAllByGoal(goal);
+		todos.stream().filter((todo -> todo instanceof TodoTask))
+			.forEach(todoTask -> todoTaskScheduleRepository.deleteByTodoTask((TodoTask)todoTask));
+		todos.forEach(todoRepository::delete);
+	}
+
+	private void deleteMindsets(Goal goal) {
+		List<Mindset> mindsets = mindsetRepository.findAllByGoal(goal);
+		mindsets.forEach(mindsetRepository::delete);
+	}
+
+	@Transactional
+	public void modifyGoal(Long userId, Long goalId, CreateGoalRequest request) {
+		Goal goal = goalRepository.findById(goalId)
+			.orElseThrow(NoSuchGoalException::new);
+		deleteMindsets(goal);
+		deleteTodos(goal);
+
+		List<Mindset> mindsets = request.createMindsetsEntity(goal);
+		Todos todos = new Todos(request.createTodosEntity(goal));
+
+		goal.registerTodosInfo(todos);
+
+		mindsetRepository.saveAll(mindsets);
+		todoRepository.saveAll(todos.get());
 	}
 }
