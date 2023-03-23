@@ -7,11 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -131,6 +133,27 @@ public class GoalController {
 
 		goalService.updateTodoScheduleCompletionStatus(userId, todoScheduleId, request.getCompletionStatus());
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createPatchSuccessResponse());
+	}
+
+	@DeleteMapping("/goals/{goalId}")
+	public ResponseEntity<ApiResponse> deleteGoal(
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@PathVariable(value = "goalId") Long goalId) {
+
+		goalService.deleteGoal(userId, goalId);
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createDeleteSuccessResponse());
+	}
+
+	@PutMapping("/goals/{goalId}")
+	public ResponseEntity<ApiResponse> modifyGoal(
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@PathVariable(value = "goalId") Long goalId,
+		@RequestBody CreateGoalRequest request) {
+
+		goalService.modifyGoal(userId, goalId, request);
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(ApiResponse.createPutSuccessResponse());
 	}
 
 	//======================================리팩토링 완료======================================

@@ -18,9 +18,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/*
-    todo
- */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -83,6 +80,7 @@ public class Goal extends BaseEntity {
 	public void addMindsetCount() {
 		this.totalMindsetCount++;
 	}
+
 	public void registerTodosInfo(Todos todos) {
 		registerStartDate(todos.getFistStartDate());
 		registerEndDate(todos.getLastEndDate());

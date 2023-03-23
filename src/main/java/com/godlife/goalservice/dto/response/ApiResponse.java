@@ -41,4 +41,12 @@ public class ApiResponse {
 	public static ApiResponse createErrorResponse(String errorMessage) {
 		return new ApiResponse("error", errorMessage, null);
 	}
+
+	public static ApiResponse createDeleteSuccessResponse() {
+		return new ApiResponse("success", "deleted", null);
+	}
+
+	public static ApiResponse createPutSuccessResponse() {
+		return new ApiResponse("success", "modified", null);
+	}
 }

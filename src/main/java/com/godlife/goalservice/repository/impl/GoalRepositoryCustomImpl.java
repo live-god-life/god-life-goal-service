@@ -33,6 +33,7 @@ import com.godlife.goalservice.dto.QTodoDto;
 import com.godlife.goalservice.dto.QTodoScheduleCountDto;
 import com.godlife.goalservice.dto.TodoDto;
 import com.godlife.goalservice.dto.TodoScheduleCountDto;
+import com.godlife.goalservice.exception.NoSuchGoalException;
 import com.godlife.goalservice.repository.GoalRepositoryCustom;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
@@ -100,6 +101,9 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 	@Override
 	public GoalMindsetsTodosDto findGoalWithMindsetsAndTodosByUserIdAndGoalId(Long userId, Long goalId) {
 		GoalMindsetsTodosDto goalMindsetsTodosDto = findGoalMindsetsTodosDto(goalId);
+		if (goalMindsetsTodosDto == null) {
+			throw new NoSuchGoalException();
+		}
 
 		List<MindsetDto> mindsetDtos = findMindsetDtos(goalId);
 		goalMindsetsTodosDto.registerMindsetDtos(mindsetDtos);
