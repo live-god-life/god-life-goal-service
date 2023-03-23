@@ -1,13 +1,9 @@
 package com.godlife.goalservice.dto.response;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
-/*
-    todo
- */
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -44,5 +40,9 @@ public class ApiResponse {
 
 	public static ApiResponse createErrorResponse(String errorMessage) {
 		return new ApiResponse("error", errorMessage, null);
+	}
+
+	public static ApiResponse createPutSuccessResponse() {
+		return new ApiResponse("success", "modified", null);
 	}
 }
