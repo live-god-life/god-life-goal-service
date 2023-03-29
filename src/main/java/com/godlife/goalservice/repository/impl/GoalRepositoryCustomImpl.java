@@ -82,6 +82,7 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 			.from(goal)
 			.join(mindset).on(goal.eq(mindset.goal))
 			.where(eqGoalCompletionStatus(completionStatus))
+			.where(goal.userId.eq(userId))
 			.offset(page.getOffset())
 			.limit(page.getPageSize())
 			.transform(
