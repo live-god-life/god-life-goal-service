@@ -77,6 +77,7 @@ public class GoalCommandService {
 	}
 
 	private void deleteMindsets(Goal goal) {
+		goal.initMindSetCount();
 		List<Mindset> mindsets = mindsetRepository.findAllByGoal(goal);
 		mindsets.forEach(mindsetRepository::delete);
 	}

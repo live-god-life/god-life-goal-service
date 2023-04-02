@@ -122,4 +122,8 @@ public class Goal extends BaseEntity {
 	public void changeCategory(Category category) {
 		this.category = category;
 	}
+
+	public void initMindSetCount() {
+		this.totalMindsetCount = 0;
+	}
 }
