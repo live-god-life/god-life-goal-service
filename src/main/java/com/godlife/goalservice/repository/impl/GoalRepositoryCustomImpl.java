@@ -124,11 +124,14 @@ public class GoalRepositoryCustomImpl implements GoalRepositoryCustom {
 	}
 
 	private void setChildTodoDtosInParentTodoDtos(List<TodoDto> parentTodoDtos, List<TodoDto> childTodoDtos) {
-		parentTodoDtos.forEach(todoDto -> todoDto.registerChildTodos(
-			childTodoDtos.stream()
-				.filter(childTodos -> childTodos.getParentTodoId().equals(todoDto.getTodoId()))
-				.collect(Collectors.toList())
-		));
+		parentTodoDtos.stream()
+			.filter(todoDto -> todoDto.getType().equals("folder"))
+			.forEach(todoDto ->
+				todoDto.registerChildTodos(
+					childTodoDtos.stream()
+						.filter(childTodos -> childTodos.getParentTodoId().equals(todoDto.getTodoId()))
+						.collect(Collectors.toList())
+				));
 	}
 
 	private List<TodoDto> findChildTodoDtos(Long goalId) {
