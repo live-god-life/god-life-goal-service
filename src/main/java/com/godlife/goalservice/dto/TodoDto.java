@@ -71,6 +71,12 @@ public class TodoDto {
 	}
 
 	public void registerChildTodos(List<TodoDto> todoDtos) {
+		this.totalTodoTaskScheduleCount = todoDtos.stream()
+			.mapToInt(TodoDto::getTotalTodoTaskScheduleCount)
+			.sum();
+		this.completedTodoTaskScheduleCount = todoDtos.stream()
+			.mapToInt(TodoDto::getCompletedTodoTaskScheduleCount)
+			.sum();
 		this.childTodos = todoDtos;
 	}
 }

@@ -32,6 +32,7 @@ public class GoalCommandController {
 		@RequestBody CreateGoalRequest request) {
 
 		goalCommandService.createGoal(userId, request);
+
 		return ResponseEntity
 			.status(HttpStatus.CREATED)
 			.body(ApiResponse.createPostSuccessResponse());
@@ -44,6 +45,7 @@ public class GoalCommandController {
 		@RequestBody UpdateGoalTodoScheduleRequest request) {
 
 		goalCommandService.updateTodoScheduleCompletionStatus(userId, todoScheduleId, request.getCompletionStatus());
+
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createPatchSuccessResponse());
 	}
 
@@ -51,19 +53,30 @@ public class GoalCommandController {
 	public ResponseEntity<ApiResponse> getTodoDetail(
 		@RequestHeader(USER_ID_HEADER) Long userId,
 		@PathVariable(value = "todoId") Long todoId) {
+
 		goalCommandService.deleteTodo(userId, todoId);
+
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createDeleteSuccessResponse());
 	}
 
 	@DeleteMapping("/goals/{goalId}")
-	public ResponseEntity<ApiResponse> deleteGoal(@RequestHeader(USER_ID_HEADER) Long userId, @PathVariable(value = "goalId") Long goalId) {
+	public ResponseEntity<ApiResponse> deleteGoal(
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@PathVariable(value = "goalId") Long goalId) {
+
 		goalCommandService.deleteGoal(userId, goalId);
+
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createDeleteSuccessResponse());
 	}
 
 	@PutMapping("/goals/{goalId}")
-	public ResponseEntity<ApiResponse> modifyGoal(@RequestHeader(USER_ID_HEADER) Long userId, @PathVariable(value = "goalId") Long goalId, @RequestBody CreateGoalRequest request) {
+	public ResponseEntity<ApiResponse> modifyGoal(
+		@RequestHeader(USER_ID_HEADER) Long userId,
+		@PathVariable(value = "goalId") Long goalId,
+		@RequestBody CreateGoalRequest request) {
+
 		goalCommandService.modifyGoal(userId, goalId, request);
+
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.createPutSuccessResponse());
 	}
 }
